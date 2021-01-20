@@ -238,8 +238,31 @@ extension ObjectId: RealmCollectionValue {
     }
 }
 
-internal protocol UntypedRealmCollection {
+// A protocol which all Realm Collections conform to which does not have any
+// associated types so that it can be used in casts
+internal protocol UntypedCollection {
+    // Cast this object to an id<NSFastEnumerator> so that it can be iterated from obj-c
     func asNSFastEnumerator() -> Any
+    // Assign this collection to the target list
+    func assign<T>(to: List<T>)
+}
+
+extension Array: UntypedCollection {
+    func asNSFastEnumerator() -> Any {
+        fatalError()
+    }
+    func assign<T>(to list: List<T>) where T : RealmCollectionValue {
+        list.replace(with: self)
+    }
+}
+
+extension NSArray: UntypedCollection {
+    func asNSFastEnumerator() -> Any {
+        fatalError()
+    }
+    func assign<T>(to list: List<T>) where T : RealmCollectionValue {
+        list.replace(with: self)
+    }
 }
 
 /// :nodoc:
@@ -667,6 +690,7 @@ private class _AnyRealmCollectionBase<T: RealmCollectionValue>: AssistedObjectiv
     var isFrozen: Bool { fatalError() }
     func freeze() -> AnyRealmCollection<T> { fatalError() }
     func thaw() -> AnyRealmCollection<T> { fatalError() }
+    func assign<T>(to list: List<T>) { fatalError() }
 }
 
 private final class _AnyRealmCollection<C: RealmCollection>: _AnyRealmCollectionBase<C.Element> {
@@ -736,7 +760,11 @@ private final class _AnyRealmCollection<C: RealmCollection>: _AnyRealmCollection
     }
 
     override func asNSFastEnumerator() -> Any {
-        return (base as! UntypedRealmCollection).asNSFastEnumerator()
+        return (base as! UntypedCollection).asNSFastEnumerator()
+    }
+
+    override func assign<T>(to list: List<T>) {
+        list.replace(with: base)
     }
 
     // MARK: Collection Support
@@ -795,7 +823,7 @@ private final class _AnyRealmCollection<C: RealmCollection>: _AnyRealmCollection
 
  Instances of `RealmCollection` forward operations to an opaque underlying collection having the same `Element` type.
  */
-public struct AnyRealmCollection<Element: RealmCollectionValue>: RealmCollection, UntypedRealmCollection {
+public struct AnyRealmCollection<Element: RealmCollectionValue>: RealmCollection, UntypedCollection {
 
     /// The type of the objects contained within the collection.
     public typealias ElementType = Element
@@ -956,6 +984,7 @@ public struct AnyRealmCollection<Element: RealmCollectionValue>: RealmCollection
     public func makeIterator() -> RLMIterator<Element> { return base.makeIterator() }
 
     internal func asNSFastEnumerator() -> Any { return base.asNSFastEnumerator() }
+    internal func assign<T>(to list: List<T>) { base.assign(to: list) }
 
 
     // MARK: Collection Support

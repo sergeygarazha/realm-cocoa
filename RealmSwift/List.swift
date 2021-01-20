@@ -357,6 +357,21 @@ public final class List<Element: RealmCollectionValue>: ListBase {
         _rlmArray.exchangeObject(at: UInt(index1), withObjectAt: UInt(index2))
     }
 
+    internal func replace<S: Sequence>(with objects: S) {
+        removeAll()
+        for obj in objects {
+            _rlmArray.add(dynamicBridgeCast(fromSwift: obj) as AnyObject)
+        }
+    }
+
+    internal func replace(with objects: List<Element>) {
+        guard _rlmArray != objects._rlmArray else { return }
+        removeAll()
+        for obj in objects {
+            _rlmArray.add(dynamicBridgeCast(fromSwift: obj) as AnyObject)
+        }
+    }
+
     // MARK: Notifications
 
     /**
@@ -474,7 +489,7 @@ extension List where Element: AddableType {
     }
 }
 
-extension List: RealmCollection, UntypedRealmCollection {
+extension List: RealmCollection, UntypedCollection {
     /// The type of the objects stored within the list.
     public typealias ElementType = Element
 
@@ -487,6 +502,10 @@ extension List: RealmCollection, UntypedRealmCollection {
 
     internal func asNSFastEnumerator() -> Any {
         return _rlmArray
+    }
+
+    internal func assign<T>(to list: List<T>) {
+        list.replace(with: self)
     }
 
     /**

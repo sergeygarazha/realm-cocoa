@@ -112,6 +112,11 @@ void RLMEnsureArrayObservationInfo(std::unique_ptr<RLMObservationInfo>& info,
     }
 }
 
+void RLMSetArrayParent(RLMArray *array, RLMObjectBase *parent, RLMProperty *property) {
+    array->_parentObject = parent;
+    array->_key = property.name;
+}
+
 //
 // validation helpers
 //
@@ -177,8 +182,6 @@ static auto translateErrors(Function&& f) {
 template<typename IndexSetFactory>
 static void changeArray(__unsafe_unretained RLMManagedArray *const ar,
                         NSKeyValueChange kind, dispatch_block_t f, IndexSetFactory&& is) {
-    translateErrors([&] { ar->_backingList.verify_in_transaction(); });
-
     RLMObservationTracker tracker(ar->_realm);
     tracker.trackDeletions();
     auto obsInfo = RLMGetObservationInfo(ar->_observationInfo.get(),

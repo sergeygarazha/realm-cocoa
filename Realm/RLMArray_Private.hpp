@@ -44,8 +44,7 @@ class RLMObservationInfo;
 }
 @end
 
-@interface RLMManagedArray : RLMArray <RLMFastEnumerable>
-- (instancetype)initWithParent:(RLMObjectBase *)parentObject property:(RLMProperty *)property;
+@interface RLMManagedArray () <RLMFastEnumerable>
 - (RLMManagedArray *)initWithList:(realm::List)list
                        parentInfo:(RLMClassInfo *)parentInfo
                          property:(__unsafe_unretained RLMProperty *const)property;

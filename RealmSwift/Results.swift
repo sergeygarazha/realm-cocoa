@@ -367,7 +367,7 @@ extension Decimal128: AddableType {}
     }
 }
 
-extension Results: RealmCollection, UntypedRealmCollection {
+extension Results: RealmCollection, UntypedCollection {
     // MARK: Sequence Support
 
     /// Returns a `RLMIterator` that yields successive elements in the results.
@@ -377,6 +377,10 @@ extension Results: RealmCollection, UntypedRealmCollection {
 
     internal func asNSFastEnumerator() -> Any {
         return rlmResults
+    }
+
+    internal func assign<T>(to list: List<T>) {
+        list.replace(with: self)
     }
 
     // MARK: Collection Support

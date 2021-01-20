@@ -20,7 +20,6 @@
 
 #import "RLMAccessor.h"
 #import "RLMArray_Private.hpp"
-#import "RLMListBase.h"
 #import "RLMObjectSchema_Private.hpp"
 #import "RLMObject_Private.hpp"
 #import "RLMProperty_Private.h"
@@ -181,16 +180,11 @@ void RLMObservationInfo::recordObserver(realm::Obj& objectRow, RLMClassInfo *obj
     NSUInteger sep = [keyPath rangeOfString:@"."].location;
     NSString *key = sep == NSNotFound ? keyPath : [keyPath substringToIndex:sep];
     RLMProperty *prop = objectSchema[key];
-    if (prop && prop.array) {
-        id value = valueForKey(key);
-        RLMArray *array = [value isKindOfClass:[RLMListBase class]] ? [value _rlmArray] : value;
-        array->_key = key;
-        array->_parentObject = object;
+    if (auto swiftAccessor = prop.swiftAccessor) {
+        [swiftAccessor observe:prop on:object];
     }
-    else if (auto swiftIvar = prop.swiftIvar) {
-        if (auto optional = RLMDynamicCast<RLMOptionalBase>(object_getIvar(object, swiftIvar))) {
-            RLMInitializeUnmanagedOptional(optional, object, prop);
-        }
+    else if (prop.array) {
+        RLMSetArrayParent(valueForKey(key), object, prop);
     }
 }
 
@@ -305,6 +299,9 @@ RLMObservationTracker::RLMObservationTracker(__unsafe_unretained RLMRealm *const
 : _realm(realm)
 , _group(realm.group)
 {
+    if (!realm.inWriteTransaction) {
+        @throw RLMException(@"Attempting to modify object outside of a write transaction - call beginWriteTransaction on an RLMRealm instance first.");
+    }
     if (trackDeletions) {
         this->trackDeletions();
     }

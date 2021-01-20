@@ -195,12 +195,11 @@ NSArray *RLMCollectionValueForKey(Collection& collection, NSString *key, RLMClas
     // new List each time
     if (info.rlmObjectSchema.isSwiftClass) {
         auto prop = info.rlmObjectSchema[key];
-        if (prop && prop.array && prop.swiftIvar) {
+        if (prop && prop.array && prop.swiftAccessor) {
             // Grab the actual class for the generic List from an instance of it
             // so that we can make instances of the List without creating a new
             // object accessor each time
-            Class cls = [object_getIvar(accessor, prop.swiftIvar) class];
-            RLMAccessorContext context(info);
+            Class cls = [[prop.swiftAccessor get:prop on:accessor] class];
             for (size_t i = 0; i < count; ++i) {
                 RLMListBase *list = [[cls alloc] init];
                 list._rlmArray = [[RLMManagedArray alloc] initWithList:realm::List(info.realm->_realm,

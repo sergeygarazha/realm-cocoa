@@ -79,8 +79,10 @@ FOUNDATION_EXTERN id RLMObjectThaw(RLMObjectBase *obj);
 FOUNDATION_EXTERN uint64_t RLMObjectBaseGetCombineId(RLMObjectBase *);
 
 @interface RLMManagedPropertyAccessor : NSObject
-+ (void)initializeObject:(void *)object parent:(RLMObjectBase *)parent property:(RLMProperty *)property;
-+ (id)get:(void *)pointer;
++ (void)initialize:(RLMProperty *)property on:(RLMObjectBase *)parent;
++ (void)observe:(RLMProperty *)property on:(RLMObjectBase *)parent;
++ (id)get:(RLMProperty *)property on:(RLMObjectBase *)parent;
++ (void)set:(RLMProperty *)property on:(RLMObjectBase *)parent to:(id)value;
 @end
 
 NS_ASSUME_NONNULL_END

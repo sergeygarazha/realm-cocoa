@@ -39,20 +39,8 @@ struct RLMOptionalId {
     id operator*() const noexcept { return value; }
 };
 
-class RLMAccessorContext {
-public:
-    ~RLMAccessorContext();
-
-    // Accessor context interface
-    RLMAccessorContext(RLMAccessorContext& parent, realm::Obj const& parent_obj, realm::Property const& property);
-
-    id box(realm::List&&);
-    id box(realm::Results&&);
-    id box(realm::Object&&);
-    id box(realm::Obj&&);
-    id box(realm::object_store::Dictionary&&) { REALM_COMPILER_HINT_UNREACHABLE(); }
-    id box(realm::object_store::Set&&) { REALM_COMPILER_HINT_UNREACHABLE(); }
-
+// The subset of RLMAccessorContext which does not require any member variables
+struct RLMStatelessAccessorContext {
     id box(bool v) { return @(v); }
     id box(double v) { return @(v); }
     id box(float v) { return @(v); }
@@ -70,17 +58,8 @@ public:
     id box(realm::util::Optional<int64_t> v) { return v ? @(*v) : NSNull.null; }
     id box(realm::util::Optional<realm::ObjectId> v) { return v ? box(*v) : NSNull.null; }
 
-    void will_change(realm::Obj const&, realm::Property const&);
-    void will_change(realm::Object& obj, realm::Property const& prop) { will_change(obj.obj(), prop); }
-    void did_change();
-
-    RLMOptionalId value_for_property(id dict, realm::Property const&, size_t prop_index);
-    RLMOptionalId default_value_for_property(realm::ObjectSchema const&,
-                                             realm::Property const& prop);
-
-    bool is_same_list(realm::List const& list, id v) const noexcept;
-    bool is_same_dictionary(realm::object_store::Dictionary const&, id) const noexcept { REALM_COMPILER_HINT_UNREACHABLE(); }
-    bool is_same_set(realm::object_store::Set const&, id) const noexcept { REALM_COMPILER_HINT_UNREACHABLE(); }
+    template<typename T>
+    T unbox(id v);
 
     template<typename Func>
     void enumerate_collection(__unsafe_unretained const id v, Func&& func) {
@@ -95,17 +74,47 @@ public:
         REALM_COMPILER_HINT_UNREACHABLE();
     }
 
-    template<typename T>
-    T unbox(id v, realm::CreatePolicy = realm::CreatePolicy::Skip, realm::ObjKey = {});
-
-    realm::Obj create_embedded_object();
-
     bool is_null(id v) { return v == NSNull.null; }
     id null_value() { return NSNull.null; }
     id no_value() { return nil; }
     bool allow_missing(id v) { return [v isKindOfClass:[NSArray class]]; }
 
+    bool is_same_list(realm::List const& list, id v) const noexcept;
+    bool is_same_dictionary(realm::object_store::Dictionary const&, id) const noexcept { REALM_COMPILER_HINT_UNREACHABLE(); }
+    bool is_same_set(realm::object_store::Set const&, id) const noexcept { REALM_COMPILER_HINT_UNREACHABLE(); }
+
     std::string print(id obj) { return [obj description].UTF8String; }
+};
+
+class RLMAccessorContext : public RLMStatelessAccessorContext {
+public:
+    ~RLMAccessorContext();
+
+    // Accessor context interface
+    RLMAccessorContext(RLMAccessorContext& parent, realm::Obj const& parent_obj, realm::Property const& property);
+
+    using RLMStatelessAccessorContext::box;
+    id box(realm::List&&);
+    id box(realm::Results&&);
+    id box(realm::Object&&);
+    id box(realm::Obj&&);
+    id box(realm::object_store::Dictionary&&) { REALM_COMPILER_HINT_UNREACHABLE(); }
+    id box(realm::object_store::Set&&) { REALM_COMPILER_HINT_UNREACHABLE(); }
+
+    void will_change(realm::Obj const&, realm::Property const&);
+    void will_change(realm::Object& obj, realm::Property const& prop) { will_change(obj.obj(), prop); }
+    void did_change();
+
+    RLMOptionalId value_for_property(id dict, realm::Property const&, size_t prop_index);
+    RLMOptionalId default_value_for_property(realm::ObjectSchema const&,
+                                             realm::Property const& prop);
+
+    template<typename T>
+    T unbox(id v, realm::CreatePolicy = realm::CreatePolicy::Skip, realm::ObjKey = {}) {
+        return RLMStatelessAccessorContext::unbox<T>(v);
+    }
+
+    realm::Obj create_embedded_object();
 
     // Internal API
     RLMAccessorContext(RLMObjectBase *parentObject, const realm::Property *property = nullptr);

@@ -156,6 +156,9 @@ void RLMInitializeManagedOptional(__unsafe_unretained RLMOptionalBase *const sel
 void RLMInitializeUnmanagedOptional(__unsafe_unretained RLMOptionalBase *const self,
                                     __unsafe_unretained RLMObjectBase *const parent,
                                     __unsafe_unretained RLMProperty *const prop) {
+    if (parent->_realm) {
+        return;
+    }
     if (!self->_impl) {
         self->_impl.reset(new UnmanagedOptional);
     }

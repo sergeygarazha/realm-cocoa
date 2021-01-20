@@ -159,7 +159,7 @@ extension Int64: CustomObjectiveCBridgeable {
 }
 extension Optional: CustomObjectiveCBridgeable {
     internal static func bridging(objCValue: Any) -> Optional {
-        if objCValue is NSNull {
+        if objCValue as AnyObject is NSNull {
             return nil
         } else {
             return .some(dynamicBridgeCast(fromObjectiveC: objCValue))

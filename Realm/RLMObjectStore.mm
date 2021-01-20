@@ -20,11 +20,9 @@
 
 #import "RLMAccessor.hpp"
 #import "RLMArray_Private.hpp"
-#import "RLMListBase.h"
 #import "RLMObservation.hpp"
 #import "RLMObject_Private.hpp"
 #import "RLMObjectSchema_Private.hpp"
-#import "RLMOptionalBase.h"
 #import "RLMProperty_Private.h"
 #import "RLMQueryUtil.hpp"
 #import "RLMRealm_Private.hpp"
@@ -91,19 +89,7 @@ void RLMInitializeSwiftAccessorGenerics(__unsafe_unretained RLMObjectBase *const
     }
 
     for (RLMProperty *prop in object->_objectSchema.swiftGenericProperties) {
-        if (prop.type == RLMPropertyTypeLinkingObjects) {
-            [prop.swiftAccessor initializeObject:(char *)(__bridge void *)object + ivar_getOffset(prop.swiftIvar)
-                                          parent:object property:prop];
-        }
-        else if (prop.array) {
-            id ivar = object_getIvar(object, prop.swiftIvar);
-            RLMArray *array = [[RLMManagedArray alloc] initWithParent:object property:prop];
-            [ivar set_rlmArray:array];
-        }
-        else {
-            id ivar = object_getIvar(object, prop.swiftIvar);
-            RLMInitializeManagedOptional(ivar, object, prop);
-        }
+        [prop.swiftAccessor initialize:prop on:object];
     }
 }
 
