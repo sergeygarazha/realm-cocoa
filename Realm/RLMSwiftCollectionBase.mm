@@ -36,6 +36,10 @@
     return nil;
 }
 
++ (Class)backingCollectionType {
+    REALM_UNREACHABLE();
+}
+
 - (instancetype)init {
     return self = [super init];
 }
