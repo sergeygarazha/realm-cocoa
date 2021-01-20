@@ -28,6 +28,7 @@
 #import "RLMRealm_Private.hpp"
 #import "RLMResults_Private.hpp"
 #import "RLMSchema_Private.h"
+#import "RLMSwiftProperty.h"
 #import "RLMUtil.hpp"
 
 #import <realm/object-store/results.hpp>
@@ -92,6 +93,15 @@ id getBoxed(__unsafe_unretained RLMObjectBase *const obj, NSUInteger index) {
     RLMAccessorContext ctx(obj, &prop);
     auto value = obj->_row.get<T>(prop.column_key);
     return isNull(value) ? nil : ctx.box(std::move(value));
+}
+
+template<typename T>
+T getOptional(__unsafe_unretained RLMObjectBase *const obj, uint16_t key, bool *gotValue) {
+    auto ret = get<realm::util::Optional<T>>(obj, key);
+    if (ret) {
+        *gotValue = true;
+    }
+    return ret.value_or(T{});
 }
 
 template<typename T>
@@ -312,6 +322,9 @@ id managedGetter(RLMProperty *prop, const char *type) {
 static realm::ColKey willChange(RLMObservationTracker& tracker,
                                 __unsafe_unretained RLMObjectBase *const obj, NSUInteger index) {
     auto& prop = get_property(obj, index);
+    if (prop.is_primary) {
+        @throw RLMException(@"Primary key can't be changed after an object is inserted.");
+    }
     tracker.willChange(RLMGetObservationInfo(obj->_observationInfo, obj->_row.get_key(), *obj->_info),
                        obj->_objectSchema.properties[index].name);
     return prop.column_key;
@@ -605,6 +618,71 @@ id RLMDynamicGetByName(__unsafe_unretained RLMObjectBase *const obj,
                             propName, obj->_objectSchema.className);
     }
     return RLMDynamicGet(obj, prop);
+}
+
+#define REALM_SWIFT_PROPERTY_ACCESSOR(objc, swift, rlmtype) \
+    objc RLMGetSwiftProperty##swift(__unsafe_unretained RLMObjectBase *const obj, uint16_t key) { \
+        return get<objc>(obj, key); \
+    } \
+    objc RLMGetSwiftProperty##swift##Optional(__unsafe_unretained RLMObjectBase *const obj, uint16_t key, bool *gotValue) { \
+        return getOptional<objc>(obj, key, gotValue); \
+    } \
+    void RLMSetSwiftProperty##swift(__unsafe_unretained RLMObjectBase *const obj, uint16_t key, objc value) { \
+        RLMVerifyAttached(obj); \
+        kvoSetValue(obj, key, value); \
+    }
+REALM_FOR_EACH_SWIFT_PRIMITIVE_TYPE(REALM_SWIFT_PROPERTY_ACCESSOR)
+#undef REALM_SWIFT_PROPERTY_ACCESSOR
+
+#define REALM_SWIFT_PROPERTY_ACCESSOR(objc, swift, rlmtype) \
+    void RLMSetSwiftProperty##swift(__unsafe_unretained RLMObjectBase *const obj, uint16_t key, objc *value) { \
+        RLMVerifyAttached(obj); \
+        kvoSetValue(obj, key, value); \
+    }
+REALM_FOR_EACH_SWIFT_OBJECT_TYPE(REALM_SWIFT_PROPERTY_ACCESSOR)
+#undef REALM_SWIFT_PROPERTY_ACCESSOR
+
+NSString *RLMGetSwiftPropertyString(__unsafe_unretained RLMObjectBase *const obj, uint16_t key) {
+    return getBoxed<realm::StringData>(obj, key);
+}
+
+NSData *RLMGetSwiftPropertyData(__unsafe_unretained RLMObjectBase *const obj, uint16_t key) {
+    return getBoxed<realm::BinaryData>(obj, key);
+}
+
+NSDate *RLMGetSwiftPropertyDate(__unsafe_unretained RLMObjectBase *const obj, uint16_t key) {
+    return getBoxed<realm::Timestamp>(obj, key);
+}
+
+RLMObjectId *RLMGetSwiftPropertyObjectId(__unsafe_unretained RLMObjectBase *const obj, uint16_t key) {
+    return getBoxed<realm::util::Optional<realm::ObjectId>>(obj, key);
+}
+
+RLMDecimal128 *RLMGetSwiftPropertyDecimal128(__unsafe_unretained RLMObjectBase *const obj, uint16_t key) {
+    return getBoxed<realm::Decimal128>(obj, key);
+}
+
+RLMArray *RLMGetSwiftPropertyArray(__unsafe_unretained RLMObjectBase *const obj, uint16_t key) {
+    return getArray(obj, key);
+}
+
+void RLMSetSwiftPropertyNil(__unsafe_unretained RLMObjectBase *const obj, uint16_t key) {
+    RLMVerifyInWriteTransaction(obj);
+    if (obj->_info->objectSchema->persisted_properties[key].type == realm::PropertyType::Object) {
+        kvoSetValue(obj, key, (RLMObjectBase *)nil);
+    }
+    else {
+        kvoSetValue(obj, key, (NSNumber<RLMInt> *)nil);
+    }
+}
+
+void RLMSetSwiftPropertyObject(__unsafe_unretained RLMObjectBase *const obj, uint16_t key,
+                               __unsafe_unretained RLMObjectBase *const target) {
+    kvoSetValue(obj, key, target);
+}
+
+RLMObjectBase *RLMGetSwiftPropertyObject(__unsafe_unretained RLMObjectBase *const obj, uint16_t key) {
+    return getBoxed<realm::Obj>(obj, key);
 }
 
 RLMAccessorContext::~RLMAccessorContext() = default;

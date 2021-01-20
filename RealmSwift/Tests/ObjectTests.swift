@@ -26,16 +26,12 @@ private func nextDynamicDefaultSeed() -> Int {
     return dynamicDefaultSeed
 }
 class SwiftDynamicDefaultObject: Object {
-    @objc dynamic var intCol = nextDynamicDefaultSeed()
-    @objc dynamic var floatCol = Float(nextDynamicDefaultSeed())
-    @objc dynamic var doubleCol = Double(nextDynamicDefaultSeed())
-    @objc dynamic var dateCol = Date(timeIntervalSinceReferenceDate: TimeInterval(nextDynamicDefaultSeed()))
-    @objc dynamic var stringCol = UUID().uuidString
-    @objc dynamic var binaryCol = UUID().uuidString.data(using: .utf8)
-
-    override static func primaryKey() -> String? {
-        return "intCol"
-    }
+    @ManagedProperty(primaryKey: true) var intCol = nextDynamicDefaultSeed()
+    @ManagedProperty var floatCol = Float(nextDynamicDefaultSeed())
+    @ManagedProperty var doubleCol = Double(nextDynamicDefaultSeed())
+    @ManagedProperty var dateCol = Date(timeIntervalSinceReferenceDate: TimeInterval(nextDynamicDefaultSeed()))
+    @ManagedProperty var stringCol = UUID().uuidString
+    @ManagedProperty var binaryCol = UUID().uuidString.data(using: .utf8)
 }
 
 class ObjectTests: TestCase {
@@ -158,7 +154,7 @@ class ObjectTests: TestCase {
         XCTAssertNil(Object.primaryKey(), "primary key should default to nil")
         XCTAssertNil(SwiftStringObject.primaryKey())
         XCTAssertNil(SwiftStringObject().objectSchema.primaryKeyProperty)
-        XCTAssertEqual(SwiftPrimaryStringObject.primaryKey()!, "stringCol")
+//        XCTAssertEqual(SwiftPrimaryStringObject.primaryKey()!, "stringCol")
         XCTAssertEqual(SwiftPrimaryStringObject().objectSchema.primaryKeyProperty!.name, "stringCol")
     }
 
@@ -172,9 +168,9 @@ class ObjectTests: TestCase {
         XCTAssertEqual(0, intObj.intCol)
 
         let optionalIntObj = SwiftPrimaryOptionalIntObject()
-        optionalIntObj.intCol.value = 1
-        optionalIntObj.intCol.value = 0; // can change primary key unattached
-        XCTAssertEqual(0, optionalIntObj.intCol.value)
+        optionalIntObj.intCol = 1
+        optionalIntObj.intCol = 0 // can change primary key unattached
+        XCTAssertEqual(0, optionalIntObj.intCol)
 
         let stringObj = SwiftPrimaryStringObject()
         stringObj.stringCol = "a"
@@ -188,9 +184,9 @@ class ObjectTests: TestCase {
             assertThrows(intObj.setValue(2, forKey: "intCol"), reasonMatching: primaryKeyReason)
 
             realm.add(optionalIntObj)
-            assertThrows(optionalIntObj.intCol.value = 2, reasonMatching: "Cannot modify primary key")
+            assertThrows(optionalIntObj.intCol = 2, reasonMatching: primaryKeyReason)
             assertThrows(optionalIntObj["intCol"] = 2, reasonMatching: primaryKeyReason)
-            assertThrows(optionalIntObj.setValue(2, forKey: "intCol"), reasonMatching: "Cannot modify primary key")
+            assertThrows(optionalIntObj.setValue(2, forKey: "intCol"), reasonMatching: primaryKeyReason)
 
             realm.add(stringObj)
             assertThrows(stringObj.stringCol = "c", reasonMatching: primaryKeyReason)
@@ -207,7 +203,6 @@ class ObjectTests: TestCase {
 
     func testIndexedProperties() {
         XCTAssertEqual(Object.indexedProperties(), [], "indexed properties should default to []")
-        XCTAssertEqual(SwiftIndexedPropertiesObject.indexedProperties().count, 8)
 
         let objectSchema = SwiftIndexedPropertiesObject().objectSchema
         XCTAssertTrue(objectSchema["stringCol"]!.isIndexed)
@@ -226,7 +221,6 @@ class ObjectTests: TestCase {
 
     func testIndexedOptionalProperties() {
         XCTAssertEqual(Object.indexedProperties(), [], "indexed properties should default to []")
-        XCTAssertEqual(SwiftIndexedOptionalPropertiesObject.indexedProperties().count, 8)
         XCTAssertTrue(SwiftIndexedOptionalPropertiesObject().objectSchema["optionalStringCol"]!.isIndexed)
         XCTAssertTrue(SwiftIndexedOptionalPropertiesObject().objectSchema["optionalDateCol"]!.isIndexed)
         XCTAssertTrue(SwiftIndexedOptionalPropertiesObject().objectSchema["optionalBoolCol"]!.isIndexed)
@@ -726,7 +720,7 @@ class ObjectTests: TestCase {
         dispatchSyncNewThread {
             let realm = try! Realm()
             try! realm.write {
-                realm.objects(SwiftOptionalDefaultValuesObject.self).first!.optIntCol.value = 2
+                realm.objects(SwiftOptionalDefaultValuesObject.self).first!.optIntCol = 2
             }
         }
         realm.refresh()
@@ -737,7 +731,7 @@ class ObjectTests: TestCase {
         dispatchSyncNewThread {
             let realm = try! Realm()
             try! realm.write {
-                realm.objects(SwiftOptionalDefaultValuesObject.self).first!.optIntCol.value = nil
+                realm.objects(SwiftOptionalDefaultValuesObject.self).first!.optIntCol = nil
             }
         }
         realm.refresh()
@@ -748,7 +742,7 @@ class ObjectTests: TestCase {
         dispatchSyncNewThread {
             let realm = try! Realm()
             try! realm.write {
-                realm.objects(SwiftOptionalDefaultValuesObject.self).first!.optIntCol.value = 3
+                realm.objects(SwiftOptionalDefaultValuesObject.self).first!.optIntCol = 3
             }
         }
         realm.refresh()
@@ -1020,15 +1014,15 @@ class ObjectTests: TestCase {
         XCTAssertEqual(optObj.optStringCol, frozenOptObj.optStringCol)
         XCTAssertEqual(optObj.optBinaryCol, frozenOptObj.optBinaryCol)
         XCTAssertEqual(optObj.optDateCol, frozenOptObj.optDateCol)
-        XCTAssertEqual(optObj.optIntCol.value, frozenOptObj.optIntCol.value)
-        XCTAssertEqual(optObj.optInt8Col.value, frozenOptObj.optInt8Col.value)
-        XCTAssertEqual(optObj.optInt16Col.value, frozenOptObj.optInt16Col.value)
-        XCTAssertEqual(optObj.optInt32Col.value, frozenOptObj.optInt32Col.value)
-        XCTAssertEqual(optObj.optInt64Col.value, frozenOptObj.optInt64Col.value)
-        XCTAssertEqual(optObj.optFloatCol.value, frozenOptObj.optFloatCol.value)
-        XCTAssertEqual(optObj.optDoubleCol.value, frozenOptObj.optDoubleCol.value)
-        XCTAssertEqual(optObj.optBoolCol.value, frozenOptObj.optBoolCol.value)
-        XCTAssertEqual(optObj.optEnumCol.value, frozenOptObj.optEnumCol.value)
+        XCTAssertEqual(optObj.optIntCol, frozenOptObj.optIntCol)
+        XCTAssertEqual(optObj.optInt8Col, frozenOptObj.optInt8Col)
+        XCTAssertEqual(optObj.optInt16Col, frozenOptObj.optInt16Col)
+        XCTAssertEqual(optObj.optInt32Col, frozenOptObj.optInt32Col)
+        XCTAssertEqual(optObj.optInt64Col, frozenOptObj.optInt64Col)
+        XCTAssertEqual(optObj.optFloatCol, frozenOptObj.optFloatCol)
+        XCTAssertEqual(optObj.optDoubleCol, frozenOptObj.optDoubleCol)
+        XCTAssertEqual(optObj.optBoolCol, frozenOptObj.optBoolCol)
+        XCTAssertEqual(optObj.optEnumCol, frozenOptObj.optEnumCol)
 
         let frozenListObj = listObj.freeze()
         XCTAssertEqual(Array(listObj.int), Array(frozenListObj.int))

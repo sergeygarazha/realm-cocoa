@@ -544,7 +544,7 @@ class SwiftPerformanceTests: TestCase {
             for value in 0..<10000 {
                 autoreleasepool {
                     let object = SwiftOptionalObject()
-                    object.optIntCol.value = value
+                    object.optIntCol = value
                     realm.add(object)
                 }
             }

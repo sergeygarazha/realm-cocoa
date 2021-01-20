@@ -216,16 +216,16 @@ class MigrationTests: TestCase {
                 soo.optStringCol = "String"
                 soo.optBinaryCol = Data()
                 soo.optDateCol = Date()
-                soo.optIntCol.value = 1
-                soo.optInt8Col.value = 2
-                soo.optInt16Col.value = 3
-                soo.optInt32Col.value = 4
-                soo.optInt64Col.value = 5
-                soo.optFloatCol.value = 6.1
-                soo.optDoubleCol.value = 7.2
+                soo.optIntCol = 1
+                soo.optInt8Col = 2
+                soo.optInt16Col = 3
+                soo.optInt32Col = 4
+                soo.optInt64Col = 5
+                soo.optFloatCol = 6.1
+                soo.optDoubleCol = 7.2
                 soo.optDecimalCol = 8.3
                 soo.optObjectIdCol = ObjectId("1234567890bc1234567890bc")
-                soo.optBoolCol.value = true
+                soo.optBoolCol = true
                 try! Realm().add(soo)
             }
         }
@@ -234,8 +234,6 @@ class MigrationTests: TestCase {
             migration.enumerateObjects(ofType: "SwiftOptionalObject") { oldObject, newObject in
                 XCTAssertTrue(oldObject! as AnyObject is MigrationObject)
                 XCTAssertTrue(newObject! as AnyObject is MigrationObject)
-                XCTAssertTrue(oldObject!["optNSStringCol"]! is NSString)
-                XCTAssertTrue(newObject!["optNSStringCol"]! is NSString)
                 XCTAssertTrue(oldObject!["optStringCol"]! is String)
                 XCTAssertTrue(newObject!["optStringCol"]! is String)
                 XCTAssertTrue(oldObject!["optBinaryCol"]! is Data)

@@ -28,7 +28,7 @@ class ObjectWithPrivateOptionals: Object {
     private var float: Float? = 1.23
     private var string: String? = "123"
 
-    @objc dynamic var value = 5
+    @ManagedProperty var value = 5
 }
 
 class ObjectCreationTests: TestCase {
@@ -213,7 +213,7 @@ class ObjectCreationTests: TestCase {
         try! realm.write {
             let object = realm.create(SwiftOptionalDefaultValuesObject.self)
             self.verifySwiftOptionalObjectWithDictionaryLiteral(object,
-                dictionary: SwiftOptionalDefaultValuesObject.defaultValues(), boolObjectValue: true)
+                                                                dictionary: SwiftOptionalDefaultValuesObject.defaultValues(), boolObjectValue: true)
         }
     }
 
@@ -503,6 +503,8 @@ class ObjectCreationTests: TestCase {
         try! Realm().commitWrite()
 
         XCTAssertNotEqual(otherRealmObject, object) // the object from the other realm should be copied into this realm
+        print("\(try! Realm().objects(SwiftLinkToPrimaryStringObject.self))")
+        print("\(try! Realm().objects(SwiftPrimaryStringObject.self))")
         XCTAssertEqual(try! Realm().objects(SwiftLinkToPrimaryStringObject.self).count, 1)
         XCTAssertEqual(try! Realm().objects(SwiftPrimaryStringObject.self).count, 4)
     }
@@ -565,15 +567,15 @@ class ObjectCreationTests: TestCase {
         // Create with all fields nil
         let object = realm.create(SwiftOptionalPrimaryObject.self, value: SwiftOptionalPrimaryObject(), update: .all)
 
-        XCTAssertNil(object.id.value)
-        XCTAssertNil(object.optIntCol.value)
-        XCTAssertNil(object.optInt8Col.value)
-        XCTAssertNil(object.optInt16Col.value)
-        XCTAssertNil(object.optInt32Col.value)
-        XCTAssertNil(object.optInt64Col.value)
-        XCTAssertNil(object.optBoolCol.value)
-        XCTAssertNil(object.optFloatCol.value)
-        XCTAssertNil(object.optDoubleCol.value)
+        XCTAssertNil(object.id)
+        XCTAssertNil(object.optIntCol)
+        XCTAssertNil(object.optInt8Col)
+        XCTAssertNil(object.optInt16Col)
+        XCTAssertNil(object.optInt32Col)
+        XCTAssertNil(object.optInt64Col)
+        XCTAssertNil(object.optBoolCol)
+        XCTAssertNil(object.optFloatCol)
+        XCTAssertNil(object.optDoubleCol)
         XCTAssertNil(object.optDateCol)
         XCTAssertNil(object.optStringCol)
         XCTAssertNil(object.optNSStringCol)
@@ -582,14 +584,14 @@ class ObjectCreationTests: TestCase {
 
         // Try to switch to non-nil
         let object2 = SwiftOptionalPrimaryObject()
-        object2.optIntCol.value = 1
-        object2.optInt8Col.value = 1
-        object2.optInt16Col.value = 1
-        object2.optInt32Col.value = 1
-        object2.optInt64Col.value = 1
-        object2.optFloatCol.value = 1
-        object2.optDoubleCol.value = 1
-        object2.optBoolCol.value = true
+        object2.optIntCol = 1
+        object2.optInt8Col = 1
+        object2.optInt16Col = 1
+        object2.optInt32Col = 1
+        object2.optInt64Col = 1
+        object2.optFloatCol = 1
+        object2.optDoubleCol = 1
+        object2.optBoolCol = true
         object2.optDateCol = Date()
         object2.optStringCol = ""
         object2.optNSStringCol = ""
@@ -597,34 +599,33 @@ class ObjectCreationTests: TestCase {
         object2.optObjectCol = SwiftBoolObject()
         realm.create(SwiftOptionalPrimaryObject.self, value: object2, update: .all)
 
-        XCTAssertNil(object.id.value)
-        XCTAssertNotNil(object.optIntCol.value)
-        XCTAssertNotNil(object.optInt8Col.value)
-        XCTAssertNotNil(object.optInt16Col.value)
-        XCTAssertNotNil(object.optInt32Col.value)
-        XCTAssertNotNil(object.optInt64Col.value)
-        XCTAssertNotNil(object.optBoolCol.value)
-        XCTAssertNotNil(object.optFloatCol.value)
-        XCTAssertNotNil(object.optDoubleCol.value)
+        XCTAssertNil(object.id)
+        XCTAssertNotNil(object.optIntCol)
+        XCTAssertNotNil(object.optInt8Col)
+        XCTAssertNotNil(object.optInt16Col)
+        XCTAssertNotNil(object.optInt32Col)
+        XCTAssertNotNil(object.optInt64Col)
+        XCTAssertNotNil(object.optBoolCol)
+        XCTAssertNotNil(object.optFloatCol)
+        XCTAssertNotNil(object.optDoubleCol)
         XCTAssertNotNil(object.optDateCol)
         XCTAssertNotNil(object.optStringCol)
-        XCTAssertNotNil(object.optNSStringCol)
         XCTAssertNotNil(object.optBinaryCol)
         XCTAssertNotNil(object.optObjectCol)
 
         // Try to switch back to nil
         realm.create(SwiftOptionalPrimaryObject.self, value: SwiftOptionalPrimaryObject(), update: .all)
 
-        XCTAssertNil(object.id.value)
+        XCTAssertNil(object.id)
 
-        XCTAssertNil(object.optIntCol.value)
-        XCTAssertNil(object.optInt8Col.value)
-        XCTAssertNil(object.optInt16Col.value)
-        XCTAssertNil(object.optInt32Col.value)
-        XCTAssertNil(object.optInt64Col.value)
-        XCTAssertNil(object.optBoolCol.value)
-        XCTAssertNil(object.optFloatCol.value)
-        XCTAssertNil(object.optDoubleCol.value)
+        XCTAssertNil(object.optIntCol)
+        XCTAssertNil(object.optInt8Col)
+        XCTAssertNil(object.optInt16Col)
+        XCTAssertNil(object.optInt32Col)
+        XCTAssertNil(object.optInt64Col)
+        XCTAssertNil(object.optBoolCol)
+        XCTAssertNil(object.optFloatCol)
+        XCTAssertNil(object.optDoubleCol)
         XCTAssertNil(object.optDateCol)
         XCTAssertNil(object.optStringCol)
         XCTAssertNil(object.optNSStringCol)
@@ -641,15 +642,15 @@ class ObjectCreationTests: TestCase {
         // Create with all fields nil
         let object = realm.create(SwiftOptionalPrimaryObject.self, value: SwiftOptionalPrimaryObject(), update: .modified)
 
-        XCTAssertNil(object.id.value)
-        XCTAssertNil(object.optIntCol.value)
-        XCTAssertNil(object.optInt8Col.value)
-        XCTAssertNil(object.optInt16Col.value)
-        XCTAssertNil(object.optInt32Col.value)
-        XCTAssertNil(object.optInt64Col.value)
-        XCTAssertNil(object.optBoolCol.value)
-        XCTAssertNil(object.optFloatCol.value)
-        XCTAssertNil(object.optDoubleCol.value)
+        XCTAssertNil(object.id)
+        XCTAssertNil(object.optIntCol)
+        XCTAssertNil(object.optInt8Col)
+        XCTAssertNil(object.optInt16Col)
+        XCTAssertNil(object.optInt32Col)
+        XCTAssertNil(object.optInt64Col)
+        XCTAssertNil(object.optBoolCol)
+        XCTAssertNil(object.optFloatCol)
+        XCTAssertNil(object.optDoubleCol)
         XCTAssertNil(object.optDateCol)
         XCTAssertNil(object.optStringCol)
         XCTAssertNil(object.optNSStringCol)
@@ -658,14 +659,14 @@ class ObjectCreationTests: TestCase {
 
         // Try to switch to non-nil
         let object2 = SwiftOptionalPrimaryObject()
-        object2.optIntCol.value = 1
-        object2.optInt8Col.value = 1
-        object2.optInt16Col.value = 1
-        object2.optInt32Col.value = 1
-        object2.optInt64Col.value = 1
-        object2.optFloatCol.value = 1
-        object2.optDoubleCol.value = 1
-        object2.optBoolCol.value = true
+        object2.optIntCol = 1
+        object2.optInt8Col = 1
+        object2.optInt16Col = 1
+        object2.optInt32Col = 1
+        object2.optInt64Col = 1
+        object2.optFloatCol = 1
+        object2.optDoubleCol = 1
+        object2.optBoolCol = true
         object2.optDateCol = Date()
         object2.optStringCol = ""
         object2.optNSStringCol = ""
@@ -673,34 +674,33 @@ class ObjectCreationTests: TestCase {
         object2.optObjectCol = SwiftBoolObject()
         realm.create(SwiftOptionalPrimaryObject.self, value: object2, update: .modified)
 
-        XCTAssertNil(object.id.value)
-        XCTAssertNotNil(object.optIntCol.value)
-        XCTAssertNotNil(object.optInt8Col.value)
-        XCTAssertNotNil(object.optInt16Col.value)
-        XCTAssertNotNil(object.optInt32Col.value)
-        XCTAssertNotNil(object.optInt64Col.value)
-        XCTAssertNotNil(object.optBoolCol.value)
-        XCTAssertNotNil(object.optFloatCol.value)
-        XCTAssertNotNil(object.optDoubleCol.value)
+        XCTAssertNil(object.id)
+        XCTAssertNotNil(object.optIntCol)
+        XCTAssertNotNil(object.optInt8Col)
+        XCTAssertNotNil(object.optInt16Col)
+        XCTAssertNotNil(object.optInt32Col)
+        XCTAssertNotNil(object.optInt64Col)
+        XCTAssertNotNil(object.optBoolCol)
+        XCTAssertNotNil(object.optFloatCol)
+        XCTAssertNotNil(object.optDoubleCol)
         XCTAssertNotNil(object.optDateCol)
         XCTAssertNotNil(object.optStringCol)
-        XCTAssertNotNil(object.optNSStringCol)
         XCTAssertNotNil(object.optBinaryCol)
         XCTAssertNotNil(object.optObjectCol)
 
         // Try to switch back to nil
         realm.create(SwiftOptionalPrimaryObject.self, value: SwiftOptionalPrimaryObject(), update: .modified)
 
-        XCTAssertNil(object.id.value)
+        XCTAssertNil(object.id)
 
-        XCTAssertNil(object.optIntCol.value)
-        XCTAssertNil(object.optInt8Col.value)
-        XCTAssertNil(object.optInt16Col.value)
-        XCTAssertNil(object.optInt32Col.value)
-        XCTAssertNil(object.optInt64Col.value)
-        XCTAssertNil(object.optBoolCol.value)
-        XCTAssertNil(object.optFloatCol.value)
-        XCTAssertNil(object.optDoubleCol.value)
+        XCTAssertNil(object.optIntCol)
+        XCTAssertNil(object.optInt8Col)
+        XCTAssertNil(object.optInt16Col)
+        XCTAssertNil(object.optInt32Col)
+        XCTAssertNil(object.optInt64Col)
+        XCTAssertNil(object.optBoolCol)
+        XCTAssertNil(object.optFloatCol)
+        XCTAssertNil(object.optDoubleCol)
         XCTAssertNil(object.optDateCol)
         XCTAssertNil(object.optStringCol)
         XCTAssertNil(object.optNSStringCol)
@@ -1063,15 +1063,15 @@ class ObjectCreationTests: TestCase {
         let object = SwiftOptionalPrimaryObject()
         realm.add(object)
 
-        XCTAssertNil(object.id.value)
-        XCTAssertNil(object.optIntCol.value)
-        XCTAssertNil(object.optInt8Col.value)
-        XCTAssertNil(object.optInt16Col.value)
-        XCTAssertNil(object.optInt32Col.value)
-        XCTAssertNil(object.optInt64Col.value)
-        XCTAssertNil(object.optBoolCol.value)
-        XCTAssertNil(object.optFloatCol.value)
-        XCTAssertNil(object.optDoubleCol.value)
+        XCTAssertNil(object.id)
+        XCTAssertNil(object.optIntCol)
+        XCTAssertNil(object.optInt8Col)
+        XCTAssertNil(object.optInt16Col)
+        XCTAssertNil(object.optInt32Col)
+        XCTAssertNil(object.optInt64Col)
+        XCTAssertNil(object.optBoolCol)
+        XCTAssertNil(object.optFloatCol)
+        XCTAssertNil(object.optDoubleCol)
         XCTAssertNil(object.optDateCol)
         XCTAssertNil(object.optStringCol)
         XCTAssertNil(object.optNSStringCol)
@@ -1080,14 +1080,14 @@ class ObjectCreationTests: TestCase {
 
         // Try to switch to non-nil
         let object2 = SwiftOptionalPrimaryObject()
-        object2.optIntCol.value = 1
-        object2.optInt8Col.value = 1
-        object2.optInt16Col.value = 1
-        object2.optInt32Col.value = 1
-        object2.optInt64Col.value = 1
-        object2.optFloatCol.value = 1
-        object2.optDoubleCol.value = 1
-        object2.optBoolCol.value = true
+        object2.optIntCol = 1
+        object2.optInt8Col = 1
+        object2.optInt16Col = 1
+        object2.optInt32Col = 1
+        object2.optInt64Col = 1
+        object2.optFloatCol = 1
+        object2.optDoubleCol = 1
+        object2.optBoolCol = true
         object2.optDateCol = Date()
         object2.optStringCol = ""
         object2.optNSStringCol = ""
@@ -1095,18 +1095,17 @@ class ObjectCreationTests: TestCase {
         object2.optObjectCol = SwiftBoolObject()
         realm.add(object2, update: .all)
 
-        XCTAssertNil(object.id.value)
-        XCTAssertNotNil(object.optIntCol.value)
-        XCTAssertNotNil(object.optInt8Col.value)
-        XCTAssertNotNil(object.optInt16Col.value)
-        XCTAssertNotNil(object.optInt32Col.value)
-        XCTAssertNotNil(object.optInt64Col.value)
-        XCTAssertNotNil(object.optBoolCol.value)
-        XCTAssertNotNil(object.optFloatCol.value)
-        XCTAssertNotNil(object.optDoubleCol.value)
+        XCTAssertNil(object.id)
+        XCTAssertNotNil(object.optIntCol)
+        XCTAssertNotNil(object.optInt8Col)
+        XCTAssertNotNil(object.optInt16Col)
+        XCTAssertNotNil(object.optInt32Col)
+        XCTAssertNotNil(object.optInt64Col)
+        XCTAssertNotNil(object.optBoolCol)
+        XCTAssertNotNil(object.optFloatCol)
+        XCTAssertNotNil(object.optDoubleCol)
         XCTAssertNotNil(object.optDateCol)
         XCTAssertNotNil(object.optStringCol)
-        XCTAssertNotNil(object.optNSStringCol)
         XCTAssertNotNil(object.optBinaryCol)
         XCTAssertNotNil(object.optObjectCol)
 
@@ -1114,15 +1113,15 @@ class ObjectCreationTests: TestCase {
         let object3 = SwiftOptionalPrimaryObject()
         realm.add(object3, update: .all)
 
-        XCTAssertNil(object.id.value)
-        XCTAssertNil(object.optIntCol.value)
-        XCTAssertNil(object.optInt8Col.value)
-        XCTAssertNil(object.optInt16Col.value)
-        XCTAssertNil(object.optInt32Col.value)
-        XCTAssertNil(object.optInt64Col.value)
-        XCTAssertNil(object.optBoolCol.value)
-        XCTAssertNil(object.optFloatCol.value)
-        XCTAssertNil(object.optDoubleCol.value)
+        XCTAssertNil(object.id)
+        XCTAssertNil(object.optIntCol)
+        XCTAssertNil(object.optInt8Col)
+        XCTAssertNil(object.optInt16Col)
+        XCTAssertNil(object.optInt32Col)
+        XCTAssertNil(object.optInt64Col)
+        XCTAssertNil(object.optBoolCol)
+        XCTAssertNil(object.optFloatCol)
+        XCTAssertNil(object.optDoubleCol)
         XCTAssertNil(object.optDateCol)
         XCTAssertNil(object.optStringCol)
         XCTAssertNil(object.optNSStringCol)
@@ -1140,15 +1139,15 @@ class ObjectCreationTests: TestCase {
         let object = SwiftOptionalPrimaryObject()
         realm.add(object)
 
-        XCTAssertNil(object.id.value)
-        XCTAssertNil(object.optIntCol.value)
-        XCTAssertNil(object.optInt8Col.value)
-        XCTAssertNil(object.optInt16Col.value)
-        XCTAssertNil(object.optInt32Col.value)
-        XCTAssertNil(object.optInt64Col.value)
-        XCTAssertNil(object.optBoolCol.value)
-        XCTAssertNil(object.optFloatCol.value)
-        XCTAssertNil(object.optDoubleCol.value)
+        XCTAssertNil(object.id)
+        XCTAssertNil(object.optIntCol)
+        XCTAssertNil(object.optInt8Col)
+        XCTAssertNil(object.optInt16Col)
+        XCTAssertNil(object.optInt32Col)
+        XCTAssertNil(object.optInt64Col)
+        XCTAssertNil(object.optBoolCol)
+        XCTAssertNil(object.optFloatCol)
+        XCTAssertNil(object.optDoubleCol)
         XCTAssertNil(object.optDateCol)
         XCTAssertNil(object.optStringCol)
         XCTAssertNil(object.optNSStringCol)
@@ -1157,14 +1156,14 @@ class ObjectCreationTests: TestCase {
 
         // Try to switch to non-nil
         let object2 = SwiftOptionalPrimaryObject()
-        object2.optIntCol.value = 1
-        object2.optInt8Col.value = 1
-        object2.optInt16Col.value = 1
-        object2.optInt32Col.value = 1
-        object2.optInt64Col.value = 1
-        object2.optFloatCol.value = 1
-        object2.optDoubleCol.value = 1
-        object2.optBoolCol.value = true
+        object2.optIntCol = 1
+        object2.optInt8Col = 1
+        object2.optInt16Col = 1
+        object2.optInt32Col = 1
+        object2.optInt64Col = 1
+        object2.optFloatCol = 1
+        object2.optDoubleCol = 1
+        object2.optBoolCol = true
         object2.optDateCol = Date()
         object2.optStringCol = ""
         object2.optNSStringCol = ""
@@ -1172,18 +1171,17 @@ class ObjectCreationTests: TestCase {
         object2.optObjectCol = SwiftBoolObject()
         realm.add(object2, update: .modified)
 
-        XCTAssertNil(object.id.value)
-        XCTAssertNotNil(object.optIntCol.value)
-        XCTAssertNotNil(object.optInt8Col.value)
-        XCTAssertNotNil(object.optInt16Col.value)
-        XCTAssertNotNil(object.optInt32Col.value)
-        XCTAssertNotNil(object.optInt64Col.value)
-        XCTAssertNotNil(object.optBoolCol.value)
-        XCTAssertNotNil(object.optFloatCol.value)
-        XCTAssertNotNil(object.optDoubleCol.value)
+        XCTAssertNil(object.id)
+        XCTAssertNotNil(object.optIntCol)
+        XCTAssertNotNil(object.optInt8Col)
+        XCTAssertNotNil(object.optInt16Col)
+        XCTAssertNotNil(object.optInt32Col)
+        XCTAssertNotNil(object.optInt64Col)
+        XCTAssertNotNil(object.optBoolCol)
+        XCTAssertNotNil(object.optFloatCol)
+        XCTAssertNotNil(object.optDoubleCol)
         XCTAssertNotNil(object.optDateCol)
         XCTAssertNotNil(object.optStringCol)
-        XCTAssertNotNil(object.optNSStringCol)
         XCTAssertNotNil(object.optBinaryCol)
         XCTAssertNotNil(object.optObjectCol)
 
@@ -1191,15 +1189,15 @@ class ObjectCreationTests: TestCase {
         let object3 = SwiftOptionalPrimaryObject()
         realm.add(object3, update: .modified)
 
-        XCTAssertNil(object.id.value)
-        XCTAssertNil(object.optIntCol.value)
-        XCTAssertNil(object.optInt8Col.value)
-        XCTAssertNil(object.optInt16Col.value)
-        XCTAssertNil(object.optInt32Col.value)
-        XCTAssertNil(object.optInt64Col.value)
-        XCTAssertNil(object.optBoolCol.value)
-        XCTAssertNil(object.optFloatCol.value)
-        XCTAssertNil(object.optDoubleCol.value)
+        XCTAssertNil(object.id)
+        XCTAssertNil(object.optIntCol)
+        XCTAssertNil(object.optInt8Col)
+        XCTAssertNil(object.optInt16Col)
+        XCTAssertNil(object.optInt32Col)
+        XCTAssertNil(object.optInt64Col)
+        XCTAssertNil(object.optBoolCol)
+        XCTAssertNil(object.optFloatCol)
+        XCTAssertNil(object.optDoubleCol)
         XCTAssertNil(object.optDateCol)
         XCTAssertNil(object.optStringCol)
         XCTAssertNil(object.optNSStringCol)
@@ -1236,8 +1234,8 @@ class ObjectCreationTests: TestCase {
         XCTAssertEqual(object.secondArray[0].stringCol, "goodbye")
         XCTAssertEqual(object.secondArray[1].stringCol, "cruel")
         XCTAssertEqual(object.secondArray[2].stringCol, "world")
-        XCTAssertEqual(object.firstOptionalNumber.value, nil)
-        XCTAssertEqual(object.secondOptionalNumber.value, 300)
+        XCTAssertEqual(object.firstOptionalNumber, nil)
+        XCTAssertEqual(object.secondOptionalNumber, 300)
         XCTAssertTrue(object.parentFirstList.count == 2)
         XCTAssertEqual(object.parentFirstList[0].intCol, 42)
         XCTAssertEqual(object.parentFirstList[1].intCol, 9001)
@@ -1306,17 +1304,17 @@ class ObjectCreationTests: TestCase {
     private func verifySwiftOptionalObjectWithDictionaryLiteral(_ object: SwiftOptionalDefaultValuesObject,
                                                                 dictionary: [String: Any],
                                                                 boolObjectValue: Bool?) {
-        XCTAssertEqual(object.optBoolCol.value, (dictionary["optBoolCol"] as! Bool?))
-        XCTAssertEqual(object.optIntCol.value, (dictionary["optIntCol"] as! Int?))
-        XCTAssertEqual(object.optInt8Col.value,
+        XCTAssertEqual(object.optBoolCol, (dictionary["optBoolCol"] as! Bool?))
+        XCTAssertEqual(object.optIntCol, (dictionary["optIntCol"] as! Int?))
+        XCTAssertEqual(object.optInt8Col,
                        ((dictionary["optInt8Col"] as! NSNumber?)?.int8Value).map({Int8($0)}))
-        XCTAssertEqual(object.optInt16Col.value,
+        XCTAssertEqual(object.optInt16Col,
                        ((dictionary["optInt16Col"] as! NSNumber?)?.int16Value).map({Int16($0)}))
-        XCTAssertEqual(object.optInt32Col.value,
-                       ((dictionary["optInt32Col"] as! NSNumber?)?.int32Value).map({Int32($0)}))
-        XCTAssertEqual(object.optInt64Col.value, (dictionary["optInt64Col"] as! NSNumber?)?.int64Value)
-        XCTAssertEqual(object.optFloatCol.value, (dictionary["optFloatCol"] as! Float?))
-        XCTAssertEqual(object.optDoubleCol.value, (dictionary["optDoubleCol"] as! Double?))
+        XCTAssertEqual(object.optInt32Col,
+            ((dictionary["optInt32Col"] as! NSNumber?)?.int32Value).map({Int32($0)}))
+        XCTAssertEqual(object.optInt64Col, (dictionary["optInt64Col"] as! NSNumber?)?.int64Value)
+        XCTAssertEqual(object.optFloatCol, (dictionary["optFloatCol"] as! Float?))
+        XCTAssertEqual(object.optDoubleCol, (dictionary["optDoubleCol"] as! Double?))
         XCTAssertEqual(object.optStringCol, (dictionary["optStringCol"] as! String?))
         XCTAssertEqual(object.optNSStringCol, (dictionary["optNSStringCol"] as! NSString))
         XCTAssertEqual(object.optBinaryCol, (dictionary["optBinaryCol"] as! Data?))

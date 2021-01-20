@@ -509,9 +509,9 @@ class ListTests: TestCase {
             for value in [1, 2] {
                 let listObject = SwiftListOfSwiftOptionalObject()
                 let object = SwiftOptionalObject()
-                object.optIntCol.value = value
-                object.optInt8Col.value = Int8(value)
-                object.optDoubleCol.value = Double(value)
+                object.optIntCol = value
+                object.optInt8Col = Int8(value)
+                object.optDoubleCol = Double(value)
                 object.optStringCol = String(value)
                 object.optNSStringCol = NSString(format: "%d", value)
                 object.optDecimalCol = Decimal128(number: value as NSNumber)
@@ -538,17 +538,17 @@ class ListTests: TestCase {
             XCTAssertEqual(properties, kvcProperties, line: line)
         }
 
-        testProperty { $0.optIntCol.value }
-        testProperty { $0.optInt8Col.value }
-        testProperty { $0.optDoubleCol.value }
+        testProperty { $0.optIntCol }
+        testProperty { $0.optInt8Col }
+        testProperty { $0.optDoubleCol }
         testProperty { $0.optStringCol }
         testProperty { $0.optNSStringCol }
         testProperty { $0.optDecimalCol }
         testProperty { $0.optObjectCol }
 
-        testProperty("optIntCol") { $0.optIntCol.value }
-        testProperty("optInt8Col") { $0.optInt8Col.value }
-        testProperty("optDoubleCol") { $0.optDoubleCol.value }
+        testProperty("optIntCol") { $0.optIntCol }
+        testProperty("optInt8Col") { $0.optInt8Col }
+        testProperty("optDoubleCol") { $0.optDoubleCol }
         testProperty("optStringCol") { $0.optStringCol }
         testProperty("optNSStringCol") { $0.optNSStringCol }
         testProperty("optDecimalCol") { $0.optDecimalCol }

@@ -50,4 +50,6 @@ void RLMReplaceClassNameMethod(Class accessorClass, NSString *className);
 // Replace sharedSchema method for the given class
 void RLMReplaceSharedSchemaMethod(Class accessorClass, RLMObjectSchema * __nullable schema);
 
+FOUNDATION_EXTERN RLMArray *RLMGetSwiftPropertyArray(RLMObjectBase *obj, uint16_t);
+
 NS_ASSUME_NONNULL_END

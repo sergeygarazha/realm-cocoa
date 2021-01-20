@@ -159,10 +159,24 @@ using namespace realm;
         if (!schema.primaryKeyProperty) {
             @throw RLMException(@"Primary key property '%@' does not exist on object '%@'", primaryKey, className);
         }
+    }
 
+    for (RLMProperty *prop in schema.properties) {
+        if (!prop.isPrimary || prop == schema.primaryKeyProperty) {
+            continue;
+        }
+
+        if (schema.primaryKeyProperty) {
+            @throw RLMException(@"Properties '%@' and '%@' are both marked as the primary key of '%@'", prop.name, schema.primaryKeyProperty, className);
+        }
+        prop.indexed = YES;
+        schema.primaryKeyProperty = prop;
+    }
+
+    if (schema.primaryKeyProperty) {
         if (schema.primaryKeyProperty.type != RLMPropertyTypeInt && schema.primaryKeyProperty.type != RLMPropertyTypeString && schema.primaryKeyProperty.type != RLMPropertyTypeObjectId) {
             @throw RLMException(@"Property '%@' cannot be made the primary key of '%@' because it is not a 'string', 'int', or 'objectId' property.",
-                                primaryKey, className);
+                                schema.primaryKeyProperty.name, className);
         }
     }
 

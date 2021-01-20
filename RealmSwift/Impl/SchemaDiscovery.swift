@@ -30,6 +30,24 @@ extension _RealmSchemaDiscoverable {
     public static func _rlmRequireObjc() -> Bool { return true }
 }
 
+private func getManagedProperties(_ object: ObjectBase) -> [RLMProperty] {
+    return Mirror(reflecting: object).children.compactMap { prop in
+        guard let label = prop.label else { return nil }
+        guard let value = prop.value as? _DiscoverableManagedProperty else {
+            return nil
+        }
+        let valueType = type(of: value)
+
+        let property = RLMProperty()
+        property.name = label
+        valueType._rlmPopulateProperty(property)
+        value._rlmPopulateProperty(property)
+        property.swiftIvar = class_getInstanceVariable(type(of: object), label)
+        property.updateAccessors()
+        return property
+    }
+}
+
 // If the property is a storage property for a lazy Swift property, return
 // the base property name (e.g. `foo.storage` becomes `foo`). Otherwise, nil.
 private func baseName(forLazySwiftProperty name: String) -> String? {
@@ -41,8 +59,7 @@ private func baseName(forLazySwiftProperty name: String) -> String? {
     return nil
 }
 
-private func getProperties(_ cls: RLMObjectBase.Type) -> [RLMProperty] {
-    let object = cls.init()
+private func getObjcProperties(_ object: ObjectBase, _ cls: ObjectBase.Type) -> [RLMProperty] {
     let indexedProperties: Set<String>
     let ignoredPropNames: Set<String>
     let columnNames = cls._realmColumnNames()
@@ -132,6 +149,15 @@ private func getProperties(_ cls: RLMObjectBase.Type) -> [RLMProperty] {
         property.updateAccessors()
         return property
     }
+}
+
+private func getProperties(_ cls: RLMObjectBase.Type) -> [RLMProperty] {
+    let object = cls.init()
+    let props = getManagedProperties(object)
+    if props.count > 0 {
+        return props
+    }
+    return getObjcProperties(object, cls)
 }
 
 internal class ObjectUtil {

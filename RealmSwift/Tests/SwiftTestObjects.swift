@@ -21,59 +21,59 @@ import RealmSwift
 import Realm
 
 class SwiftStringObject: Object {
-    @objc dynamic var stringCol = ""
+    @ManagedProperty var stringCol = ""
 }
 
 class SwiftBoolObject: Object {
-    @objc dynamic var boolCol = false
+    @ManagedProperty var boolCol = false
 }
 
 class SwiftIntObject: Object {
-    @objc dynamic var intCol = 0
+    @ManagedProperty var intCol = 0
 }
 
 class SwiftInt8Object: Object {
-    @objc dynamic var int8Col = 0
+    @ManagedProperty var int8Col = 0
 }
 
 class SwiftInt16Object: Object {
-    @objc dynamic var int16Col = 0
+    @ManagedProperty var int16Col = 0
 }
 
 class SwiftInt32Object: Object {
-    @objc dynamic var int32Col = 0
+    @ManagedProperty var int32Col = 0
 }
 
 class SwiftInt64Object: Object {
-    @objc dynamic var int64Col = 0
+    @ManagedProperty var int64Col = 0
 }
 
 class SwiftLongObject: Object {
-    @objc dynamic var longCol: Int64 = 0
+    @ManagedProperty var longCol: Int64 = 0
 }
 
-@objc enum IntEnum: Int, RealmEnum {
+@objc enum IntEnum: Int, RealmEnum, _ManagedPropertyType {
     case value1 = 1
     case value2 = 3
 }
 
 class SwiftObject: Object {
-    @objc dynamic var boolCol = false
-    @objc dynamic var intCol = 123
-    @objc dynamic var int8Col: Int8 = 123
-    @objc dynamic var int16Col: Int16 = 123
-    @objc dynamic var int32Col: Int32 = 123
-    @objc dynamic var int64Col: Int64 = 123
-    @objc dynamic var intEnumCol = IntEnum.value1
-    @objc dynamic var floatCol = 1.23 as Float
-    @objc dynamic var doubleCol = 12.3
-    @objc dynamic var stringCol = "a"
-    @objc dynamic var binaryCol = "a".data(using: String.Encoding.utf8)!
-    @objc dynamic var dateCol = Date(timeIntervalSince1970: 1)
-    @objc dynamic var decimalCol = Decimal128("123e4")
-    @objc dynamic var objectIdCol = ObjectId("1234567890ab1234567890ab")
-    @objc dynamic var objectCol: SwiftBoolObject? = SwiftBoolObject()
-    let arrayCol = List<SwiftBoolObject>()
+    @ManagedProperty var boolCol = false
+    @ManagedProperty var intCol = 123
+    @ManagedProperty var int8Col: Int8 = 123
+    @ManagedProperty var int16Col: Int16 = 123
+    @ManagedProperty var int32Col: Int32 = 123
+    @ManagedProperty var int64Col: Int64 = 123
+    @ManagedProperty var intEnumCol = IntEnum.value1
+    @ManagedProperty var floatCol = 1.23 as Float
+    @ManagedProperty var doubleCol = 12.3
+    @ManagedProperty var stringCol = "a"
+    @ManagedProperty var binaryCol = "a".data(using: String.Encoding.utf8)!
+    @ManagedProperty var dateCol = Date(timeIntervalSince1970: 1)
+    @ManagedProperty var decimalCol = Decimal128("123e4")
+    @ManagedProperty var objectIdCol = ObjectId("1234567890ab1234567890ab")
+    @ManagedProperty var objectCol: SwiftBoolObject? = SwiftBoolObject()
+    @ManagedProperty var arrayCol: List<SwiftBoolObject>
 
     class func defaultValues() -> [String: Any] {
         return  [
@@ -98,84 +98,99 @@ class SwiftObject: Object {
 
 class SwiftOptionalObject: Object {
     @objc dynamic var optNSStringCol: NSString?
-    @objc dynamic var optStringCol: String?
-    @objc dynamic var optBinaryCol: Data?
-    @objc dynamic var optDateCol: Date?
-    @objc dynamic var optDecimalCol: Decimal128?
-    @objc dynamic var optObjectIdCol: ObjectId?
+    @ManagedProperty var optStringCol: String?
+    @ManagedProperty var optBinaryCol: Data?
+    @ManagedProperty var optDateCol: Date?
+    @ManagedProperty var optDecimalCol: Decimal128?
+    @ManagedProperty var optObjectIdCol: ObjectId?
+    @ManagedProperty var optIntCol: Int? = nil
+    @ManagedProperty var optFloatCol: Float? = nil
+    @ManagedProperty var optDoubleCol: Double? = nil
+    @ManagedProperty var optBoolCol: Bool? = nil
+    @ManagedProperty var optInt8Col: Int8?
+    @ManagedProperty var optInt16Col: Int16?
+    @ManagedProperty var optInt32Col: Int32?
+    @ManagedProperty var optInt64Col: Int64?
+    @ManagedProperty var optEnumCol: IntEnum?
+    @ManagedProperty var optObjectCol: SwiftBoolObject?
+}
+
+class SwiftRealmOptionalObject: Object {
     let optIntCol = RealmOptional<Int>()
+    let optFloatCol = RealmOptional<Float>()
+    let optDoubleCol = RealmOptional<Double>()
+    let optBoolCol = RealmOptional<Bool>()
     let optInt8Col = RealmOptional<Int8>()
     let optInt16Col = RealmOptional<Int16>()
     let optInt32Col = RealmOptional<Int32>()
     let optInt64Col = RealmOptional<Int64>()
-    let optFloatCol = RealmOptional<Float>()
-    let optDoubleCol = RealmOptional<Double>()
-    let optBoolCol = RealmOptional<Bool>()
     let optEnumCol = RealmOptional<IntEnum>()
-    @objc dynamic var optObjectCol: SwiftBoolObject?
 }
 
 class SwiftOptionalPrimaryObject: SwiftOptionalObject {
-    let id = RealmOptional<Int>()
+    @ManagedProperty(primaryKey: true) var id: Int?
+}
 
-    override class func primaryKey() -> String? { return "id" }
+class ManagedPropertyWrapper: Object {
+    @ManagedProperty(wrappedValue: 0, primaryKey: true)
+    var value: Int
 }
 
 class SwiftListObject: Object {
-    let int = List<Int>()
-    let int8 = List<Int8>()
-    let int16 = List<Int16>()
-    let int32 = List<Int32>()
-    let int64 = List<Int64>()
-    let float = List<Float>()
-    let double = List<Double>()
-    let string = List<String>()
-    let data = List<Data>()
-    let date = List<Date>()
-    let decimal = List<Decimal128>()
-    let objectId = List<ObjectId>()
+    @ManagedProperty var int: List<Int>
+    @ManagedProperty var int8: List<Int8>
+    @ManagedProperty var int16: List<Int16>
+    @ManagedProperty var int32: List<Int32>
+    @ManagedProperty var int64: List<Int64>
+    @ManagedProperty var float: List<Float>
+    @ManagedProperty var double: List<Double>
+    @ManagedProperty var string: List<String>
+    @ManagedProperty var data: List<Data>
+    @ManagedProperty var date: List<Date>
+    @ManagedProperty var decimal: List<Decimal128>
+    @ManagedProperty var objectId: List<ObjectId>
 
-    let intOpt = List<Int?>()
-    let int8Opt = List<Int8?>()
-    let int16Opt = List<Int16?>()
-    let int32Opt = List<Int32?>()
-    let int64Opt = List<Int64?>()
-    let floatOpt = List<Float?>()
-    let doubleOpt = List<Double?>()
-    let stringOpt = List<String?>()
-    let dataOpt = List<Data?>()
-    let dateOpt = List<Date?>()
-    let decimalOpt = List<Decimal128?>()
-    let objectIdOpt = List<ObjectId?>()
+    @ManagedProperty var intOpt: List<Int?>
+    @ManagedProperty var int8Opt: List<Int8?>
+    @ManagedProperty var int16Opt: List<Int16?>
+    @ManagedProperty var int32Opt: List<Int32?>
+    @ManagedProperty var int64Opt: List<Int64?>
+    @ManagedProperty var floatOpt: List<Float?>
+    @ManagedProperty var doubleOpt: List<Double?>
+    @ManagedProperty var stringOpt: List<String?>
+    @ManagedProperty var dataOpt: List<Data?>
+    @ManagedProperty var dateOpt: List<Date?>
+    @ManagedProperty var decimalOpt: List<Decimal128?>
+    @ManagedProperty var objectIdOpt: List<ObjectId?>
 }
 
 class SwiftImplicitlyUnwrappedOptionalObject: Object {
     @objc dynamic var optNSStringCol: NSString!
-    @objc dynamic var optStringCol: String!
-    @objc dynamic var optBinaryCol: Data!
-    @objc dynamic var optDateCol: Date!
-    @objc dynamic var optDecimalCol: Decimal128!
-    @objc dynamic var optObjectIdCol: ObjectId!
-    @objc dynamic var optObjectCol: SwiftBoolObject!
+    @ManagedProperty var optStringCol: String!
+    @ManagedProperty var optBinaryCol: Data!
+    @ManagedProperty var optDateCol: Date!
+    @ManagedProperty var optDecimalCol: Decimal128!
+    @ManagedProperty var optObjectIdCol: ObjectId!
+    @ManagedProperty var optObjectCol: SwiftBoolObject!
 }
 
 class SwiftOptionalDefaultValuesObject: Object {
     @objc dynamic var optNSStringCol: NSString? = "A"
-    @objc dynamic var optStringCol: String? = "B"
-    @objc dynamic var optBinaryCol: Data? = "C".data(using: String.Encoding.utf8)! as Data
-    @objc dynamic var optDateCol: Date? = Date(timeIntervalSince1970: 10)
-    @objc dynamic var optDecimalCol: Decimal128? = "123"
-    @objc dynamic var optObjectIdCol: ObjectId? = ObjectId("1234567890ab1234567890ab")
-    let optIntCol = RealmOptional<Int>(1)
-    let optInt8Col = RealmOptional<Int8>(1)
-    let optInt16Col = RealmOptional<Int16>(1)
-    let optInt32Col = RealmOptional<Int32>(1)
-    let optInt64Col = RealmOptional<Int64>(1)
-    let optFloatCol = RealmOptional<Float>(2.2)
-    let optDoubleCol = RealmOptional<Double>(3.3)
-    let optBoolCol = RealmOptional<Bool>(true)
-    @objc dynamic var optObjectCol: SwiftBoolObject? = SwiftBoolObject(value: [true])
-    //    let arrayCol = List<SwiftBoolObject?>()
+    @ManagedProperty var optStringCol: String? = "B"
+    @ManagedProperty var optBinaryCol: Data? = "C".data(using: String.Encoding.utf8)! as Data
+    @ManagedProperty var optDateCol: Date? = Date(timeIntervalSince1970: 10)
+    @ManagedProperty var optDecimalCol: Decimal128? = "123"
+    @ManagedProperty var optObjectIdCol: ObjectId? = ObjectId("1234567890ab1234567890ab")
+    @ManagedProperty var optIntCol: Int? = 1
+    @ManagedProperty var optInt8Col: Int8? = 1
+    @ManagedProperty var optInt16Col: Int16? = 1
+    @ManagedProperty var optInt32Col: Int32? = 1
+    @ManagedProperty var optInt64Col: Int64? = 1
+    @ManagedProperty var optFloatCol: Float? = 2.2
+    @ManagedProperty var optDoubleCol: Double? = 3.3
+    @ManagedProperty var optBoolCol: Bool? = true
+    @ManagedProperty var optObjectCol: SwiftBoolObject? = SwiftBoolObject(value: [true])
+    //    @ManagedProperty var arrayCol: List<SwiftBoolObject?>
 
     class func defaultValues() -> [String: Any] {
         return [
@@ -222,82 +237,79 @@ class SwiftOptionalIgnoredPropertiesObject: Object {
 }
 
 class SwiftDogObject: Object {
-    @objc dynamic var dogName = ""
-    let owners = LinkingObjects(fromType: SwiftOwnerObject.self, property: "dog")
+    @ManagedProperty var dogName = ""
+    @ManagedProperty(originProperty: "dog")
+    var owners: LinkingObjects<SwiftOwnerObject>
 }
 
 class SwiftOwnerObject: Object {
-    @objc dynamic var name = ""
-    @objc dynamic var dog: SwiftDogObject? = SwiftDogObject()
+    @ManagedProperty var name = ""
+    @ManagedProperty var dog: SwiftDogObject? = SwiftDogObject()
 }
 
 class SwiftAggregateObject: Object {
-    @objc dynamic var intCol = 0
-    @objc dynamic var int8Col: Int8 = 0
-    @objc dynamic var int16Col: Int16 = 0
-    @objc dynamic var int32Col: Int32 = 0
-    @objc dynamic var int64Col: Int64 = 0
-    @objc dynamic var floatCol = 0 as Float
-    @objc dynamic var doubleCol = 0.0
-    @objc dynamic var decimalCol = 0.0 as Decimal128
-    @objc dynamic var boolCol = false
-    @objc dynamic var dateCol = Date()
-    @objc dynamic var trueCol = true
-    let stringListCol = List<SwiftStringObject>()
+    @ManagedProperty var intCol = 0
+    @ManagedProperty var int8Col: Int8 = 0
+    @ManagedProperty var int16Col: Int16 = 0
+    @ManagedProperty var int32Col: Int32 = 0
+    @ManagedProperty var int64Col: Int64 = 0
+    @ManagedProperty var floatCol = 0 as Float
+    @ManagedProperty var doubleCol = 0.0
+    @ManagedProperty var decimalCol = 0.0 as Decimal128
+    @ManagedProperty var boolCol = false
+    @ManagedProperty var dateCol = Date()
+    @ManagedProperty var trueCol = true
+    @ManagedProperty var stringListCol: List<SwiftStringObject>
 }
 
 class SwiftAllIntSizesObject: Object {
-    @objc dynamic var int8: Int8  = 0
-    @objc dynamic var int16: Int16 = 0
-    @objc dynamic var int32: Int32 = 0
-    @objc dynamic var int64: Int64 = 0
+    @ManagedProperty var int8: Int8  = 0
+    @ManagedProperty var int16: Int16 = 0
+    @ManagedProperty var int32: Int32 = 0
+    @ManagedProperty var int64: Int64 = 0
 }
 
 class SwiftEmployeeObject: Object {
-    @objc dynamic var name = ""
-    @objc dynamic var age = 0
-    @objc dynamic var hired = false
+    @ManagedProperty var name = ""
+    @ManagedProperty var age = 0
+    @ManagedProperty var hired = false
 }
 
 class SwiftCompanyObject: Object {
-    let employees = List<SwiftEmployeeObject>()
+    @ManagedProperty var employees: List<SwiftEmployeeObject>
 }
 
 class SwiftArrayPropertyObject: Object {
-    @objc dynamic var name = ""
-    let array = List<SwiftStringObject>()
-    let intArray = List<SwiftIntObject>()
+    @ManagedProperty var name = ""
+    @ManagedProperty var array: List<SwiftStringObject>
+    @ManagedProperty var intArray: List<SwiftIntObject>
 }
 
 class SwiftDoubleListOfSwiftObject: Object {
-    let array = List<SwiftListOfSwiftObject>()
+    @ManagedProperty var array: List<SwiftListOfSwiftObject>
 }
 
 class SwiftListOfSwiftObject: Object {
-    let array = List<SwiftObject>()
+    @ManagedProperty var array: List<SwiftObject>
 }
 
 class SwiftListOfSwiftOptionalObject: Object {
-    let array = List<SwiftOptionalObject>()
+    @ManagedProperty var array: List<SwiftOptionalObject>
 }
 
 class SwiftArrayPropertySubclassObject: SwiftArrayPropertyObject {
-    let boolArray = List<SwiftBoolObject>()
+    @ManagedProperty var boolArray: List<SwiftBoolObject>
 }
 
 class SwiftLinkToPrimaryStringObject: Object {
-    @objc dynamic var pk = ""
-    @objc dynamic var object: SwiftPrimaryStringObject?
-    let objects = List<SwiftPrimaryStringObject>()
-
-    override class func primaryKey() -> String? {
-        return "pk"
-    }
+    @ManagedProperty(primaryKey: true) var pk = ""
+    @ManagedProperty var object: SwiftPrimaryStringObject?
+    @ManagedProperty var objects: List<SwiftPrimaryStringObject>
 }
 
 class SwiftUTF8Object: Object {
     // swiftlint:disable:next identifier_name
-    @objc dynamic var 柱колоéнǢкƱаم👍 = "值значен™👍☞⎠‱௹♣︎☐▼❒∑⨌⧭иеمرحبا"
+    @ManagedProperty var 柱колоéнǢкƱаم👍 = "值значен™👍☞⎠‱௹♣︎☐▼❒∑⨌⧭иеمرحبا"
 }
 
 class SwiftIgnoredPropertiesObject: Object {
@@ -313,175 +325,129 @@ class SwiftIgnoredPropertiesObject: Object {
 }
 
 class SwiftRecursiveObject: Object {
-    let objects = List<SwiftRecursiveObject>()
+    @ManagedProperty var objects: List<SwiftRecursiveObject>
 }
 
 protocol SwiftPrimaryKeyObjectType {
     associatedtype PrimaryKey
-    static func primaryKey() -> String?
 }
 
 class SwiftPrimaryStringObject: Object, SwiftPrimaryKeyObjectType {
-    @objc dynamic var stringCol = ""
-    @objc dynamic var intCol = 0
+    @ManagedProperty(primaryKey: true) var stringCol = ""
+    @ManagedProperty var intCol = 0
 
     typealias PrimaryKey = String
-    override class func primaryKey() -> String? {
-        return "stringCol"
-    }
 }
 
 class SwiftPrimaryOptionalStringObject: Object, SwiftPrimaryKeyObjectType {
-    @objc dynamic var stringCol: String? = ""
-    @objc dynamic var intCol = 0
+    @ManagedProperty(primaryKey: true) var stringCol: String? = ""
+    @ManagedProperty var intCol = 0
 
     typealias PrimaryKey = String?
-    override class func primaryKey() -> String? {
-        return "stringCol"
-    }
 }
 
 class SwiftPrimaryIntObject: Object, SwiftPrimaryKeyObjectType {
-    @objc dynamic var stringCol = ""
-    @objc dynamic var intCol = 0
+    @ManagedProperty var stringCol = ""
+    @ManagedProperty(primaryKey: true) var intCol = 0
 
     typealias PrimaryKey = Int
-    override class func primaryKey() -> String? {
-        return "intCol"
-    }
 }
 
 class SwiftPrimaryOptionalIntObject: Object, SwiftPrimaryKeyObjectType {
-    @objc dynamic var stringCol = ""
-    let intCol = RealmOptional<Int>()
+    @ManagedProperty var stringCol = ""
+    @ManagedProperty(primaryKey: true) var intCol: Int?
 
     typealias PrimaryKey = RealmOptional<Int>
-    override class func primaryKey() -> String? {
-        return "intCol"
-    }
 }
 
 class SwiftPrimaryInt8Object: Object, SwiftPrimaryKeyObjectType {
-    @objc dynamic var stringCol = ""
-    @objc dynamic var int8Col: Int8 = 0
+    @ManagedProperty var stringCol = ""
+    @ManagedProperty(primaryKey: true) var int8Col: Int8 = 0
 
     typealias PrimaryKey = Int8
-    override class func primaryKey() -> String? {
-        return "int8Col"
-    }
 }
 
 class SwiftPrimaryOptionalInt8Object: Object, SwiftPrimaryKeyObjectType {
-    @objc dynamic var stringCol = ""
-    let int8Col = RealmOptional<Int8>()
+    @ManagedProperty var stringCol = ""
+    @ManagedProperty(primaryKey: true) var int8Col: Int8?
 
     typealias PrimaryKey = RealmOptional<Int8>
-    override class func primaryKey() -> String? {
-        return "int8Col"
-    }
 }
 
 class SwiftPrimaryInt16Object: Object, SwiftPrimaryKeyObjectType {
-    @objc dynamic var stringCol = ""
-    @objc dynamic var int16Col: Int16 = 0
+    @ManagedProperty var stringCol = ""
+    @ManagedProperty(primaryKey: true) var int16Col: Int16 = 0
 
     typealias PrimaryKey = Int16
-    override class func primaryKey() -> String? {
-        return "int16Col"
-    }
 }
 
 class SwiftPrimaryOptionalInt16Object: Object, SwiftPrimaryKeyObjectType {
-    @objc dynamic var stringCol = ""
-    let int16Col = RealmOptional<Int16>()
+    @ManagedProperty var stringCol = ""
+    @ManagedProperty(primaryKey: true) var int16Col: Int16?
 
     typealias PrimaryKey = RealmOptional<Int16>
-    override class func primaryKey() -> String? {
-        return "int16Col"
-    }
 }
 
 class SwiftPrimaryInt32Object: Object, SwiftPrimaryKeyObjectType {
-    @objc dynamic var stringCol = ""
-    @objc dynamic var int32Col: Int32 = 0
+    @ManagedProperty var stringCol = ""
+    @ManagedProperty(primaryKey: true) var int32Col: Int32 = 0
 
     typealias PrimaryKey = Int32
-    override class func primaryKey() -> String? {
-        return "int32Col"
-    }
 }
 
 class SwiftPrimaryOptionalInt32Object: Object, SwiftPrimaryKeyObjectType {
-    @objc dynamic var stringCol = ""
-    let int32Col = RealmOptional<Int32>()
+    @ManagedProperty var stringCol = ""
+    @ManagedProperty(primaryKey: true) var int32Col: Int32?
 
     typealias PrimaryKey = RealmOptional<Int32>
-    override class func primaryKey() -> String? {
-        return "int32Col"
-    }
 }
 
 class SwiftPrimaryInt64Object: Object, SwiftPrimaryKeyObjectType {
-    @objc dynamic var stringCol = ""
-    @objc dynamic var int64Col: Int64 = 0
+    @ManagedProperty var stringCol = ""
+    @ManagedProperty(primaryKey: true) var int64Col: Int64 = 0
 
     typealias PrimaryKey = Int64
-    override class func primaryKey() -> String? {
-        return "int64Col"
-    }
 }
 
 class SwiftPrimaryOptionalInt64Object: Object, SwiftPrimaryKeyObjectType {
-    @objc dynamic var stringCol = ""
-    let int64Col = RealmOptional<Int64>()
+    @ManagedProperty var stringCol = ""
+    @ManagedProperty(primaryKey: true) var int64Col: Int64?
 
     typealias PrimaryKey = RealmOptional<Int64>
-    override class func primaryKey() -> String? {
-        return "int64Col"
-    }
 }
 
 class SwiftIndexedPropertiesObject: Object {
-    @objc dynamic var stringCol = ""
-    @objc dynamic var intCol = 0
-    @objc dynamic var int8Col: Int8 = 0
-    @objc dynamic var int16Col: Int16 = 0
-    @objc dynamic var int32Col: Int32 = 0
-    @objc dynamic var int64Col: Int64 = 0
-    @objc dynamic var boolCol = false
-    @objc dynamic var dateCol = Date()
+    @ManagedProperty(indexed: true) var stringCol = ""
+    @ManagedProperty(indexed: true) var intCol = 0
+    @ManagedProperty(indexed: true) var int8Col: Int8 = 0
+    @ManagedProperty(indexed: true) var int16Col: Int16 = 0
+    @ManagedProperty(indexed: true) var int32Col: Int32 = 0
+    @ManagedProperty(indexed: true) var int64Col: Int64 = 0
+    @ManagedProperty(indexed: true) var boolCol = false
+    @ManagedProperty(indexed: true) var dateCol = Date()
 
-    @objc dynamic var floatCol: Float = 0.0
-    @objc dynamic var doubleCol: Double = 0.0
-    @objc dynamic var dataCol = Data()
-
-    override class func indexedProperties() -> [String] {
-        return ["stringCol", "intCol", "int8Col", "int16Col", "int32Col", "int64Col", "boolCol", "dateCol"]
-    }
+    @ManagedProperty var floatCol: Float = 0.0
+    @ManagedProperty var doubleCol: Double = 0.0
+    @ManagedProperty var dataCol = Data()
 }
 
 class SwiftIndexedOptionalPropertiesObject: Object {
-    @objc dynamic var optionalStringCol: String? = ""
-    let optionalIntCol = RealmOptional<Int>()
-    let optionalInt8Col = RealmOptional<Int8>()
-    let optionalInt16Col = RealmOptional<Int16>()
-    let optionalInt32Col = RealmOptional<Int32>()
-    let optionalInt64Col = RealmOptional<Int64>()
-    let optionalBoolCol = RealmOptional<Bool>()
-    @objc dynamic var optionalDateCol: Date? = Date()
+    @ManagedProperty(indexed: true) var optionalStringCol: String? = ""
+    @ManagedProperty(indexed: true) var optionalIntCol: Int?
+    @ManagedProperty(indexed: true) var optionalInt8Col: Int8?
+    @ManagedProperty(indexed: true) var optionalInt16Col: Int16?
+    @ManagedProperty(indexed: true) var optionalInt32Col: Int32?
+    @ManagedProperty(indexed: true) var optionalInt64Col: Int64?
+    @ManagedProperty(indexed: true) var optionalBoolCol: Bool?
+    @ManagedProperty(indexed: true) var optionalDateCol: Date? = Date()
 
-    let optionalFloatCol = RealmOptional<Float>()
-    let optionalDoubleCol = RealmOptional<Double>()
-    @objc dynamic var optionalDataCol: Data? = Data()
-
-    override class func indexedProperties() -> [String] {
-        return ["optionalStringCol", "optionalIntCol", "optionalInt8Col", "optionalInt16Col",
-                "optionalInt32Col", "optionalInt64Col", "optionalBoolCol", "optionalDateCol"]
-    }
+    @ManagedProperty var optionalFloatCol: Float?
+    @ManagedProperty var optionalDoubleCol: Double?
+    @ManagedProperty var optionalDataCol: Data? = Data()
 }
 
 class SwiftCustomInitializerObject: Object {
-    @objc dynamic var stringCol: String
+    @ManagedProperty var stringCol: String
 
     init(stringVal: String) {
         stringCol = stringVal
@@ -495,7 +461,7 @@ class SwiftCustomInitializerObject: Object {
 }
 
 class SwiftConvenienceInitializerObject: Object {
-    @objc dynamic var stringCol = ""
+    @ManagedProperty var stringCol = ""
 
     convenience init(stringCol: String) {
         self.init()
@@ -511,7 +477,7 @@ class SwiftObjectiveCTypesObject: Object {
 
 class SwiftComputedPropertyNotIgnoredObject: Object {
     // swiftlint:disable:next identifier_name
-    @objc dynamic var _urlBacking = ""
+    @ManagedProperty var _urlBacking = ""
 
     // Dynamic; no ivar
     @objc dynamic var dynamicURL: URL? {
@@ -536,27 +502,27 @@ class SwiftComputedPropertyNotIgnoredObject: Object {
 
 @objc(SwiftObjcRenamedObject)
 class SwiftObjcRenamedObject: Object {
-    @objc dynamic var stringCol = ""
+    @ManagedProperty var stringCol = ""
 }
 
 @objc(SwiftObjcRenamedObjectWithTotallyDifferentName)
 class SwiftObjcArbitrarilyRenamedObject: Object {
-    @objc dynamic var boolCol = false
+    @ManagedProperty var boolCol = false
 }
 
 class SwiftCircleObject: Object {
-    @objc dynamic var obj: SwiftCircleObject?
-    let array = List<SwiftCircleObject>()
+    @ManagedProperty var obj: SwiftCircleObject?
+    @ManagedProperty var array: List<SwiftCircleObject>
 }
 
 // Exists to serve as a superclass to `SwiftGenericPropsOrderingObject`
 class SwiftGenericPropsOrderingParent: Object {
     var implicitlyIgnoredComputedProperty: Int { return 0 }
     let implicitlyIgnoredReadOnlyProperty: Int = 1
-    let parentFirstList = List<SwiftIntObject>()
-    @objc dynamic var parentFirstNumber = 0
+    @ManagedProperty var parentFirstList: List<SwiftIntObject>
+    @ManagedProperty var parentFirstNumber = 0
     func parentFunction() -> Int { return parentFirstNumber + 1 }
-    @objc dynamic var parentSecondNumber = 1
+    @ManagedProperty var parentSecondNumber = 1
     var parentComputedProp: String { return "hello world" }
 }
 
@@ -566,31 +532,31 @@ class SwiftGenericPropsOrderingObject: SwiftGenericPropsOrderingParent {
     func myFunction() -> Int { return firstNumber + secondNumber + thirdNumber }
     @objc dynamic var dynamicComputed: Int { return 999 }
     var firstIgnored = 999
-    @objc dynamic var dynamicIgnored = 999
-    @objc dynamic var firstNumber = 0                   // Managed property
+    @ManagedProperty var dynamicIgnored = 999
+    @ManagedProperty var firstNumber = 0                   // Managed property
     class func myClassFunction(x: Int, y: Int) -> Int { return x + y }
     var secondIgnored = 999
     lazy var lazyIgnored = 999
-    let firstArray = List<SwiftStringObject>()          // Managed property
-    @objc dynamic var secondNumber = 0                  // Managed property
+    @ManagedProperty var firstArray: List<SwiftStringObject>          // Managed property
+    @ManagedProperty var secondNumber = 0                  // Managed property
     var computedProp: String { return "\(firstNumber), \(secondNumber), and \(thirdNumber)" }
-    let secondArray = List<SwiftStringObject>()         // Managed property
+    @ManagedProperty var secondArray: List<SwiftStringObject>         // Managed property
     override class func ignoredProperties() -> [String] {
         return ["firstIgnored", "dynamicIgnored", "secondIgnored", "thirdIgnored", "lazyIgnored", "dynamicLazyIgnored"]
     }
-    let firstOptionalNumber = RealmOptional<Int>()      // Managed property
+    @ManagedProperty var firstOptionalNumber: Int?      // Managed property
     var thirdIgnored = 999
     @objc dynamic lazy var dynamicLazyIgnored = 999
-    let firstLinking = LinkingObjects(fromType: SwiftGenericPropsOrderingHelper.self, property: "first")
-    let secondLinking = LinkingObjects(fromType: SwiftGenericPropsOrderingHelper.self, property: "second")
-    @objc dynamic var thirdNumber = 0                   // Managed property
-    let secondOptionalNumber = RealmOptional<Int>()     // Managed property
+    @ManagedProperty(originProperty: "first") var firstLinking: LinkingObjects<SwiftGenericPropsOrderingHelper>
+    @ManagedProperty(originProperty: "second") var secondLinking: LinkingObjects<SwiftGenericPropsOrderingHelper>
+    @ManagedProperty var thirdNumber = 0                   // Managed property
+    @ManagedProperty var secondOptionalNumber: Int?     // Managed property
 }
 
 // Only exists to allow linking object properties on `SwiftGenericPropsNotLastObject`.
 class SwiftGenericPropsOrderingHelper: Object {
-    @objc dynamic var first: SwiftGenericPropsOrderingObject?
-    @objc dynamic var second: SwiftGenericPropsOrderingObject?
+    @ManagedProperty var first: SwiftGenericPropsOrderingObject?
+    @ManagedProperty var second: SwiftGenericPropsOrderingObject?
 }
 
 class SwiftRenamedProperties1: Object {
@@ -640,18 +606,14 @@ class LinkToSwiftRenamedProperties2: Object {
 }
 
 class EmbeddedParentObject: Object {
-    @objc dynamic var object: EmbeddedTreeObject1?
-    let array = List<EmbeddedTreeObject1>()
+    @ManagedProperty var object: EmbeddedTreeObject1?
+    @ManagedProperty var array: List<EmbeddedTreeObject1>
 }
 
 class EmbeddedPrimaryParentObject: Object {
-    @objc dynamic var pk: Int = 0
-    @objc dynamic var object: EmbeddedTreeObject1?
-    let array = List<EmbeddedTreeObject1>()
-
-    override class func primaryKey() -> String? {
-        return "pk"
-    }
+    @ManagedProperty(primaryKey: true) var pk: Int = 0
+    @ManagedProperty var object: EmbeddedTreeObject1?
+    @ManagedProperty var array: List<EmbeddedTreeObject1>
 }
 
 protocol EmbeddedTreeObject: EmbeddedObject {
@@ -659,26 +621,26 @@ protocol EmbeddedTreeObject: EmbeddedObject {
 }
 
 class EmbeddedTreeObject1: EmbeddedObject, EmbeddedTreeObject {
-    @objc dynamic var value = 0
-    @objc dynamic var child: EmbeddedTreeObject2?
-    let children = List<EmbeddedTreeObject2>()
+    @ManagedProperty var value = 0
+    @ManagedProperty var child: EmbeddedTreeObject2?
+    @ManagedProperty var children: List<EmbeddedTreeObject2>
 
-    let parent1 = LinkingObjects(fromType: EmbeddedParentObject.self, property: "object")
-    let parent2 = LinkingObjects(fromType: EmbeddedParentObject.self, property: "array")
+    @ManagedProperty(originProperty: "object") var parent1: LinkingObjects<EmbeddedParentObject>
+    @ManagedProperty(originProperty: "array") var parent2: LinkingObjects<EmbeddedParentObject>
 }
 
 class EmbeddedTreeObject2: EmbeddedObject, EmbeddedTreeObject {
-    @objc dynamic var value = 0
-    @objc dynamic var child: EmbeddedTreeObject3?
-    let children = List<EmbeddedTreeObject3>()
+    @ManagedProperty var value = 0
+    @ManagedProperty var child: EmbeddedTreeObject3?
+    @ManagedProperty var children: List<EmbeddedTreeObject3>
 
-    let parent3 = LinkingObjects(fromType: EmbeddedTreeObject1.self, property: "child")
-    let parent4 = LinkingObjects(fromType: EmbeddedTreeObject1.self, property: "children")
+    @ManagedProperty(originProperty: "child") var parent3: LinkingObjects<EmbeddedTreeObject1>
+    @ManagedProperty(originProperty: "children") var parent4: LinkingObjects<EmbeddedTreeObject1>
 }
 
 class EmbeddedTreeObject3: EmbeddedObject, EmbeddedTreeObject {
-    @objc dynamic var value = 0
+    @ManagedProperty var value = 0
 
-    let parent3 = LinkingObjects(fromType: EmbeddedTreeObject2.self, property: "child")
-    let parent4 = LinkingObjects(fromType: EmbeddedTreeObject2.self, property: "children")
+    @ManagedProperty(originProperty: "child") var parent3: LinkingObjects<EmbeddedTreeObject2>
+    @ManagedProperty(originProperty: "children") var parent4: LinkingObjects<EmbeddedTreeObject2>
 }
