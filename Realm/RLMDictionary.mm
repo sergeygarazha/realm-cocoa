@@ -230,13 +230,7 @@ static void changeDictionary(__unsafe_unretained RLMDictionary *const dictionary
 }
 
 - (nullable id)valueForKey:(nonnull NSString *)key {
-    if ([key isEqualToString:RLMInvalidatedKey]) {
-        return @NO; // Unmanaged dictionaries are never invalidated
-    }
-    if (!_backingCollection) {
-        _backingCollection = [NSMutableDictionary new];
-    }
-    return [_backingCollection valueForKey:key];
+    return [self objectForKey:key];
 }
 
 - (id)valueForKeyPath:(NSString *)keyPath {
