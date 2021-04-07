@@ -204,8 +204,9 @@ let package = Package(
             dependencies: ["RealmSwift", "RealmTestSupport", "RealmSyncTestSupport", "RealmSwiftSyncTestSupport"],
             path: "Realm/ObjectServerTests",
             sources: [
-                 "SwiftObjectServerTests.swift",
-                 "SwiftBSONTests.swift"
+                "SwiftObjectServerTests.swift",
+                "SwiftBSONTests.swift",
+                "SwiftCollectionSyncTests.swift"
             ],
             swiftSettings: combineFlags()
         ),
@@ -216,7 +217,8 @@ let package = Package(
             sources: [
                 "RLMBSONTests.mm",
                 "RLMObjectServerTests.mm",
-                "RLMWatchTestUtility.m"
+                "RLMWatchTestUtility.m",
+                "RLMCollectionSyncTests.mm"
             ],
             cxxSettings: testCxxSettings
         )

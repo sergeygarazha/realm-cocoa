@@ -643,6 +643,7 @@ RLM_COLLECTION_TYPE(RenamedProperties2)
 @property (nonatomic) RenamedProperties1 *linkD;
 @property (nonatomic) RLM_GENERIC_ARRAY(RenamedProperties2) *array;
 @property (nonatomic) RLM_GENERIC_SET(RenamedProperties2) *set;
+@property (nonatomic) RLM_GENERIC_DICTIONARY(RLMString, RenamedProperties2) *dictionary;
 @end
 
 @interface RenamedPrimaryKey : RLMObject
