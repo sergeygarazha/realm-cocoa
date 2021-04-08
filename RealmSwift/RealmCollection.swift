@@ -62,7 +62,7 @@ import Realm
             let val: Element.Value = dynamicBridgeCast(fromObjectiveC: collection[key as! RLMDictionaryKey]!)
             return Map<Element.Key, Element.Value>.SingleMapEntry(key: key, value: val) as? Element
         }
-        return dynamicBridgeCast(fromObjectiveC: next as Any)
+        return nil
     }
 }
 
