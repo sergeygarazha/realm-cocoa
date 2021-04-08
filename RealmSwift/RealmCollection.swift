@@ -66,8 +66,19 @@ import Realm
     }
 }
 
-@frozen public struct RLMMapIterator<Key: RealmCollectionValue, Value: RealmCollectionValue>: IteratorProtocol {
-    public typealias Element = (Key, Value)
+public struct SingleMapEntry<Key: MapKeyType, Value: RealmCollectionValue>: RealmTupleValue, Hashable {
+    // possibly unused
+    public static func == (lhs: SingleMapEntry, rhs: SingleMapEntry) -> Bool {
+        return true
+    }
+    public var hashValue: Int { 0 }
+    public func hash(into hasher: inout Hasher) { }
+
+    var key: Self.Key
+    var value: Self.Value
+}
+
+@frozen public struct RLMMapIterator<Element: RealmTupleValue>: IteratorProtocol {
 
     private var generatorBase: NSFastEnumerationIterator
     private var collection: RLMDictionary<AnyObject, AnyObject>
@@ -77,21 +88,12 @@ import Realm
         generatorBase = NSFastEnumerationIterator(collection)
     }
 
-    /// Advance to the next element and return it, or `nil` if no next element exists.
     public mutating func next() -> Element? {
         let next = generatorBase.next()
-        if next == nil {
-            return nil
-        }
-//        if let next = next as? NSDictionary {
-//            let key: Key = dynamicBridgeCast(fromObjectiveC: next.allKeys.first!)
-//            let val: Value = dynamicBridgeCast(fromObjectiveC: next[key]!)
-//            return (key, val)
-//        } else
-        if let next = next as? Key {
-            let key: Key = next//dynamicBridgeCast(fromObjectiveC: next.allKeys.first!)
-            let val: Value = dynamicBridgeCast(fromObjectiveC: collection[key as! RLMDictionaryKey]!)
-            return (key, val)
+        if let next = next as? Element.Key {
+            let key: Element.Key = next
+            let val: Element.Value = dynamicBridgeCast(fromObjectiveC: collection[key as! RLMDictionaryKey]!)
+            return SingleMapEntry(key: key, value: val) as? Element
         }
         return dynamicBridgeCast(fromObjectiveC: next as Any)
     }
@@ -199,6 +201,11 @@ public protocol RealmCollectionValue: Hashable {
     static func _rlmDictionary() -> RLMDictionary<AnyObject, AnyObject>
     /// :nodoc:
     static func _nilValue() -> Self
+}
+
+public protocol RealmTupleValue: RealmCollectionValue {
+    associatedtype Key: MapKeyType
+    associatedtype Value: RealmCollectionValue
 }
 
 extension RealmCollectionValue {
@@ -430,7 +437,7 @@ public protocol _RealmCollectionEnumerator {
 }
 
 /// :nodoc:
-public protocol RealmCollectionBase: RandomAccessCollection, LazyCollectionProtocol, CustomStringConvertible, ThreadConfined {
+public protocol RealmCollectionBase: RandomAccessCollection, LazyCollectionProtocol, CustomStringConvertible, ThreadConfined where Element: RealmCollectionValue {
     // This typealias was needed with Swift 3.1. It no longer is, but remains
     // just in case someone was depending on it
     typealias ElementType = Element
@@ -820,7 +827,7 @@ public extension RealmCollection where Element: OptionalProtocol, Element.Wrappe
     }
 }
 
-private class _AnyRealmCollectionBase<T/*: RealmCollectionValue*/>: AssistedObjectiveCBridgeable {
+private class _AnyRealmCollectionBase<T: RealmCollectionValue>: AssistedObjectiveCBridgeable {
     typealias Wrapper = AnyRealmCollection<Element>
     typealias Element = T
     var realm: Realm? { fatalError() }
@@ -984,7 +991,7 @@ private final class _AnyRealmCollection<C: RealmCollection>: _AnyRealmCollection
 
  Instances of `RealmCollection` forward operations to an opaque underlying collection having the same `Element` type.
  */
-public struct AnyRealmCollection<Element/*: RealmCollectionValue*/>: RealmCollection {
+public struct AnyRealmCollection<Element: RealmCollectionValue>: RealmCollection {
 
     /// The type of the objects contained within the collection.
     public typealias ElementType = Element
@@ -1286,7 +1293,7 @@ public struct AnyRealmCollection<Element/*: RealmCollectionValue*/>: RealmCollec
 
 // MARK: AssistedObjectiveCBridgeable
 
-private struct AnyRealmCollectionBridgingMetadata<T/*: RealmCollectionValue*/> {
+private struct AnyRealmCollectionBridgingMetadata<T: RealmCollectionValue> {
     var baseMetadata: Any?
     var baseType: _AnyRealmCollectionBase<T>.Type
 }
