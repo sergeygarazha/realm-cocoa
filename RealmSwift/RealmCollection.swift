@@ -22,7 +22,7 @@ import Realm
 /**
  An iterator for a `RealmCollection` instance.
  */
-@frozen public struct RLMIterator<Element>: IteratorProtocol {
+@frozen public struct RLMIterator<Element: RealmCollectionValue>: IteratorProtocol {
     private var generatorBase: NSFastEnumerationIterator
 
     init(collection: RLMCollection) {
@@ -33,52 +33,19 @@ import Realm
     public mutating func next() -> Element? {
         let next = generatorBase.next()
         if next is NSNull {
-            return nil
-//            return Element._nilValue()
+            return Element._nilValue()
         }
         if let next = next as? Object? {
             if next == nil {
-                return nil
+                return nil as Element?
             }
             return unsafeBitCast(next, to: Optional<Element>.self)
         }
         return dynamicBridgeCast(fromObjectiveC: next as Any)
-
-//        let next = generatorBase.next()
-//        if next is NSNull {
-//            return nil
-//        }
-////        if !(next is Element.ReturnElement) {
-////            return ReturnElement
-////        }
-////        if let next = next as? NSDictionary {
-////            let key = dynamicBridgeCast(fromObjectiveC: next.allKeys.first!)
-////            let val = dynamicBridgeCast(fromObjectiveC: next[key]!)
-////            return (key, val) as ReturnElement?
-////        }
-//        if let next = next as? Object? {
-//            if next == nil {
-//                return nil
-//            }
-//            return unsafeBitCast(next, to: Optional<Element>.self)
-//        }
-//        return dynamicBridgeCast(fromObjectiveC: next as Any)
     }
 }
 
-public struct SingleMapEntry<Key: MapKeyType, Value: RealmCollectionValue>: RealmTupleValue, Hashable {
-    // possibly unused
-    public static func == (lhs: SingleMapEntry, rhs: SingleMapEntry) -> Bool {
-        return true
-    }
-    public var hashValue: Int { 0 }
-    public func hash(into hasher: inout Hasher) { }
-
-    var key: Self.Key
-    var value: Self.Value
-}
-
-@frozen public struct RLMMapIterator<Element: RealmTupleValue>: IteratorProtocol {
+@frozen public struct RLMMapIterator<Element: RealmMapValue>: IteratorProtocol {
 
     private var generatorBase: NSFastEnumerationIterator
     private var collection: RLMDictionary<AnyObject, AnyObject>
@@ -93,7 +60,7 @@ public struct SingleMapEntry<Key: MapKeyType, Value: RealmCollectionValue>: Real
         if let next = next as? Element.Key {
             let key: Element.Key = next
             let val: Element.Value = dynamicBridgeCast(fromObjectiveC: collection[key as! RLMDictionaryKey]!)
-            return SingleMapEntry(key: key, value: val) as? Element
+            return Map<Element.Key, Element.Value>.SingleMapEntry(key: key, value: val) as? Element
         }
         return dynamicBridgeCast(fromObjectiveC: next as Any)
     }
@@ -203,7 +170,7 @@ public protocol RealmCollectionValue: Hashable {
     static func _nilValue() -> Self
 }
 
-public protocol RealmTupleValue: RealmCollectionValue {
+public protocol RealmMapValue: RealmCollectionValue {
     associatedtype Key: MapKeyType
     associatedtype Value: RealmCollectionValue
 }
