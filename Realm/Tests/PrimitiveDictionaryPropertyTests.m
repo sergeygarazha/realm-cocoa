@@ -70,16 +70,7 @@ static double average(NSDictionary *dictionary) {
     return [[self UUIDString] compare:other.UUIDString];
 }
 @end
-@interface RLMDictionary (Tests)
--(void)addObjects:(NSDictionary *)dictionary;
-@end
-@implementation RLMDictionary (Tests)
--(void)addObjects:(NSDictionary *)dictionary {
-    for (id key in dictionary.allKeys) {
-        self[key] = dictionary[key];
-    }
-}
-@end
+
 @interface LinkToAllPrimitiveDictionaries : RLMObject
 @property (nonatomic) AllPrimitiveDictionaries *link;
 @end

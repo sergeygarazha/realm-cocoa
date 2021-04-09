@@ -230,7 +230,7 @@ static void changeDictionary(__unsafe_unretained RLMDictionary *const dictionary
 }
 
 - (nullable id)valueForKey:(nonnull NSString *)key {
-    return [self objectForKey:key];
+    return [_backingCollection valueForKey:key];
 }
 
 - (id)valueForKeyPath:(NSString *)keyPath {
@@ -277,12 +277,10 @@ static void changeDictionary(__unsafe_unretained RLMDictionary *const dictionary
     copy->items = std::make_unique<id[]>(_backingCollection.count);
 
     NSUInteger i = 0;
-    if ([_backingCollection isKindOfClass:[NSDictionary class]]) {
-        for (id key in _backingCollection) {
-//            copy->items[i++] = @{key: _backingCollection[key]};
-            copy->items[i++] = key;
-        }
+    for (id key in _backingCollection) {
+        copy->items[i++] = key;
     }
+
     state->itemsPtr = (__unsafe_unretained id *)(void *)copy->items.get();
     // needs to point to something valid, but the whole point of this is so
     // that it can't be changed

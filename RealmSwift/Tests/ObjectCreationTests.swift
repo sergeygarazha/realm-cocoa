@@ -86,13 +86,14 @@ class ObjectCreationTests: TestCase {
             "objectIdCol": ObjectId.generate(),
             "objectCol": SwiftBoolObject(value: [true]),
             "arrayCol": [SwiftBoolObject(value: [true]), SwiftBoolObject()],
-            "setCol": [SwiftBoolObject(value: [true]), SwiftBoolObject()]
+            "setCol": [SwiftBoolObject(value: [true]), SwiftBoolObject()],
+            "mapCol": ["true": SwiftBoolObject(value: [true])]
            ]
 
         // test with valid dictionary literals
         let props = try! Realm().schema["SwiftObject"]!.properties
         for propNum in 0..<props.count {
-            for validValue in validValuesForSwiftObjectType(props[propNum].type, (props[propNum].isArray || props[propNum].isSet)) {
+            for validValue in validValuesForSwiftObjectType(props[propNum].type, (props[propNum].isArray || props[propNum].isSet), props[propNum].isMap) {
                 // update dict with valid value and init
                 var values = baselineValues
                 values[props[propNum].name] = validValue
