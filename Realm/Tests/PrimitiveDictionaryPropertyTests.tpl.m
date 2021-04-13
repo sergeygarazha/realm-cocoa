@@ -348,11 +348,11 @@ static double average(NSDictionary *dictionary) {
     %man %r [$dictionary addObjects:@{@"2": $v0, @"3": $v1, @"4": $v0, @"5": $v1}];
     %man %o [$dictionary addObjects:@{@"2": $v0, @"3": $v1, @"4": NSNull.null, @"5": $v1, @"6": $v0}];
 
-    %man %r XCTAssertEqual(0U, [[$dictionary sortedResultsUsingKeyPath:@"self" ascending:NO] indexOfObject:@"1"]);
-    %man %r XCTAssertEqual(2U, [[$dictionary sortedResultsUsingKeyPath:@"self" ascending:NO] indexOfObject:@"0"]);
+    %man %r XCTAssertEqual(0U, [[$dictionary sortedResultsUsingKeyPath:@"self" ascending:NO] indexOfObject:$v1]);
+    %man %r XCTAssertEqual(2U, [[$dictionary sortedResultsUsingKeyPath:@"self" ascending:NO] indexOfObject:$v0]);
 
-    %man %o XCTAssertEqual(0U, [[$dictionary sortedResultsUsingKeyPath:@"self" ascending:NO] indexOfObject:@"1"]);
-    %man %o XCTAssertEqual(2U, [[$dictionary sortedResultsUsingKeyPath:@"self" ascending:NO] indexOfObject:@"0"]);
+    %man %o XCTAssertEqual(0U, [[$dictionary sortedResultsUsingKeyPath:@"self" ascending:NO] indexOfObject:$v1]);
+    %man %o XCTAssertEqual(2U, [[$dictionary sortedResultsUsingKeyPath:@"self" ascending:NO] indexOfObject:$v0]);
     %man %o XCTAssertEqual(4U, [[$dictionary sortedResultsUsingKeyPath:@"self" ascending:NO] indexOfObject:NSNull.null]);
 }
 
@@ -474,7 +474,7 @@ static double average(NSDictionary *dictionary) {
         [self addObjects];
     }
 
-    { ^nl NSUInteger i = 0; ^nl NSDictionary *values = $values; ^nl for (id key in $dictionary) { ^nl id value = $dictionary[key]; ^nl XCTAssertEqualObjects(values[key], value); ^nl } ^nl XCTAssertEqual(i, $dictionary.count); ^nl } ^nl 
+    { ^nl NSDictionary *values = $values; ^nl for (id key in $dictionary) { ^nl     id value = $dictionary[key]; ^nl     XCTAssertEqualObjects(values[key], value); ^nl } ^nl XCTAssertEqual(values.count, $dictionary.count); ^nl } ^nl 
 }
 
 - (void)testValueForKeySelf {

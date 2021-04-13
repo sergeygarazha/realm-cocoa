@@ -877,19 +877,19 @@ static double average(NSDictionary *dictionary) {
     [optManaged.intObj addObjects:@{@"2": @2, @"3": @3, @"4": NSNull.null, @"5": @3, @"6": @2}];
     [optManaged.stringObj addObjects:@{@"2": @"a", @"3": @"b", @"4": NSNull.null, @"5": @"b", @"6": @"a"}];
 
-    XCTAssertEqual(0U, [[managed.boolObj sortedResultsUsingKeyPath:@"self" ascending:NO] indexOfObject:@"1"]);
-    XCTAssertEqual(0U, [[managed.intObj sortedResultsUsingKeyPath:@"self" ascending:NO] indexOfObject:@"1"]);
-    XCTAssertEqual(0U, [[managed.stringObj sortedResultsUsingKeyPath:@"self" ascending:NO] indexOfObject:@"1"]);
-    XCTAssertEqual(2U, [[managed.boolObj sortedResultsUsingKeyPath:@"self" ascending:NO] indexOfObject:@"0"]);
-    XCTAssertEqual(2U, [[managed.intObj sortedResultsUsingKeyPath:@"self" ascending:NO] indexOfObject:@"0"]);
-    XCTAssertEqual(2U, [[managed.stringObj sortedResultsUsingKeyPath:@"self" ascending:NO] indexOfObject:@"0"]);
+    XCTAssertEqual(0U, [[managed.boolObj sortedResultsUsingKeyPath:@"self" ascending:NO] indexOfObject:@YES]);
+    XCTAssertEqual(0U, [[managed.intObj sortedResultsUsingKeyPath:@"self" ascending:NO] indexOfObject:@3]);
+    XCTAssertEqual(0U, [[managed.stringObj sortedResultsUsingKeyPath:@"self" ascending:NO] indexOfObject:@"b"]);
+    XCTAssertEqual(2U, [[managed.boolObj sortedResultsUsingKeyPath:@"self" ascending:NO] indexOfObject:@NO]);
+    XCTAssertEqual(2U, [[managed.intObj sortedResultsUsingKeyPath:@"self" ascending:NO] indexOfObject:@2]);
+    XCTAssertEqual(2U, [[managed.stringObj sortedResultsUsingKeyPath:@"self" ascending:NO] indexOfObject:@"a"]);
 
-    XCTAssertEqual(0U, [[optManaged.boolObj sortedResultsUsingKeyPath:@"self" ascending:NO] indexOfObject:@"1"]);
-    XCTAssertEqual(0U, [[optManaged.intObj sortedResultsUsingKeyPath:@"self" ascending:NO] indexOfObject:@"1"]);
-    XCTAssertEqual(0U, [[optManaged.stringObj sortedResultsUsingKeyPath:@"self" ascending:NO] indexOfObject:@"1"]);
-    XCTAssertEqual(2U, [[optManaged.boolObj sortedResultsUsingKeyPath:@"self" ascending:NO] indexOfObject:@"0"]);
-    XCTAssertEqual(2U, [[optManaged.intObj sortedResultsUsingKeyPath:@"self" ascending:NO] indexOfObject:@"0"]);
-    XCTAssertEqual(2U, [[optManaged.stringObj sortedResultsUsingKeyPath:@"self" ascending:NO] indexOfObject:@"0"]);
+    XCTAssertEqual(0U, [[optManaged.boolObj sortedResultsUsingKeyPath:@"self" ascending:NO] indexOfObject:@YES]);
+    XCTAssertEqual(0U, [[optManaged.intObj sortedResultsUsingKeyPath:@"self" ascending:NO] indexOfObject:@3]);
+    XCTAssertEqual(0U, [[optManaged.stringObj sortedResultsUsingKeyPath:@"self" ascending:NO] indexOfObject:@"b"]);
+    XCTAssertEqual(2U, [[optManaged.boolObj sortedResultsUsingKeyPath:@"self" ascending:NO] indexOfObject:@NO]);
+    XCTAssertEqual(2U, [[optManaged.intObj sortedResultsUsingKeyPath:@"self" ascending:NO] indexOfObject:@2]);
+    XCTAssertEqual(2U, [[optManaged.stringObj sortedResultsUsingKeyPath:@"self" ascending:NO] indexOfObject:@"a"]);
     XCTAssertEqual(4U, [[optManaged.boolObj sortedResultsUsingKeyPath:@"self" ascending:NO] indexOfObject:NSNull.null]);
     XCTAssertEqual(4U, [[optManaged.intObj sortedResultsUsingKeyPath:@"self" ascending:NO] indexOfObject:NSNull.null]);
     XCTAssertEqual(4U, [[optManaged.stringObj sortedResultsUsingKeyPath:@"self" ascending:NO] indexOfObject:NSNull.null]);
@@ -1314,123 +1314,111 @@ static double average(NSDictionary *dictionary) {
     }
 
     {
-    NSUInteger i = 0;
     NSDictionary *values = @{@"0": @NO, @"1": @YES};
     for (id key in unmanaged.boolObj) {
-    id value = unmanaged.boolObj[key];
-    XCTAssertEqualObjects(values[key], value);
+        id value = unmanaged.boolObj[key];
+        XCTAssertEqualObjects(values[key], value);
     }
-    XCTAssertEqual(i, unmanaged.boolObj.count);
+    XCTAssertEqual(values.count, unmanaged.boolObj.count);
     }
     
     {
-    NSUInteger i = 0;
     NSDictionary *values = @{@"0": @2, @"1": @3};
     for (id key in unmanaged.intObj) {
-    id value = unmanaged.intObj[key];
-    XCTAssertEqualObjects(values[key], value);
+        id value = unmanaged.intObj[key];
+        XCTAssertEqualObjects(values[key], value);
     }
-    XCTAssertEqual(i, unmanaged.intObj.count);
+    XCTAssertEqual(values.count, unmanaged.intObj.count);
     }
     
     {
-    NSUInteger i = 0;
     NSDictionary *values = @{@"0": @"a", @"1": @"b"};
     for (id key in unmanaged.stringObj) {
-    id value = unmanaged.stringObj[key];
-    XCTAssertEqualObjects(values[key], value);
+        id value = unmanaged.stringObj[key];
+        XCTAssertEqualObjects(values[key], value);
     }
-    XCTAssertEqual(i, unmanaged.stringObj.count);
+    XCTAssertEqual(values.count, unmanaged.stringObj.count);
     }
     
     {
-    NSUInteger i = 0;
     NSDictionary *values = @{@"0": @NO, @"1": @YES, @"2": NSNull.null};
     for (id key in optUnmanaged.boolObj) {
-    id value = optUnmanaged.boolObj[key];
-    XCTAssertEqualObjects(values[key], value);
+        id value = optUnmanaged.boolObj[key];
+        XCTAssertEqualObjects(values[key], value);
     }
-    XCTAssertEqual(i, optUnmanaged.boolObj.count);
+    XCTAssertEqual(values.count, optUnmanaged.boolObj.count);
     }
     
     {
-    NSUInteger i = 0;
     NSDictionary *values = @{@"0": @2, @"1": @3, @"2": NSNull.null};
     for (id key in optUnmanaged.intObj) {
-    id value = optUnmanaged.intObj[key];
-    XCTAssertEqualObjects(values[key], value);
+        id value = optUnmanaged.intObj[key];
+        XCTAssertEqualObjects(values[key], value);
     }
-    XCTAssertEqual(i, optUnmanaged.intObj.count);
+    XCTAssertEqual(values.count, optUnmanaged.intObj.count);
     }
     
     {
-    NSUInteger i = 0;
     NSDictionary *values = @{@"0": @"a", @"1": @"b", @"2": NSNull.null};
     for (id key in optUnmanaged.stringObj) {
-    id value = optUnmanaged.stringObj[key];
-    XCTAssertEqualObjects(values[key], value);
+        id value = optUnmanaged.stringObj[key];
+        XCTAssertEqualObjects(values[key], value);
     }
-    XCTAssertEqual(i, optUnmanaged.stringObj.count);
+    XCTAssertEqual(values.count, optUnmanaged.stringObj.count);
     }
     
     {
-    NSUInteger i = 0;
     NSDictionary *values = @{@"0": @NO, @"1": @YES};
     for (id key in managed.boolObj) {
-    id value = managed.boolObj[key];
-    XCTAssertEqualObjects(values[key], value);
+        id value = managed.boolObj[key];
+        XCTAssertEqualObjects(values[key], value);
     }
-    XCTAssertEqual(i, managed.boolObj.count);
+    XCTAssertEqual(values.count, managed.boolObj.count);
     }
     
     {
-    NSUInteger i = 0;
     NSDictionary *values = @{@"0": @2, @"1": @3};
     for (id key in managed.intObj) {
-    id value = managed.intObj[key];
-    XCTAssertEqualObjects(values[key], value);
+        id value = managed.intObj[key];
+        XCTAssertEqualObjects(values[key], value);
     }
-    XCTAssertEqual(i, managed.intObj.count);
+    XCTAssertEqual(values.count, managed.intObj.count);
     }
     
     {
-    NSUInteger i = 0;
     NSDictionary *values = @{@"0": @"a", @"1": @"b"};
     for (id key in managed.stringObj) {
-    id value = managed.stringObj[key];
-    XCTAssertEqualObjects(values[key], value);
+        id value = managed.stringObj[key];
+        XCTAssertEqualObjects(values[key], value);
     }
-    XCTAssertEqual(i, managed.stringObj.count);
+    XCTAssertEqual(values.count, managed.stringObj.count);
     }
     
     {
-    NSUInteger i = 0;
     NSDictionary *values = @{@"0": @NO, @"1": @YES, @"2": NSNull.null};
     for (id key in optManaged.boolObj) {
-    id value = optManaged.boolObj[key];
-    XCTAssertEqualObjects(values[key], value);
+        id value = optManaged.boolObj[key];
+        XCTAssertEqualObjects(values[key], value);
     }
-    XCTAssertEqual(i, optManaged.boolObj.count);
+    XCTAssertEqual(values.count, optManaged.boolObj.count);
     }
     
     {
-    NSUInteger i = 0;
     NSDictionary *values = @{@"0": @2, @"1": @3, @"2": NSNull.null};
     for (id key in optManaged.intObj) {
-    id value = optManaged.intObj[key];
-    XCTAssertEqualObjects(values[key], value);
+        id value = optManaged.intObj[key];
+        XCTAssertEqualObjects(values[key], value);
     }
-    XCTAssertEqual(i, optManaged.intObj.count);
+    XCTAssertEqual(values.count, optManaged.intObj.count);
     }
     
     {
-    NSUInteger i = 0;
     NSDictionary *values = @{@"0": @"a", @"1": @"b", @"2": NSNull.null};
     for (id key in optManaged.stringObj) {
-    id value = optManaged.stringObj[key];
-    XCTAssertEqualObjects(values[key], value);
+        id value = optManaged.stringObj[key];
+        XCTAssertEqualObjects(values[key], value);
     }
-    XCTAssertEqual(i, optManaged.stringObj.count);
+    XCTAssertEqual(values.count, optManaged.stringObj.count);
     }
     
 }
@@ -1457,41 +1445,41 @@ static double average(NSDictionary *dictionary) {
 }
 
 - (void)testValueForKeyNumericAggregates {
-//    XCTAssertNil([unmanaged.intObj valueForKeyPath:@"@min.self"]);
-//    XCTAssertNil([optUnmanaged.intObj valueForKeyPath:@"@min.self"]);
-//    XCTAssertNil([managed.intObj valueForKeyPath:@"@min.self"]);
-//    XCTAssertNil([optManaged.intObj valueForKeyPath:@"@min.self"]);
-//    XCTAssertNil([unmanaged.intObj valueForKeyPath:@"@max.self"]);
-//    XCTAssertNil([optUnmanaged.intObj valueForKeyPath:@"@max.self"]);
-//    XCTAssertNil([managed.intObj valueForKeyPath:@"@max.self"]);
-//    XCTAssertNil([optManaged.intObj valueForKeyPath:@"@max.self"]);
-//    XCTAssertEqualObjects([unmanaged.intObj valueForKeyPath:@"@sum.self"], @0);
-//    XCTAssertEqualObjects([optUnmanaged.intObj valueForKeyPath:@"@sum.self"], @0);
-//    XCTAssertEqualObjects([managed.intObj valueForKeyPath:@"@sum.self"], @0);
-//    XCTAssertEqualObjects([optManaged.intObj valueForKeyPath:@"@sum.self"], @0);
-//    XCTAssertNil([unmanaged.intObj valueForKeyPath:@"@avg.self"]);
-//    XCTAssertNil([optUnmanaged.intObj valueForKeyPath:@"@avg.self"]);
-//    XCTAssertNil([managed.intObj valueForKeyPath:@"@avg.self"]);
-//    XCTAssertNil([optManaged.intObj valueForKeyPath:@"@avg.self"]);
-//
-//    [self addObjects];
-//
-//    XCTAssertEqualObjects([unmanaged.intObj valueForKeyPath:@"@min.self"], @2);
-//    XCTAssertEqualObjects([optUnmanaged.intObj valueForKeyPath:@"@min.self"], @2);
-//    XCTAssertEqualObjects([managed.intObj valueForKeyPath:@"@min.self"], @2);
-//    XCTAssertEqualObjects([optManaged.intObj valueForKeyPath:@"@min.self"], @2);
-//    XCTAssertEqualObjects([unmanaged.intObj valueForKeyPath:@"@max.self"], @3);
-//    XCTAssertEqualObjects([optUnmanaged.intObj valueForKeyPath:@"@max.self"], @3);
-//    XCTAssertEqualObjects([managed.intObj valueForKeyPath:@"@max.self"], @3);
-//    XCTAssertEqualObjects([optManaged.intObj valueForKeyPath:@"@max.self"], @3);
-//    XCTAssertEqualWithAccuracy([[unmanaged.intObj valueForKeyPath:@"@sum.self"] doubleValue], sum(@{@"0": @2, @"1": @3}), .001);
-//    XCTAssertEqualWithAccuracy([[optUnmanaged.intObj valueForKeyPath:@"@sum.self"] doubleValue], sum(@{@"0": @2, @"1": @3, @"2": NSNull.null}), .001);
-//    XCTAssertEqualWithAccuracy([[managed.intObj valueForKeyPath:@"@sum.self"] doubleValue], sum(@{@"0": @2, @"1": @3}), .001);
-//    XCTAssertEqualWithAccuracy([[optManaged.intObj valueForKeyPath:@"@sum.self"] doubleValue], sum(@{@"0": @2, @"1": @3, @"2": NSNull.null}), .001);
-//    XCTAssertEqualWithAccuracy([[unmanaged.intObj valueForKeyPath:@"@avg.self"] doubleValue], average(@{@"0": @2, @"1": @3}), .001);
-//    XCTAssertEqualWithAccuracy([[optUnmanaged.intObj valueForKeyPath:@"@avg.self"] doubleValue], average(@{@"0": @2, @"1": @3, @"2": NSNull.null}), .001);
-//    XCTAssertEqualWithAccuracy([[managed.intObj valueForKeyPath:@"@avg.self"] doubleValue], average(@{@"0": @2, @"1": @3}), .001);
-//    XCTAssertEqualWithAccuracy([[optManaged.intObj valueForKeyPath:@"@avg.self"] doubleValue], average(@{@"0": @2, @"1": @3, @"2": NSNull.null}), .001);
+    XCTAssertNil([unmanaged.intObj valueForKeyPath:@"@min.self"]);
+    XCTAssertNil([optUnmanaged.intObj valueForKeyPath:@"@min.self"]);
+    XCTAssertNil([managed.intObj valueForKeyPath:@"@min.self"]);
+    XCTAssertNil([optManaged.intObj valueForKeyPath:@"@min.self"]);
+    XCTAssertNil([unmanaged.intObj valueForKeyPath:@"@max.self"]);
+    XCTAssertNil([optUnmanaged.intObj valueForKeyPath:@"@max.self"]);
+    XCTAssertNil([managed.intObj valueForKeyPath:@"@max.self"]);
+    XCTAssertNil([optManaged.intObj valueForKeyPath:@"@max.self"]);
+    XCTAssertEqualObjects([unmanaged.intObj valueForKeyPath:@"@sum.self"], @0);
+    XCTAssertEqualObjects([optUnmanaged.intObj valueForKeyPath:@"@sum.self"], @0);
+    XCTAssertEqualObjects([managed.intObj valueForKeyPath:@"@sum.self"], @0);
+    XCTAssertEqualObjects([optManaged.intObj valueForKeyPath:@"@sum.self"], @0);
+    XCTAssertNil([unmanaged.intObj valueForKeyPath:@"@avg.self"]);
+    XCTAssertNil([optUnmanaged.intObj valueForKeyPath:@"@avg.self"]);
+    XCTAssertNil([managed.intObj valueForKeyPath:@"@avg.self"]);
+    XCTAssertNil([optManaged.intObj valueForKeyPath:@"@avg.self"]);
+
+    [self addObjects];
+
+    XCTAssertEqualObjects([unmanaged.intObj valueForKeyPath:@"@min.self"], @2);
+    XCTAssertEqualObjects([optUnmanaged.intObj valueForKeyPath:@"@min.self"], @2);
+    XCTAssertEqualObjects([managed.intObj valueForKeyPath:@"@min.self"], @2);
+    XCTAssertEqualObjects([optManaged.intObj valueForKeyPath:@"@min.self"], @2);
+    XCTAssertEqualObjects([unmanaged.intObj valueForKeyPath:@"@max.self"], @3);
+    XCTAssertEqualObjects([optUnmanaged.intObj valueForKeyPath:@"@max.self"], @3);
+    XCTAssertEqualObjects([managed.intObj valueForKeyPath:@"@max.self"], @3);
+    XCTAssertEqualObjects([optManaged.intObj valueForKeyPath:@"@max.self"], @3);
+    XCTAssertEqualWithAccuracy([[unmanaged.intObj valueForKeyPath:@"@sum.self"] doubleValue], sum(@{@"0": @2, @"1": @3}), .001);
+    XCTAssertEqualWithAccuracy([[optUnmanaged.intObj valueForKeyPath:@"@sum.self"] doubleValue], sum(@{@"0": @2, @"1": @3, @"2": NSNull.null}), .001);
+    XCTAssertEqualWithAccuracy([[managed.intObj valueForKeyPath:@"@sum.self"] doubleValue], sum(@{@"0": @2, @"1": @3}), .001);
+    XCTAssertEqualWithAccuracy([[optManaged.intObj valueForKeyPath:@"@sum.self"] doubleValue], sum(@{@"0": @2, @"1": @3, @"2": NSNull.null}), .001);
+    XCTAssertEqualWithAccuracy([[unmanaged.intObj valueForKeyPath:@"@avg.self"] doubleValue], average(@{@"0": @2, @"1": @3}), .001);
+    XCTAssertEqualWithAccuracy([[optUnmanaged.intObj valueForKeyPath:@"@avg.self"] doubleValue], average(@{@"0": @2, @"1": @3, @"2": NSNull.null}), .001);
+    XCTAssertEqualWithAccuracy([[managed.intObj valueForKeyPath:@"@avg.self"] doubleValue], average(@{@"0": @2, @"1": @3}), .001);
+    XCTAssertEqualWithAccuracy([[optManaged.intObj valueForKeyPath:@"@avg.self"] doubleValue], average(@{@"0": @2, @"1": @3, @"2": NSNull.null}), .001);
 }
 
 - (void)testValueForKeyLength {
