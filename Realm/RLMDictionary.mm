@@ -171,10 +171,16 @@ static void changeDictionary(__unsafe_unretained RLMDictionary *const dictionary
 }
 
 - (void)setValue:(nullable id)value forKey:(nonnull NSString *)key {
-    RLMDictionaryValidateMatchingObjectType(self, key, value);
-    changeDictionary(self, ^{
-        [_backingCollection setValue:value forKey:key];
-    });
+    if ([key isEqualToString:@"self"]) {
+        RLMDictionaryValidateMatchingObjectType(self, key, value);
+        [_backingCollection removeAllObjects];
+        [_backingCollection setObject:value forKey:key];
+    } else {
+        RLMDictionaryValidateMatchingObjectType(self, key, value);
+        changeDictionary(self, ^{
+            [_backingCollection setValue:value forKey:key];
+        });
+    }
 }
 
 - (void)setDictionary:(RLMDictionary *)dictionary {
@@ -219,9 +225,7 @@ static void changeDictionary(__unsafe_unretained RLMDictionary *const dictionary
 }
 
 - (void)addObjects:(NSDictionary *)objects {
-    for (id key in objects) {
-        [self setObject:objects[key] forKey:key];
-    }
+    [self addEntriesFromDictionary:objects];
 }
 
 - (void)enumerateKeysAndObjectsUsingBlock:(void (^)(id <RLMDictionaryKey> key,
@@ -230,6 +234,15 @@ static void changeDictionary(__unsafe_unretained RLMDictionary *const dictionary
 }
 
 - (nullable id)valueForKey:(nonnull NSString *)key {
+    if ([key isEqualToString:RLMInvalidatedKey]) {
+        return @NO; // Unmanaged dictionaries are never invalidated
+    }
+    if (!_backingCollection) {
+        _backingCollection = [NSMutableDictionary new];
+    }
+    if ([key isEqualToString:@"self"]) {
+        return [_backingCollection valueForKey:@"@self"];
+    }
     return [_backingCollection valueForKey:key];
 }
 
@@ -250,13 +263,27 @@ static void changeDictionary(__unsafe_unretained RLMDictionary *const dictionary
     return [self aggregateProperty:key operation:op method:nil];
 }
 
-- (void)addEntriesFromDictionary:(RLMDictionary *)otherDictionary {
+- (void)addEntriesFromDictionary:(id)otherDictionary {
+    if (![otherDictionary isKindOfClass:[RLMDictionary class]] &&
+        ![otherDictionary isKindOfClass:[NSDictionary class]]) {
+        @throw RLMException(@"Cannot add entries from the object of class '%@'", [otherDictionary className]);
+    }
+
     [otherDictionary enumerateKeysAndObjectsUsingBlock:^(id _Nonnull key, id _Nonnull value, BOOL *) {
         RLMDictionaryValidateMatchingObjectType(self, key, value);
     }];
-    changeDictionary(self, ^{
-        [_backingCollection addEntriesFromDictionary:otherDictionary->_backingCollection];
-    });
+    if ([otherDictionary isKindOfClass:[RLMDictionary class]]) {
+        changeDictionary(self, ^{
+            [_backingCollection addEntriesFromDictionary:((RLMDictionary *)otherDictionary)->_backingCollection];
+        });
+    }
+    else if ([otherDictionary isKindOfClass:[NSDictionary class]]) {
+        changeDictionary(self, ^{
+            for (id key in otherDictionary) {
+                [self setObject:otherDictionary[key] forKey:key];
+            }
+        });
+    }
 }
 
 - (NSUInteger)countByEnumeratingWithState:(nonnull NSFastEnumerationState *)state
@@ -363,7 +390,7 @@ static bool canAggregate(RLMPropertyType type, bool allowDate) {
                                 method, RLMTypeToString(type), _objectClassName, key);
         }
         else {
-            @throw RLMException(@"%@ is not supported for %@%s set",
+            @throw RLMException(@"%@ is not supported for %@%s dictionary",
                                 method, RLMTypeToString(_type), _optional ? "?" : "");
         }
     }

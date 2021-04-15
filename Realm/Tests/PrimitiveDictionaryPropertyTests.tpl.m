@@ -114,7 +114,7 @@ static double average(NSDictionary *dictionary) {
 }
 
 - (void)addObjects {
-    [$dictionary addObjects:$values];
+    [$dictionary addEntriesFromDictionary:$values];
 }
 
 - (void)testCount {
@@ -274,8 +274,8 @@ static double average(NSDictionary *dictionary) {
 #pragma clang diagnostic pop
 
 - (void)testAddObjects {
-    RLMAssertThrowsWithReason([$dictionary addObjects:@{@"wrongVal": $wrong}], ^n @"Invalid value '$wdesc' of type '$wtype' for expected type '$type'");
-    %r RLMAssertThrowsWithReason([$dictionary addObjects:@{@"nullVal": NSNull.null}], ^n @"Invalid value '<null>' of type 'NSNull' for expected type '$type'");
+    RLMAssertThrowsWithReason([$dictionary addEntriesFromDictionary:@{@"wrongVal": $wrong}], ^n @"Invalid value '$wdesc' of type '$wtype' for expected type '$type'");
+    %r RLMAssertThrowsWithReason([$dictionary addEntriesFromDictionary:@{@"nullVal": NSNull.null}], ^n @"Invalid value '<null>' of type 'NSNull' for expected type '$type'");
 
     [self addObjects];
     XCTAssertEqualObjects($dictionary[@"0"], $v0);
@@ -345,8 +345,8 @@ static double average(NSDictionary *dictionary) {
 }
 
 - (void)testIndexOfObjectSorted {
-    %man %r [$dictionary addObjects:@{@"2": $v0, @"3": $v1, @"4": $v0, @"5": $v1}];
-    %man %o [$dictionary addObjects:@{@"2": $v0, @"3": $v1, @"4": NSNull.null, @"5": $v1, @"6": $v0}];
+    %man %r [$dictionary addEntriesFromDictionary:@{@"2": $v0, @"3": $v1, @"4": $v0, @"5": $v1}];
+    %man %o [$dictionary addEntriesFromDictionary:@{@"2": $v0, @"3": $v1, @"4": NSNull.null, @"5": $v1, @"6": $v0}];
 
     %man %r XCTAssertEqual(0U, [[$dictionary sortedResultsUsingKeyPath:@"self" ascending:NO] indexOfObject:$v1]);
     %man %r XCTAssertEqual(2U, [[$dictionary sortedResultsUsingKeyPath:@"self" ascending:NO] indexOfObject:$v0]);
@@ -357,8 +357,8 @@ static double average(NSDictionary *dictionary) {
 }
 
 - (void)testIndexOfObjectDistinct {
-    %man %r [$dictionary addObjects:@{@"2": $v0, @"3": $v0, @"4": $v1}];
-    %man %o [$dictionary addObjects:@{@"2": $v0, @"3": $v0, @"4": NSNull.null, @"5": $v1, @"6": $v0}];
+    %man %r [$dictionary addEntriesFromDictionary:@{@"2": $v0, @"3": $v0, @"4": $v1}];
+    %man %o [$dictionary addEntriesFromDictionary:@{@"2": $v0, @"3": $v0, @"4": NSNull.null, @"5": $v1, @"6": $v0}];
 
     %man %r XCTAssertEqual(0U, [[$dictionary distinctResultsUsingKeyPaths:@[@"self"]] indexOfObject:$v0]);
     %man %r XCTAssertEqual(1U, [[$dictionary distinctResultsUsingKeyPaths:@[@"self"]] indexOfObject:$v1]);
@@ -397,8 +397,8 @@ static double average(NSDictionary *dictionary) {
     %unman RLMAssertThrowsWithReason([$dictionary sortedResultsUsingDescriptors:@[]], ^n @"This method may only be called on RLMDictionary instances retrieved from an RLMRealm");
     %man RLMAssertThrowsWithReason([$dictionary sortedResultsUsingKeyPath:@"not self" ascending:NO], ^n @"can only be sorted on 'self'");
 
-    %man %r [$dictionary addObjects:@{@"2": $v0, @"3": $v1, @"4": $v0}];
-    %man %o [$dictionary addObjects:@{@"2": $v0, @"3": $v1, @"4": NSNull.null, @"5": $v1, @"6": $v0}];
+    %man %r [$dictionary addEntriesFromDictionary:@{@"2": $v0, @"3": $v1, @"4": $v0}];
+    %man %o [$dictionary addEntriesFromDictionary:@{@"2": $v0, @"3": $v1, @"4": NSNull.null, @"5": $v1, @"6": $v0}];
 
     %man %r XCTAssertEqualObjects([[$dictionary sortedResultsUsingDescriptors:@[]] valueForKey:@"self"], ^n (@[$v0, $v1, $v0]));
     %man %o XCTAssertEqualObjects([[$dictionary sortedResultsUsingDescriptors:@[]] valueForKey:@"self"], ^n (@[$v0, $v1, NSNull.null, $v1, $v0]));
@@ -426,8 +426,8 @@ static double average(NSDictionary *dictionary) {
 }
 
 - (void)testMin {
-    %nominmax %unman RLMAssertThrowsWithReason([$dictionary minOfProperty:@"self"], ^n @"minOfProperty: is not supported for $type array");
-    %nominmax %man RLMAssertThrowsWithReason([$dictionary minOfProperty:@"self"], ^n @"minOfProperty: is not supported for $type array '$class.$prop'");
+    %nominmax %unman RLMAssertThrowsWithReason([$dictionary minOfProperty:@"self"], ^n @"minOfProperty: is not supported for $type dictionary");
+    %nominmax %man RLMAssertThrowsWithReason([$dictionary minOfProperty:@"self"], ^n @"minOfProperty: is not supported for $type dictionary '$class.$prop'");
 
     %minmax XCTAssertNil([$dictionary minOfProperty:@"self"]);
 
@@ -437,8 +437,8 @@ static double average(NSDictionary *dictionary) {
 }
 
 - (void)testMax {
-    %nominmax %unman RLMAssertThrowsWithReason([$dictionary maxOfProperty:@"self"], ^n @"maxOfProperty: is not supported for $type array");
-    %nominmax %man RLMAssertThrowsWithReason([$dictionary maxOfProperty:@"self"], ^n @"maxOfProperty: is not supported for $type array '$class.$prop'");
+    %nominmax %unman RLMAssertThrowsWithReason([$dictionary maxOfProperty:@"self"], ^n @"maxOfProperty: is not supported for $type dictionary");
+    %nominmax %man RLMAssertThrowsWithReason([$dictionary maxOfProperty:@"self"], ^n @"maxOfProperty: is not supported for $type dictionary '$class.$prop'");
 
     %minmax XCTAssertNil([$dictionary maxOfProperty:@"self"]);
 
@@ -448,8 +448,8 @@ static double average(NSDictionary *dictionary) {
 }
 
 - (void)testSum {
-    %nosum %unman RLMAssertThrowsWithReason([$dictionary sumOfProperty:@"self"], ^n @"sumOfProperty: is not supported for $type array");
-    %nosum %man RLMAssertThrowsWithReason([$dictionary sumOfProperty:@"self"], ^n @"sumOfProperty: is not supported for $type array '$class.$prop'");
+    %nosum %unman RLMAssertThrowsWithReason([$dictionary sumOfProperty:@"self"], ^n @"sumOfProperty: is not supported for $type dictionary");
+    %nosum %man RLMAssertThrowsWithReason([$dictionary sumOfProperty:@"self"], ^n @"sumOfProperty: is not supported for $type dictionary '$class.$prop'");
 
     %sum XCTAssertEqualObjects([$dictionary sumOfProperty:@"self"], @0);
 
@@ -459,8 +459,8 @@ static double average(NSDictionary *dictionary) {
 }
 
 - (void)testAverage {
-    %noavg %unman RLMAssertThrowsWithReason([$dictionary averageOfProperty:@"self"], ^n @"averageOfProperty: is not supported for $type array");
-    %noavg %man RLMAssertThrowsWithReason([$dictionary averageOfProperty:@"self"], ^n @"averageOfProperty: is not supported for $type array '$class.$prop'");
+    %noavg %unman RLMAssertThrowsWithReason([$dictionary averageOfProperty:@"self"], ^n @"averageOfProperty: is not supported for $type dictionary");
+    %noavg %man RLMAssertThrowsWithReason([$dictionary averageOfProperty:@"self"], ^n @"averageOfProperty: is not supported for $type dictionary '$class.$prop'");
 
     %avg XCTAssertNil([$dictionary averageOfProperty:@"self"]);
 
@@ -545,52 +545,22 @@ static NSArray *sortedDistinctUnion(id array, NSString *type, NSString *prop) {
             }];
 }
 
-- (void)testUnionOfObjects {
-    XCTAssertEqualObjects([$allDictionaries valueForKeyPath:@"@unionOfObjects.self"], @[]);
-    XCTAssertEqualObjects([$allDictionaries valueForKeyPath:@"@distinctUnionOfObjects.self"], @[]);
-
-    [self addObjects];
-    [self addObjects];
-
-    XCTAssertEqualObjects([$dictionary valueForKeyPath:@"@unionOfObjects.self"], ^n ($values2));
-    XCTAssertEqualObjects(sortedDistinctUnion($dictionary, @"Objects", @"self"), ^n ($values));
-}
-
-- (void)testUnionOfArrays {
-    RLMResults *allRequired = [AllPrimitiveDictionaries allObjectsInRealm:realm];
-    RLMResults *allOptional = [AllOptionalPrimitiveDictionaries allObjectsInRealm:realm];
-
-    %man %r XCTAssertEqualObjects([allRequired valueForKeyPath:@"@unionOfArrays.$prop"], @[]);
-    %man %o XCTAssertEqualObjects([allOptional valueForKeyPath:@"@unionOfArrays.$prop"], @[]);
-    %man %r XCTAssertEqualObjects([allRequired valueForKeyPath:@"@distinctUnionOfArrays.$prop"], @[]);
-    %man %o XCTAssertEqualObjects([allOptional valueForKeyPath:@"@distinctUnionOfArrays.$prop"], @[]);
-
-    [self addObjects];
-
-    [AllPrimitiveDictionaries createInRealm:realm withValue:managed];
-    [AllOptionalPrimitiveDictionaries createInRealm:realm withValue:optManaged];
-
-    %man %r XCTAssertEqualObjects([allRequired valueForKeyPath:@"@unionOfArrays.$prop"], ^n ($values2));
-    %man %o XCTAssertEqualObjects([allOptional valueForKeyPath:@"@unionOfArrays.$prop"], ^n ($values2));
-    %man %r XCTAssertEqualObjects(sortedDistinctUnion(allRequired, @"Arrays", @"$prop"), ^n ($values));
-    %man %o XCTAssertEqualObjects(sortedDistinctUnion(allOptional, @"Arrays", @"$prop"), ^n ($values));
-}
-
 - (void)testSetValueForKey {
-    RLMAssertThrowsWithReason([$allDictionaries setValue:@0 forKey:@"not self"], ^n @"this class is not key value coding-compliant for the key not self.");
     RLMAssertThrowsWithReason([$dictionary setValue:$wrong forKey:@"self"], ^n @"Invalid value '$wdesc' of type '$wtype' for expected type '$type'");
     %r RLMAssertThrowsWithReason([$dictionary setValue:NSNull.null forKey:@"self"], ^n @"Invalid value '<null>' of type 'NSNull' for expected type '$type'");
 
     [self addObjects];
 
+    // setValue overrides all existing values
     [$dictionary setValue:$v0 forKey:@"self"];
 
-    XCTAssertEqualObjects($dictionary[0], $v0);
-    XCTAssertEqualObjects($dictionary[1], $v0);
-    %o XCTAssertEqualObjects($dictionary[2], $v0);
+    RLMAssertThrowsWithReason($dictionary.allValues[1], @"index 1 beyond bounds [0 .. 0]");
+
+    XCTAssertEqualObjects($dictionary.allValues.firstObject, $v0);
+    %o XCTAssertEqualObjects($dictionary.allValues.firstObject, $v0);
 
     %o [$dictionary setValue:NSNull.null forKey:@"self"];
-    %o XCTAssertEqualObjects($dictionary[0], NSNull.null);
+    %o XCTAssertEqualObjects($dictionary.allValues.firstObject, NSNull.null);
 }
 
 - (void)testAssignment {
@@ -599,7 +569,7 @@ static NSArray *sortedDistinctUnion(id array, NSString *type, NSString *prop) {
     // Should replace and not append
     $dictionary = (id)$values; ^nl XCTAssertEqualObjects([$dictionary valueForKey:@"self"], ($values)); ^nl 
 
-    // Should not clear the array
+    // Should not clear the dictionary
     $dictionary = $dictionary; ^nl XCTAssertEqualObjects([$dictionary valueForKey:@"self"], ($values)); ^nl 
 
     [unmanaged.intObj removeAllObjects];
@@ -617,7 +587,7 @@ static NSArray *sortedDistinctUnion(id array, NSString *type, NSString *prop) {
     // Should replace and not append
     $obj[@"$prop"] = (id)$values; ^nl XCTAssertEqualObjects([$obj[@"$prop"] valueForKey:@"self"], ($values)); ^nl 
 
-    // Should not clear the array
+    // Should not clear the dictionary
     $obj[@"$prop"] = $obj[@"$prop"]; ^nl XCTAssertEqualObjects([$obj[@"$prop"] valueForKey:@"self"], ($values)); ^nl 
 
     [unmanaged[@"intObj"] removeAllObjects];
@@ -631,11 +601,11 @@ static NSArray *sortedDistinctUnion(id array, NSString *type, NSString *prop) {
 
 - (void)testInvalidAssignment {
     RLMAssertThrowsWithReason(unmanaged.intObj = (id)@{@"0": NSNull.null},
-                              @"Invalid value '<null>' of type 'NSNull' for RLMDictionary<string, int> property 'AllPrimitiveDictionaries.intObj'.");
+                              @"Invalid value '<null>' of type 'NSNull' for 'int' property 'AllPrimitiveDictionaries.intObj'.");
     RLMAssertThrowsWithReason(unmanaged.intObj = (id)@{@"0": @"a"},
-                              @"Invalid value 'a' of type '__NSCFConstantString' for RLMDictionary<string, int> property 'AllPrimitiveDictionaries.intObj'.");
+                              @"Invalid value 'a' of type '__NSCFConstantString' for 'int' property 'AllPrimitiveDictionaries.intObj'.");
     RLMAssertThrowsWithReason(unmanaged.intObj = (id)(@{@"0": @1, @"1": @"a"}),
-                              @"Invalid value 'a' of type '__NSCFConstantString' for RLMDictionary<string, int> property 'AllPrimitiveDictionaries.intObj'.");
+                              @"Invalid value 'a' of type '__NSCFConstantString' for 'int' property 'AllPrimitiveDictionaries.intObj'.");
     RLMAssertThrowsWithReason(unmanaged.intObj = (id)unmanaged.floatObj,
                               @"RLMDictionary<string, float> does not match expected type RLMDictionary<string, int> for property 'AllPrimitiveDictionaries.intObj'.");
     RLMAssertThrowsWithReason(unmanaged.intObj = (id)optUnmanaged.intObj,
@@ -649,7 +619,7 @@ static NSArray *sortedDistinctUnion(id array, NSString *type, NSString *prop) {
                               @"Invalid value '<null>' of type 'NSNull' for RLMDictionary<string, int> property 'AllPrimitiveDictionaries.intObj'.");
     RLMAssertThrowsWithReason(managed.intObj = (id)@{@"0": @"a"},
                               @"Invalid value 'a' of type '__NSCFConstantString' for RLMDictionary<string, int> property 'AllPrimitiveDictionaries.intObj'.");
-    RLMAssertThrowsWithReason(managed.intObj = (id)(@{@"0": @1, @"0": @"a"}),
+    RLMAssertThrowsWithReason(managed.intObj = (id)(@{@"0": @1, @"1": @"a"}),
                               @"Invalid value 'a' of type '__NSCFConstantString' for RLMDictionary<string, int> property 'AllPrimitiveDictionaries.intObj'.");
     RLMAssertThrowsWithReason(managed.intObj = (id)managed.floatObj,
                               @"RLMDictionary<string, float> does not match expected type RLMDictionary<string, int> for property 'AllPrimitiveDictionaries.intObj'.");
@@ -670,7 +640,7 @@ static NSArray *sortedDistinctUnion(id array, NSString *type, NSString *prop) {
         RLMAssertThrowsWithReason([dictionary lastObject], @"thread");
 
         RLMAssertThrowsWithReason([dictionary setObject:@0 forKey:@"thread"], @"thread");
-        RLMAssertThrowsWithReason([dictionary addObjects:@{@"thread": @0}], @"thread");
+        RLMAssertThrowsWithReason([dictionary addEntriesFromDictionary:@{@"thread": @0}], @"thread");
         RLMAssertThrowsWithReason([dictionary removeObjectForKey:@"thread"], @"thread");
         RLMAssertThrowsWithReason([dictionary removeObjectsForKeys:(id)@[@"thread"]], @"thread");
         RLMAssertThrowsWithReason([dictionary removeAllObjects], @"thread");
@@ -706,7 +676,7 @@ static NSArray *sortedDistinctUnion(id array, NSString *type, NSString *prop) {
     RLMAssertThrowsWithReason([dictionary lastObject], @"invalidated");
 
     RLMAssertThrowsWithReason([dictionary setObject:@0 forKey:@"thread"], @"invalidated");
-    RLMAssertThrowsWithReason([dictionary addObjects:@{@"invalidated": @0}], @"invalidated");
+    RLMAssertThrowsWithReason([dictionary addEntriesFromDictionary:@{@"invalidated": @0}], @"invalidated");
     RLMAssertThrowsWithReason([dictionary removeObjectForKey:@"invalidated"], @"invalidated");
     RLMAssertThrowsWithReason([dictionary removeObjectsForKeys:(id)@[@"invalidated"]], @"invalidated");
     RLMAssertThrowsWithReason([dictionary removeAllObjects], @"invalidated");
@@ -754,7 +724,7 @@ static NSArray *sortedDistinctUnion(id array, NSString *type, NSString *prop) {
     XCTAssertNoThrow({for (__unused id obj in dictionary);});
     
     RLMAssertThrowsWithReason([dictionary setObject:@0 forKey:@"testKey"], @"write transaction");
-    RLMAssertThrowsWithReason([dictionary addObjects:@{@"testKey": @0}], @"write transaction");
+    RLMAssertThrowsWithReason([dictionary addEntriesFromDictionary:@{@"testKey": @0}], @"write transaction");
     RLMAssertThrowsWithReason([dictionary removeObjectForKey:@"testKey"], @"write transaction");
     RLMAssertThrowsWithReason([dictionary removeObjectsForKeys:(id)@[@"testKey"]], @"write transaction");
     RLMAssertThrowsWithReason([dictionary removeAllObjects], @"write transaction");
@@ -881,7 +851,7 @@ static NSArray *sortedDistinctUnion(id array, NSString *type, NSString *prop) {
 }
 
 - (void)testDeletingObjectWithNotificationsRegistered {
-    [managed.intObj addObjects:@{@"a": @10, @"b": @20}];
+    [managed.intObj addEntriesFromDictionary:@{@"a": @10, @"b": @20}];
     [realm commitWriteTransaction];
 
     __block bool first = true;
@@ -1123,7 +1093,7 @@ static NSArray *sortedDistinctUnion(id array, NSString *type, NSString *prop) {
     [AllPrimitiveDictionaries createInRealm:realm withValue:@{}];
     [AllOptionalPrimitiveDictionaries createInRealm:realm withValue:@{}];
 
-    // Only empty arrays, so count is zero
+    // Only empty dictionarys, so count is zero
     %minmax %man RLMAssertCount($class, 0U, @"$prop.@min == %@", $v0);
     %minmax %man RLMAssertCount($class, 0U, @"$prop.@min == %@", $v1);
 
@@ -1167,7 +1137,7 @@ static NSArray *sortedDistinctUnion(id array, NSString *type, NSString *prop) {
     [AllPrimitiveDictionaries createInRealm:realm withValue:@{}];
     [AllOptionalPrimitiveDictionaries createInRealm:realm withValue:@{}];
 
-    // Only empty arrays, so count is zero
+    // Only empty dictionarys, so count is zero
     %minmax %man RLMAssertCount($class, 0U, @"$prop.@max == %@", $v0);
     %minmax %man RLMAssertCount($class, 0U, @"$prop.@max == %@", $v1);
 

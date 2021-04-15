@@ -125,18 +125,18 @@ static double average(NSDictionary *dictionary) {
 }
 
 - (void)addObjects {
-    [unmanaged.boolObj addObjects:@{@"0": @NO, @"1": @YES}];
-    [unmanaged.intObj addObjects:@{@"0": @2, @"1": @3}];
-    [unmanaged.stringObj addObjects:@{@"0": @"a", @"1": @"b"}];
-    [optUnmanaged.boolObj addObjects:@{@"0": @NO, @"1": @YES, @"2": NSNull.null}];
-    [optUnmanaged.intObj addObjects:@{@"0": @2, @"1": @3, @"2": NSNull.null}];
-    [optUnmanaged.stringObj addObjects:@{@"0": @"a", @"1": @"b", @"2": NSNull.null}];
-    [managed.boolObj addObjects:@{@"0": @NO, @"1": @YES}];
-    [managed.intObj addObjects:@{@"0": @2, @"1": @3}];
-    [managed.stringObj addObjects:@{@"0": @"a", @"1": @"b"}];
-    [optManaged.boolObj addObjects:@{@"0": @NO, @"1": @YES, @"2": NSNull.null}];
-    [optManaged.intObj addObjects:@{@"0": @2, @"1": @3, @"2": NSNull.null}];
-    [optManaged.stringObj addObjects:@{@"0": @"a", @"1": @"b", @"2": NSNull.null}];
+    [unmanaged.boolObj addEntriesFromDictionary:@{@"0": @NO, @"1": @YES}];
+    [unmanaged.intObj addEntriesFromDictionary:@{@"0": @2, @"1": @3}];
+    [unmanaged.stringObj addEntriesFromDictionary:@{@"0": @"a", @"1": @"b"}];
+    [optUnmanaged.boolObj addEntriesFromDictionary:@{@"0": @NO, @"1": @YES, @"2": NSNull.null}];
+    [optUnmanaged.intObj addEntriesFromDictionary:@{@"0": @2, @"1": @3, @"2": NSNull.null}];
+    [optUnmanaged.stringObj addEntriesFromDictionary:@{@"0": @"a", @"1": @"b", @"2": NSNull.null}];
+    [managed.boolObj addEntriesFromDictionary:@{@"0": @NO, @"1": @YES}];
+    [managed.intObj addEntriesFromDictionary:@{@"0": @2, @"1": @3}];
+    [managed.stringObj addEntriesFromDictionary:@{@"0": @"a", @"1": @"b"}];
+    [optManaged.boolObj addEntriesFromDictionary:@{@"0": @NO, @"1": @YES, @"2": NSNull.null}];
+    [optManaged.intObj addEntriesFromDictionary:@{@"0": @2, @"1": @3, @"2": NSNull.null}];
+    [optManaged.stringObj addEntriesFromDictionary:@{@"0": @"a", @"1": @"b", @"2": NSNull.null}];
 }
 
 - (void)testCount {
@@ -478,41 +478,41 @@ static double average(NSDictionary *dictionary) {
 #pragma clang diagnostic pop
 
 - (void)testAddObjects {
-    RLMAssertThrowsWithReason([unmanaged.boolObj addObjects:@{@"wrongVal": @"a"}],
+    RLMAssertThrowsWithReason([unmanaged.boolObj addEntriesFromDictionary:@{@"wrongVal": @"a"}],
                               @"Invalid value 'a' of type '__NSCFConstantString' for expected type 'bool'");
-    RLMAssertThrowsWithReason([unmanaged.intObj addObjects:@{@"wrongVal": @"a"}],
+    RLMAssertThrowsWithReason([unmanaged.intObj addEntriesFromDictionary:@{@"wrongVal": @"a"}],
                               @"Invalid value 'a' of type '__NSCFConstantString' for expected type 'int'");
-    RLMAssertThrowsWithReason([unmanaged.stringObj addObjects:@{@"wrongVal": @2}],
+    RLMAssertThrowsWithReason([unmanaged.stringObj addEntriesFromDictionary:@{@"wrongVal": @2}],
                               @"Invalid value '2' of type '__NSCFNumber' for expected type 'string'");
-    RLMAssertThrowsWithReason([optUnmanaged.boolObj addObjects:@{@"wrongVal": @"a"}],
+    RLMAssertThrowsWithReason([optUnmanaged.boolObj addEntriesFromDictionary:@{@"wrongVal": @"a"}],
                               @"Invalid value 'a' of type '__NSCFConstantString' for expected type 'bool?'");
-    RLMAssertThrowsWithReason([optUnmanaged.intObj addObjects:@{@"wrongVal": @"a"}],
+    RLMAssertThrowsWithReason([optUnmanaged.intObj addEntriesFromDictionary:@{@"wrongVal": @"a"}],
                               @"Invalid value 'a' of type '__NSCFConstantString' for expected type 'int?'");
-    RLMAssertThrowsWithReason([optUnmanaged.stringObj addObjects:@{@"wrongVal": @2}],
+    RLMAssertThrowsWithReason([optUnmanaged.stringObj addEntriesFromDictionary:@{@"wrongVal": @2}],
                               @"Invalid value '2' of type '__NSCFNumber' for expected type 'string?'");
-    RLMAssertThrowsWithReason([managed.boolObj addObjects:@{@"wrongVal": @"a"}],
+    RLMAssertThrowsWithReason([managed.boolObj addEntriesFromDictionary:@{@"wrongVal": @"a"}],
                               @"Invalid value 'a' of type '__NSCFConstantString' for expected type 'bool'");
-    RLMAssertThrowsWithReason([managed.intObj addObjects:@{@"wrongVal": @"a"}],
+    RLMAssertThrowsWithReason([managed.intObj addEntriesFromDictionary:@{@"wrongVal": @"a"}],
                               @"Invalid value 'a' of type '__NSCFConstantString' for expected type 'int'");
-    RLMAssertThrowsWithReason([managed.stringObj addObjects:@{@"wrongVal": @2}],
+    RLMAssertThrowsWithReason([managed.stringObj addEntriesFromDictionary:@{@"wrongVal": @2}],
                               @"Invalid value '2' of type '__NSCFNumber' for expected type 'string'");
-    RLMAssertThrowsWithReason([optManaged.boolObj addObjects:@{@"wrongVal": @"a"}],
+    RLMAssertThrowsWithReason([optManaged.boolObj addEntriesFromDictionary:@{@"wrongVal": @"a"}],
                               @"Invalid value 'a' of type '__NSCFConstantString' for expected type 'bool?'");
-    RLMAssertThrowsWithReason([optManaged.intObj addObjects:@{@"wrongVal": @"a"}],
+    RLMAssertThrowsWithReason([optManaged.intObj addEntriesFromDictionary:@{@"wrongVal": @"a"}],
                               @"Invalid value 'a' of type '__NSCFConstantString' for expected type 'int?'");
-    RLMAssertThrowsWithReason([optManaged.stringObj addObjects:@{@"wrongVal": @2}],
+    RLMAssertThrowsWithReason([optManaged.stringObj addEntriesFromDictionary:@{@"wrongVal": @2}],
                               @"Invalid value '2' of type '__NSCFNumber' for expected type 'string?'");
-    RLMAssertThrowsWithReason([unmanaged.boolObj addObjects:@{@"nullVal": NSNull.null}],
+    RLMAssertThrowsWithReason([unmanaged.boolObj addEntriesFromDictionary:@{@"nullVal": NSNull.null}],
                               @"Invalid value '<null>' of type 'NSNull' for expected type 'bool'");
-    RLMAssertThrowsWithReason([unmanaged.intObj addObjects:@{@"nullVal": NSNull.null}],
+    RLMAssertThrowsWithReason([unmanaged.intObj addEntriesFromDictionary:@{@"nullVal": NSNull.null}],
                               @"Invalid value '<null>' of type 'NSNull' for expected type 'int'");
-    RLMAssertThrowsWithReason([unmanaged.stringObj addObjects:@{@"nullVal": NSNull.null}],
+    RLMAssertThrowsWithReason([unmanaged.stringObj addEntriesFromDictionary:@{@"nullVal": NSNull.null}],
                               @"Invalid value '<null>' of type 'NSNull' for expected type 'string'");
-    RLMAssertThrowsWithReason([managed.boolObj addObjects:@{@"nullVal": NSNull.null}],
+    RLMAssertThrowsWithReason([managed.boolObj addEntriesFromDictionary:@{@"nullVal": NSNull.null}],
                               @"Invalid value '<null>' of type 'NSNull' for expected type 'bool'");
-    RLMAssertThrowsWithReason([managed.intObj addObjects:@{@"nullVal": NSNull.null}],
+    RLMAssertThrowsWithReason([managed.intObj addEntriesFromDictionary:@{@"nullVal": NSNull.null}],
                               @"Invalid value '<null>' of type 'NSNull' for expected type 'int'");
-    RLMAssertThrowsWithReason([managed.stringObj addObjects:@{@"nullVal": NSNull.null}],
+    RLMAssertThrowsWithReason([managed.stringObj addEntriesFromDictionary:@{@"nullVal": NSNull.null}],
                               @"Invalid value '<null>' of type 'NSNull' for expected type 'string'");
 
     [self addObjects];
@@ -870,12 +870,12 @@ static double average(NSDictionary *dictionary) {
 }
 
 - (void)testIndexOfObjectSorted {
-    [managed.boolObj addObjects:@{@"2": @NO, @"3": @YES, @"4": @NO, @"5": @YES}];
-    [managed.intObj addObjects:@{@"2": @2, @"3": @3, @"4": @2, @"5": @3}];
-    [managed.stringObj addObjects:@{@"2": @"a", @"3": @"b", @"4": @"a", @"5": @"b"}];
-    [optManaged.boolObj addObjects:@{@"2": @NO, @"3": @YES, @"4": NSNull.null, @"5": @YES, @"6": @NO}];
-    [optManaged.intObj addObjects:@{@"2": @2, @"3": @3, @"4": NSNull.null, @"5": @3, @"6": @2}];
-    [optManaged.stringObj addObjects:@{@"2": @"a", @"3": @"b", @"4": NSNull.null, @"5": @"b", @"6": @"a"}];
+    [managed.boolObj addEntriesFromDictionary:@{@"2": @NO, @"3": @YES, @"4": @NO, @"5": @YES}];
+    [managed.intObj addEntriesFromDictionary:@{@"2": @2, @"3": @3, @"4": @2, @"5": @3}];
+    [managed.stringObj addEntriesFromDictionary:@{@"2": @"a", @"3": @"b", @"4": @"a", @"5": @"b"}];
+    [optManaged.boolObj addEntriesFromDictionary:@{@"2": @NO, @"3": @YES, @"4": NSNull.null, @"5": @YES, @"6": @NO}];
+    [optManaged.intObj addEntriesFromDictionary:@{@"2": @2, @"3": @3, @"4": NSNull.null, @"5": @3, @"6": @2}];
+    [optManaged.stringObj addEntriesFromDictionary:@{@"2": @"a", @"3": @"b", @"4": NSNull.null, @"5": @"b", @"6": @"a"}];
 
     XCTAssertEqual(0U, [[managed.boolObj sortedResultsUsingKeyPath:@"self" ascending:NO] indexOfObject:@YES]);
     XCTAssertEqual(0U, [[managed.intObj sortedResultsUsingKeyPath:@"self" ascending:NO] indexOfObject:@3]);
@@ -896,12 +896,12 @@ static double average(NSDictionary *dictionary) {
 }
 
 - (void)testIndexOfObjectDistinct {
-    [managed.boolObj addObjects:@{@"2": @NO, @"3": @NO, @"4": @YES}];
-    [managed.intObj addObjects:@{@"2": @2, @"3": @2, @"4": @3}];
-    [managed.stringObj addObjects:@{@"2": @"a", @"3": @"a", @"4": @"b"}];
-    [optManaged.boolObj addObjects:@{@"2": @NO, @"3": @NO, @"4": NSNull.null, @"5": @YES, @"6": @NO}];
-    [optManaged.intObj addObjects:@{@"2": @2, @"3": @2, @"4": NSNull.null, @"5": @3, @"6": @2}];
-    [optManaged.stringObj addObjects:@{@"2": @"a", @"3": @"a", @"4": NSNull.null, @"5": @"b", @"6": @"a"}];
+    [managed.boolObj addEntriesFromDictionary:@{@"2": @NO, @"3": @NO, @"4": @YES}];
+    [managed.intObj addEntriesFromDictionary:@{@"2": @2, @"3": @2, @"4": @3}];
+    [managed.stringObj addEntriesFromDictionary:@{@"2": @"a", @"3": @"a", @"4": @"b"}];
+    [optManaged.boolObj addEntriesFromDictionary:@{@"2": @NO, @"3": @NO, @"4": NSNull.null, @"5": @YES, @"6": @NO}];
+    [optManaged.intObj addEntriesFromDictionary:@{@"2": @2, @"3": @2, @"4": NSNull.null, @"5": @3, @"6": @2}];
+    [optManaged.stringObj addEntriesFromDictionary:@{@"2": @"a", @"3": @"a", @"4": NSNull.null, @"5": @"b", @"6": @"a"}];
 
     XCTAssertEqual(0U, [[managed.boolObj distinctResultsUsingKeyPaths:@[@"self"]] indexOfObject:@NO]);
     XCTAssertEqual(0U, [[managed.intObj distinctResultsUsingKeyPaths:@[@"self"]] indexOfObject:@2]);
@@ -1045,12 +1045,12 @@ static double average(NSDictionary *dictionary) {
     RLMAssertThrowsWithReason([optManaged.stringObj sortedResultsUsingKeyPath:@"not self" ascending:NO],
                               @"can only be sorted on 'self'");
 
-    [managed.boolObj addObjects:@{@"2": @NO, @"3": @YES, @"4": @NO}];
-    [managed.intObj addObjects:@{@"2": @2, @"3": @3, @"4": @2}];
-    [managed.stringObj addObjects:@{@"2": @"a", @"3": @"b", @"4": @"a"}];
-    [optManaged.boolObj addObjects:@{@"2": @NO, @"3": @YES, @"4": NSNull.null, @"5": @YES, @"6": @NO}];
-    [optManaged.intObj addObjects:@{@"2": @2, @"3": @3, @"4": NSNull.null, @"5": @3, @"6": @2}];
-    [optManaged.stringObj addObjects:@{@"2": @"a", @"3": @"b", @"4": NSNull.null, @"5": @"b", @"6": @"a"}];
+    [managed.boolObj addEntriesFromDictionary:@{@"2": @NO, @"3": @YES, @"4": @NO}];
+    [managed.intObj addEntriesFromDictionary:@{@"2": @2, @"3": @3, @"4": @2}];
+    [managed.stringObj addEntriesFromDictionary:@{@"2": @"a", @"3": @"b", @"4": @"a"}];
+    [optManaged.boolObj addEntriesFromDictionary:@{@"2": @NO, @"3": @YES, @"4": NSNull.null, @"5": @YES, @"6": @NO}];
+    [optManaged.intObj addEntriesFromDictionary:@{@"2": @2, @"3": @3, @"4": NSNull.null, @"5": @3, @"6": @2}];
+    [optManaged.stringObj addEntriesFromDictionary:@{@"2": @"a", @"3": @"b", @"4": NSNull.null, @"5": @"b", @"6": @"a"}];
 
     XCTAssertEqualObjects([[managed.boolObj sortedResultsUsingDescriptors:@[]] valueForKey:@"self"],
                           (@[@NO, @YES, @NO]));
@@ -1186,21 +1186,21 @@ static double average(NSDictionary *dictionary) {
 
 - (void)testMin {
     RLMAssertThrowsWithReason([unmanaged.boolObj minOfProperty:@"self"],
-                              @"minOfProperty: is not supported for bool array");
+                              @"minOfProperty: is not supported for bool dictionary");
     RLMAssertThrowsWithReason([unmanaged.stringObj minOfProperty:@"self"],
-                              @"minOfProperty: is not supported for string array");
+                              @"minOfProperty: is not supported for string dictionary");
     RLMAssertThrowsWithReason([optUnmanaged.boolObj minOfProperty:@"self"],
-                              @"minOfProperty: is not supported for bool? array");
+                              @"minOfProperty: is not supported for bool? dictionary");
     RLMAssertThrowsWithReason([optUnmanaged.stringObj minOfProperty:@"self"],
-                              @"minOfProperty: is not supported for string? array");
+                              @"minOfProperty: is not supported for string? dictionary");
     RLMAssertThrowsWithReason([managed.boolObj minOfProperty:@"self"],
-                              @"minOfProperty: is not supported for bool array 'AllPrimitiveDictionaries.boolObj'");
+                              @"minOfProperty: is not supported for bool dictionary 'AllPrimitiveDictionaries.boolObj'");
     RLMAssertThrowsWithReason([managed.stringObj minOfProperty:@"self"],
-                              @"minOfProperty: is not supported for string array 'AllPrimitiveDictionaries.stringObj'");
+                              @"minOfProperty: is not supported for string dictionary 'AllPrimitiveDictionaries.stringObj'");
     RLMAssertThrowsWithReason([optManaged.boolObj minOfProperty:@"self"],
-                              @"minOfProperty: is not supported for bool? array 'AllOptionalPrimitiveDictionaries.boolObj'");
+                              @"minOfProperty: is not supported for bool? dictionary 'AllOptionalPrimitiveDictionaries.boolObj'");
     RLMAssertThrowsWithReason([optManaged.stringObj minOfProperty:@"self"],
-                              @"minOfProperty: is not supported for string? array 'AllOptionalPrimitiveDictionaries.stringObj'");
+                              @"minOfProperty: is not supported for string? dictionary 'AllOptionalPrimitiveDictionaries.stringObj'");
 
     XCTAssertNil([unmanaged.intObj minOfProperty:@"self"]);
     XCTAssertNil([optUnmanaged.intObj minOfProperty:@"self"]);
@@ -1217,21 +1217,21 @@ static double average(NSDictionary *dictionary) {
 
 - (void)testMax {
     RLMAssertThrowsWithReason([unmanaged.boolObj maxOfProperty:@"self"],
-                              @"maxOfProperty: is not supported for bool array");
+                              @"maxOfProperty: is not supported for bool dictionary");
     RLMAssertThrowsWithReason([unmanaged.stringObj maxOfProperty:@"self"],
-                              @"maxOfProperty: is not supported for string array");
+                              @"maxOfProperty: is not supported for string dictionary");
     RLMAssertThrowsWithReason([optUnmanaged.boolObj maxOfProperty:@"self"],
-                              @"maxOfProperty: is not supported for bool? array");
+                              @"maxOfProperty: is not supported for bool? dictionary");
     RLMAssertThrowsWithReason([optUnmanaged.stringObj maxOfProperty:@"self"],
-                              @"maxOfProperty: is not supported for string? array");
+                              @"maxOfProperty: is not supported for string? dictionary");
     RLMAssertThrowsWithReason([managed.boolObj maxOfProperty:@"self"],
-                              @"maxOfProperty: is not supported for bool array 'AllPrimitiveDictionaries.boolObj'");
+                              @"maxOfProperty: is not supported for bool dictionary 'AllPrimitiveDictionaries.boolObj'");
     RLMAssertThrowsWithReason([managed.stringObj maxOfProperty:@"self"],
-                              @"maxOfProperty: is not supported for string array 'AllPrimitiveDictionaries.stringObj'");
+                              @"maxOfProperty: is not supported for string dictionary 'AllPrimitiveDictionaries.stringObj'");
     RLMAssertThrowsWithReason([optManaged.boolObj maxOfProperty:@"self"],
-                              @"maxOfProperty: is not supported for bool? array 'AllOptionalPrimitiveDictionaries.boolObj'");
+                              @"maxOfProperty: is not supported for bool? dictionary 'AllOptionalPrimitiveDictionaries.boolObj'");
     RLMAssertThrowsWithReason([optManaged.stringObj maxOfProperty:@"self"],
-                              @"maxOfProperty: is not supported for string? array 'AllOptionalPrimitiveDictionaries.stringObj'");
+                              @"maxOfProperty: is not supported for string? dictionary 'AllOptionalPrimitiveDictionaries.stringObj'");
 
     XCTAssertNil([unmanaged.intObj maxOfProperty:@"self"]);
     XCTAssertNil([optUnmanaged.intObj maxOfProperty:@"self"]);
@@ -1248,21 +1248,21 @@ static double average(NSDictionary *dictionary) {
 
 - (void)testSum {
     RLMAssertThrowsWithReason([unmanaged.boolObj sumOfProperty:@"self"],
-                              @"sumOfProperty: is not supported for bool array");
+                              @"sumOfProperty: is not supported for bool dictionary");
     RLMAssertThrowsWithReason([unmanaged.stringObj sumOfProperty:@"self"],
-                              @"sumOfProperty: is not supported for string array");
+                              @"sumOfProperty: is not supported for string dictionary");
     RLMAssertThrowsWithReason([optUnmanaged.boolObj sumOfProperty:@"self"],
-                              @"sumOfProperty: is not supported for bool? array");
+                              @"sumOfProperty: is not supported for bool? dictionary");
     RLMAssertThrowsWithReason([optUnmanaged.stringObj sumOfProperty:@"self"],
-                              @"sumOfProperty: is not supported for string? array");
+                              @"sumOfProperty: is not supported for string? dictionary");
     RLMAssertThrowsWithReason([managed.boolObj sumOfProperty:@"self"],
-                              @"sumOfProperty: is not supported for bool array 'AllPrimitiveDictionaries.boolObj'");
+                              @"sumOfProperty: is not supported for bool dictionary 'AllPrimitiveDictionaries.boolObj'");
     RLMAssertThrowsWithReason([managed.stringObj sumOfProperty:@"self"],
-                              @"sumOfProperty: is not supported for string array 'AllPrimitiveDictionaries.stringObj'");
+                              @"sumOfProperty: is not supported for string dictionary 'AllPrimitiveDictionaries.stringObj'");
     RLMAssertThrowsWithReason([optManaged.boolObj sumOfProperty:@"self"],
-                              @"sumOfProperty: is not supported for bool? array 'AllOptionalPrimitiveDictionaries.boolObj'");
+                              @"sumOfProperty: is not supported for bool? dictionary 'AllOptionalPrimitiveDictionaries.boolObj'");
     RLMAssertThrowsWithReason([optManaged.stringObj sumOfProperty:@"self"],
-                              @"sumOfProperty: is not supported for string? array 'AllOptionalPrimitiveDictionaries.stringObj'");
+                              @"sumOfProperty: is not supported for string? dictionary 'AllOptionalPrimitiveDictionaries.stringObj'");
 
     XCTAssertEqualObjects([unmanaged.intObj sumOfProperty:@"self"], @0);
     XCTAssertEqualObjects([optUnmanaged.intObj sumOfProperty:@"self"], @0);
@@ -1279,21 +1279,21 @@ static double average(NSDictionary *dictionary) {
 
 - (void)testAverage {
     RLMAssertThrowsWithReason([unmanaged.boolObj averageOfProperty:@"self"],
-                              @"averageOfProperty: is not supported for bool array");
+                              @"averageOfProperty: is not supported for bool dictionary");
     RLMAssertThrowsWithReason([unmanaged.stringObj averageOfProperty:@"self"],
-                              @"averageOfProperty: is not supported for string array");
+                              @"averageOfProperty: is not supported for string dictionary");
     RLMAssertThrowsWithReason([optUnmanaged.boolObj averageOfProperty:@"self"],
-                              @"averageOfProperty: is not supported for bool? array");
+                              @"averageOfProperty: is not supported for bool? dictionary");
     RLMAssertThrowsWithReason([optUnmanaged.stringObj averageOfProperty:@"self"],
-                              @"averageOfProperty: is not supported for string? array");
+                              @"averageOfProperty: is not supported for string? dictionary");
     RLMAssertThrowsWithReason([managed.boolObj averageOfProperty:@"self"],
-                              @"averageOfProperty: is not supported for bool array 'AllPrimitiveDictionaries.boolObj'");
+                              @"averageOfProperty: is not supported for bool dictionary 'AllPrimitiveDictionaries.boolObj'");
     RLMAssertThrowsWithReason([managed.stringObj averageOfProperty:@"self"],
-                              @"averageOfProperty: is not supported for string array 'AllPrimitiveDictionaries.stringObj'");
+                              @"averageOfProperty: is not supported for string dictionary 'AllPrimitiveDictionaries.stringObj'");
     RLMAssertThrowsWithReason([optManaged.boolObj averageOfProperty:@"self"],
-                              @"averageOfProperty: is not supported for bool? array 'AllOptionalPrimitiveDictionaries.boolObj'");
+                              @"averageOfProperty: is not supported for bool? dictionary 'AllOptionalPrimitiveDictionaries.boolObj'");
     RLMAssertThrowsWithReason([optManaged.stringObj averageOfProperty:@"self"],
-                              @"averageOfProperty: is not supported for string? array 'AllOptionalPrimitiveDictionaries.stringObj'");
+                              @"averageOfProperty: is not supported for string? dictionary 'AllOptionalPrimitiveDictionaries.stringObj'");
 
     XCTAssertNil([unmanaged.intObj averageOfProperty:@"self"]);
     XCTAssertNil([optUnmanaged.intObj averageOfProperty:@"self"]);
@@ -1533,120 +1533,7 @@ static NSArray *sortedDistinctUnion(id array, NSString *type, NSString *prop) {
             }];
 }
 
-- (void)testUnionOfObjects {
-    for (RLMDictionary *dictionary in allDictionaries) {
-        XCTAssertEqualObjects([dictionary valueForKeyPath:@"@unionOfObjects.self"], @[]);
-    }
-    for (RLMDictionary *dictionary in allDictionaries) {
-        XCTAssertEqualObjects([dictionary valueForKeyPath:@"@distinctUnionOfObjects.self"], @[]);
-    }
-
-    [self addObjects];
-    [self addObjects];
-
-    XCTAssertEqualObjects([unmanaged.boolObj valueForKeyPath:@"@unionOfObjects.self"],
-                          (@{@"0": @NO, @"1": @YES}));
-    XCTAssertEqualObjects([unmanaged.intObj valueForKeyPath:@"@unionOfObjects.self"],
-                          (@{@"0": @2, @"1": @4}));
-    XCTAssertEqualObjects([unmanaged.stringObj valueForKeyPath:@"@unionOfObjects.self"],
-                          (@{@"0": @"a", @"1": @"de"}));
-    XCTAssertEqualObjects([optUnmanaged.boolObj valueForKeyPath:@"@unionOfObjects.self"],
-                          (@{@"0": @YES, @"1": @NO}));
-    XCTAssertEqualObjects([optUnmanaged.intObj valueForKeyPath:@"@unionOfObjects.self"],
-                          (@{@"0": @3, @"1": @4}));
-    XCTAssertEqualObjects([optUnmanaged.stringObj valueForKeyPath:@"@unionOfObjects.self"],
-                          (@{@"0": @"bc", @"1": @"de"}));
-    XCTAssertEqualObjects([managed.boolObj valueForKeyPath:@"@unionOfObjects.self"],
-                          (@{@"0": @YES, @"1": @NO}));
-    XCTAssertEqualObjects([managed.intObj valueForKeyPath:@"@unionOfObjects.self"],
-                          (@{@"0": @3, @"1": @4}));
-    XCTAssertEqualObjects([managed.stringObj valueForKeyPath:@"@unionOfObjects.self"],
-                          (@{@"0": @"bc", @"1": @"de"}));
-    XCTAssertEqualObjects([optManaged.boolObj valueForKeyPath:@"@unionOfObjects.self"],
-                          (@{@"0": @YES, @"1": @NO}));
-    XCTAssertEqualObjects([optManaged.intObj valueForKeyPath:@"@unionOfObjects.self"],
-                          (@{@"0": @3, @"1": @4}));
-    XCTAssertEqualObjects([optManaged.stringObj valueForKeyPath:@"@unionOfObjects.self"],
-                          (@{@"0": @"bc", @"1": @"de"}));
-    XCTAssertEqualObjects(sortedDistinctUnion(unmanaged.boolObj, @"Objects", @"self"),
-                          (@{@"0": @NO, @"1": @YES}));
-    XCTAssertEqualObjects(sortedDistinctUnion(unmanaged.intObj, @"Objects", @"self"),
-                          (@{@"0": @2, @"1": @3}));
-    XCTAssertEqualObjects(sortedDistinctUnion(unmanaged.stringObj, @"Objects", @"self"),
-                          (@{@"0": @"a", @"1": @"b"}));
-    XCTAssertEqualObjects(sortedDistinctUnion(optUnmanaged.boolObj, @"Objects", @"self"),
-                          (@{@"0": @NO, @"1": @YES, @"2": NSNull.null}));
-    XCTAssertEqualObjects(sortedDistinctUnion(optUnmanaged.intObj, @"Objects", @"self"),
-                          (@{@"0": @2, @"1": @3, @"2": NSNull.null}));
-    XCTAssertEqualObjects(sortedDistinctUnion(optUnmanaged.stringObj, @"Objects", @"self"),
-                          (@{@"0": @"a", @"1": @"b", @"2": NSNull.null}));
-    XCTAssertEqualObjects(sortedDistinctUnion(managed.boolObj, @"Objects", @"self"),
-                          (@{@"0": @NO, @"1": @YES}));
-    XCTAssertEqualObjects(sortedDistinctUnion(managed.intObj, @"Objects", @"self"),
-                          (@{@"0": @2, @"1": @3}));
-    XCTAssertEqualObjects(sortedDistinctUnion(managed.stringObj, @"Objects", @"self"),
-                          (@{@"0": @"a", @"1": @"b"}));
-    XCTAssertEqualObjects(sortedDistinctUnion(optManaged.boolObj, @"Objects", @"self"),
-                          (@{@"0": @NO, @"1": @YES, @"2": NSNull.null}));
-    XCTAssertEqualObjects(sortedDistinctUnion(optManaged.intObj, @"Objects", @"self"),
-                          (@{@"0": @2, @"1": @3, @"2": NSNull.null}));
-    XCTAssertEqualObjects(sortedDistinctUnion(optManaged.stringObj, @"Objects", @"self"),
-                          (@{@"0": @"a", @"1": @"b", @"2": NSNull.null}));
-}
-
-- (void)testUnionOfArrays {
-    RLMResults *allRequired = [AllPrimitiveDictionaries allObjectsInRealm:realm];
-    RLMResults *allOptional = [AllOptionalPrimitiveDictionaries allObjectsInRealm:realm];
-
-    XCTAssertEqualObjects([allRequired valueForKeyPath:@"@unionOfArrays.boolObj"], @[]);
-    XCTAssertEqualObjects([allRequired valueForKeyPath:@"@unionOfArrays.intObj"], @[]);
-    XCTAssertEqualObjects([allRequired valueForKeyPath:@"@unionOfArrays.stringObj"], @[]);
-    XCTAssertEqualObjects([allOptional valueForKeyPath:@"@unionOfArrays.boolObj"], @[]);
-    XCTAssertEqualObjects([allOptional valueForKeyPath:@"@unionOfArrays.intObj"], @[]);
-    XCTAssertEqualObjects([allOptional valueForKeyPath:@"@unionOfArrays.stringObj"], @[]);
-    XCTAssertEqualObjects([allRequired valueForKeyPath:@"@distinctUnionOfArrays.boolObj"], @[]);
-    XCTAssertEqualObjects([allRequired valueForKeyPath:@"@distinctUnionOfArrays.intObj"], @[]);
-    XCTAssertEqualObjects([allRequired valueForKeyPath:@"@distinctUnionOfArrays.stringObj"], @[]);
-    XCTAssertEqualObjects([allOptional valueForKeyPath:@"@distinctUnionOfArrays.boolObj"], @[]);
-    XCTAssertEqualObjects([allOptional valueForKeyPath:@"@distinctUnionOfArrays.intObj"], @[]);
-    XCTAssertEqualObjects([allOptional valueForKeyPath:@"@distinctUnionOfArrays.stringObj"], @[]);
-
-    [self addObjects];
-
-    [AllPrimitiveDictionaries createInRealm:realm withValue:managed];
-    [AllOptionalPrimitiveDictionaries createInRealm:realm withValue:optManaged];
-
-    XCTAssertEqualObjects([allRequired valueForKeyPath:@"@unionOfArrays.boolObj"],
-                          (@{@"0": @YES, @"1": @NO}));
-    XCTAssertEqualObjects([allRequired valueForKeyPath:@"@unionOfArrays.intObj"],
-                          (@{@"0": @3, @"1": @4}));
-    XCTAssertEqualObjects([allRequired valueForKeyPath:@"@unionOfArrays.stringObj"],
-                          (@{@"0": @"bc", @"1": @"de"}));
-    XCTAssertEqualObjects([allOptional valueForKeyPath:@"@unionOfArrays.boolObj"],
-                          (@{@"0": @YES, @"1": @NO}));
-    XCTAssertEqualObjects([allOptional valueForKeyPath:@"@unionOfArrays.intObj"],
-                          (@{@"0": @3, @"1": @4}));
-    XCTAssertEqualObjects([allOptional valueForKeyPath:@"@unionOfArrays.stringObj"],
-                          (@{@"0": @"bc", @"1": @"de"}));
-    XCTAssertEqualObjects(sortedDistinctUnion(allRequired, @"Arrays", @"boolObj"),
-                          (@{@"0": @NO, @"1": @YES}));
-    XCTAssertEqualObjects(sortedDistinctUnion(allRequired, @"Arrays", @"intObj"),
-                          (@{@"0": @2, @"1": @3}));
-    XCTAssertEqualObjects(sortedDistinctUnion(allRequired, @"Arrays", @"stringObj"),
-                          (@{@"0": @"a", @"1": @"b"}));
-    XCTAssertEqualObjects(sortedDistinctUnion(allOptional, @"Arrays", @"boolObj"),
-                          (@{@"0": @NO, @"1": @YES, @"2": NSNull.null}));
-    XCTAssertEqualObjects(sortedDistinctUnion(allOptional, @"Arrays", @"intObj"),
-                          (@{@"0": @2, @"1": @3, @"2": NSNull.null}));
-    XCTAssertEqualObjects(sortedDistinctUnion(allOptional, @"Arrays", @"stringObj"),
-                          (@{@"0": @"a", @"1": @"b", @"2": NSNull.null}));
-}
-
 - (void)testSetValueForKey {
-    for (RLMDictionary *dictionary in allDictionaries) {
-        RLMAssertThrowsWithReason([dictionary setValue:@0 forKey:@"not self"],
-                                  @"this class is not key value coding-compliant for the key not self.");
-    }
     RLMAssertThrowsWithReason([unmanaged.boolObj setValue:@"a" forKey:@"self"],
                               @"Invalid value 'a' of type '__NSCFConstantString' for expected type 'bool'");
     RLMAssertThrowsWithReason([unmanaged.intObj setValue:@"a" forKey:@"self"],
@@ -1686,6 +1573,7 @@ static NSArray *sortedDistinctUnion(id array, NSString *type, NSString *prop) {
 
     [self addObjects];
 
+    // setValue overrides all existing values
     [unmanaged.boolObj setValue:@NO forKey:@"self"];
     [unmanaged.intObj setValue:@2 forKey:@"self"];
     [unmanaged.stringObj setValue:@"a" forKey:@"self"];
@@ -1699,36 +1587,37 @@ static NSArray *sortedDistinctUnion(id array, NSString *type, NSString *prop) {
     [optManaged.intObj setValue:@2 forKey:@"self"];
     [optManaged.stringObj setValue:@"a" forKey:@"self"];
 
-    XCTAssertEqualObjects(unmanaged.boolObj[0], @NO);
-    XCTAssertEqualObjects(unmanaged.intObj[0], @2);
-    XCTAssertEqualObjects(unmanaged.stringObj[0], @"a");
-    XCTAssertEqualObjects(optUnmanaged.boolObj[0], @NO);
-    XCTAssertEqualObjects(optUnmanaged.intObj[0], @2);
-    XCTAssertEqualObjects(optUnmanaged.stringObj[0], @"a");
-    XCTAssertEqualObjects(managed.boolObj[0], @NO);
-    XCTAssertEqualObjects(managed.intObj[0], @2);
-    XCTAssertEqualObjects(managed.stringObj[0], @"a");
-    XCTAssertEqualObjects(optManaged.boolObj[0], @NO);
-    XCTAssertEqualObjects(optManaged.intObj[0], @2);
-    XCTAssertEqualObjects(optManaged.stringObj[0], @"a");
-    XCTAssertEqualObjects(unmanaged.boolObj[1], @NO);
-    XCTAssertEqualObjects(unmanaged.intObj[1], @2);
-    XCTAssertEqualObjects(unmanaged.stringObj[1], @"a");
-    XCTAssertEqualObjects(optUnmanaged.boolObj[1], @NO);
-    XCTAssertEqualObjects(optUnmanaged.intObj[1], @2);
-    XCTAssertEqualObjects(optUnmanaged.stringObj[1], @"a");
-    XCTAssertEqualObjects(managed.boolObj[1], @NO);
-    XCTAssertEqualObjects(managed.intObj[1], @2);
-    XCTAssertEqualObjects(managed.stringObj[1], @"a");
-    XCTAssertEqualObjects(optManaged.boolObj[1], @NO);
-    XCTAssertEqualObjects(optManaged.intObj[1], @2);
-    XCTAssertEqualObjects(optManaged.stringObj[1], @"a");
-    XCTAssertEqualObjects(optUnmanaged.boolObj[2], @NO);
-    XCTAssertEqualObjects(optUnmanaged.intObj[2], @2);
-    XCTAssertEqualObjects(optUnmanaged.stringObj[2], @"a");
-    XCTAssertEqualObjects(optManaged.boolObj[2], @NO);
-    XCTAssertEqualObjects(optManaged.intObj[2], @2);
-    XCTAssertEqualObjects(optManaged.stringObj[2], @"a");
+    RLMAssertThrowsWithReason(unmanaged.boolObj.allValues[1], @"index 1 beyond bounds [0 .. 0]");
+    RLMAssertThrowsWithReason(unmanaged.intObj.allValues[1], @"index 1 beyond bounds [0 .. 0]");
+    RLMAssertThrowsWithReason(unmanaged.stringObj.allValues[1], @"index 1 beyond bounds [0 .. 0]");
+    RLMAssertThrowsWithReason(optUnmanaged.boolObj.allValues[1], @"index 1 beyond bounds [0 .. 0]");
+    RLMAssertThrowsWithReason(optUnmanaged.intObj.allValues[1], @"index 1 beyond bounds [0 .. 0]");
+    RLMAssertThrowsWithReason(optUnmanaged.stringObj.allValues[1], @"index 1 beyond bounds [0 .. 0]");
+    RLMAssertThrowsWithReason(managed.boolObj.allValues[1], @"index 1 beyond bounds [0 .. 0]");
+    RLMAssertThrowsWithReason(managed.intObj.allValues[1], @"index 1 beyond bounds [0 .. 0]");
+    RLMAssertThrowsWithReason(managed.stringObj.allValues[1], @"index 1 beyond bounds [0 .. 0]");
+    RLMAssertThrowsWithReason(optManaged.boolObj.allValues[1], @"index 1 beyond bounds [0 .. 0]");
+    RLMAssertThrowsWithReason(optManaged.intObj.allValues[1], @"index 1 beyond bounds [0 .. 0]");
+    RLMAssertThrowsWithReason(optManaged.stringObj.allValues[1], @"index 1 beyond bounds [0 .. 0]");
+
+    XCTAssertEqualObjects(unmanaged.boolObj.allValues.firstObject, @NO);
+    XCTAssertEqualObjects(unmanaged.intObj.allValues.firstObject, @2);
+    XCTAssertEqualObjects(unmanaged.stringObj.allValues.firstObject, @"a");
+    XCTAssertEqualObjects(optUnmanaged.boolObj.allValues.firstObject, @NO);
+    XCTAssertEqualObjects(optUnmanaged.intObj.allValues.firstObject, @2);
+    XCTAssertEqualObjects(optUnmanaged.stringObj.allValues.firstObject, @"a");
+    XCTAssertEqualObjects(managed.boolObj.allValues.firstObject, @NO);
+    XCTAssertEqualObjects(managed.intObj.allValues.firstObject, @2);
+    XCTAssertEqualObjects(managed.stringObj.allValues.firstObject, @"a");
+    XCTAssertEqualObjects(optManaged.boolObj.allValues.firstObject, @NO);
+    XCTAssertEqualObjects(optManaged.intObj.allValues.firstObject, @2);
+    XCTAssertEqualObjects(optManaged.stringObj.allValues.firstObject, @"a");
+    XCTAssertEqualObjects(optUnmanaged.boolObj.allValues.firstObject, @NO);
+    XCTAssertEqualObjects(optUnmanaged.intObj.allValues.firstObject, @2);
+    XCTAssertEqualObjects(optUnmanaged.stringObj.allValues.firstObject, @"a");
+    XCTAssertEqualObjects(optManaged.boolObj.allValues.firstObject, @NO);
+    XCTAssertEqualObjects(optManaged.intObj.allValues.firstObject, @2);
+    XCTAssertEqualObjects(optManaged.stringObj.allValues.firstObject, @"a");
 
     [optUnmanaged.boolObj setValue:NSNull.null forKey:@"self"];
     [optUnmanaged.intObj setValue:NSNull.null forKey:@"self"];
@@ -1736,12 +1625,12 @@ static NSArray *sortedDistinctUnion(id array, NSString *type, NSString *prop) {
     [optManaged.boolObj setValue:NSNull.null forKey:@"self"];
     [optManaged.intObj setValue:NSNull.null forKey:@"self"];
     [optManaged.stringObj setValue:NSNull.null forKey:@"self"];
-    XCTAssertEqualObjects(optUnmanaged.boolObj[0], NSNull.null);
-    XCTAssertEqualObjects(optUnmanaged.intObj[0], NSNull.null);
-    XCTAssertEqualObjects(optUnmanaged.stringObj[0], NSNull.null);
-    XCTAssertEqualObjects(optManaged.boolObj[0], NSNull.null);
-    XCTAssertEqualObjects(optManaged.intObj[0], NSNull.null);
-    XCTAssertEqualObjects(optManaged.stringObj[0], NSNull.null);
+    XCTAssertEqualObjects(optUnmanaged.boolObj.allValues.firstObject, NSNull.null);
+    XCTAssertEqualObjects(optUnmanaged.intObj.allValues.firstObject, NSNull.null);
+    XCTAssertEqualObjects(optUnmanaged.stringObj.allValues.firstObject, NSNull.null);
+    XCTAssertEqualObjects(optManaged.boolObj.allValues.firstObject, NSNull.null);
+    XCTAssertEqualObjects(optManaged.intObj.allValues.firstObject, NSNull.null);
+    XCTAssertEqualObjects(optManaged.stringObj.allValues.firstObject, NSNull.null);
 }
 
 - (void)testAssignment {
@@ -1808,7 +1697,7 @@ static NSArray *sortedDistinctUnion(id array, NSString *type, NSString *prop) {
     XCTAssertEqualObjects([optManaged.stringObj valueForKey:@"self"], (@{@"0": @"a", @"1": @"b", @"2": NSNull.null}));
     
 
-    // Should not clear the array
+    // Should not clear the dictionary
     unmanaged.boolObj = unmanaged.boolObj;
     XCTAssertEqualObjects([unmanaged.boolObj valueForKey:@"self"], (@{@"0": @NO, @"1": @YES}));
     
@@ -1919,7 +1808,7 @@ static NSArray *sortedDistinctUnion(id array, NSString *type, NSString *prop) {
     XCTAssertEqualObjects([optManaged[@"stringObj"] valueForKey:@"self"], (@{@"0": @"a", @"1": @"b", @"2": NSNull.null}));
     
 
-    // Should not clear the array
+    // Should not clear the dictionary
     unmanaged[@"boolObj"] = unmanaged[@"boolObj"];
     XCTAssertEqualObjects([unmanaged[@"boolObj"] valueForKey:@"self"], (@{@"0": @NO, @"1": @YES}));
     
@@ -1986,7 +1875,7 @@ static NSArray *sortedDistinctUnion(id array, NSString *type, NSString *prop) {
                               @"Invalid value '<null>' of type 'NSNull' for RLMDictionary<string, int> property 'AllPrimitiveDictionaries.intObj'.");
     RLMAssertThrowsWithReason(managed.intObj = (id)@{@"0": @"a"},
                               @"Invalid value 'a' of type '__NSCFConstantString' for RLMDictionary<string, int> property 'AllPrimitiveDictionaries.intObj'.");
-    RLMAssertThrowsWithReason(managed.intObj = (id)(@{@"0": @1, @"0": @"a"}),
+    RLMAssertThrowsWithReason(managed.intObj = (id)(@{@"0": @1, @"1": @"a"}),
                               @"Invalid value 'a' of type '__NSCFConstantString' for RLMDictionary<string, int> property 'AllPrimitiveDictionaries.intObj'.");
     RLMAssertThrowsWithReason(managed.intObj = (id)managed.floatObj,
                               @"RLMDictionary<string, float> does not match expected type RLMDictionary<string, int> for property 'AllPrimitiveDictionaries.intObj'.");
@@ -2007,7 +1896,7 @@ static NSArray *sortedDistinctUnion(id array, NSString *type, NSString *prop) {
         RLMAssertThrowsWithReason([dictionary lastObject], @"thread");
 
         RLMAssertThrowsWithReason([dictionary setObject:@0 forKey:@"thread"], @"thread");
-        RLMAssertThrowsWithReason([dictionary addObjects:@{@"thread": @0}], @"thread");
+        RLMAssertThrowsWithReason([dictionary addEntriesFromDictionary:@{@"thread": @0}], @"thread");
         RLMAssertThrowsWithReason([dictionary removeObjectForKey:@"thread"], @"thread");
         RLMAssertThrowsWithReason([dictionary removeObjectsForKeys:(id)@[@"thread"]], @"thread");
         RLMAssertThrowsWithReason([dictionary removeAllObjects], @"thread");
@@ -2043,7 +1932,7 @@ static NSArray *sortedDistinctUnion(id array, NSString *type, NSString *prop) {
     RLMAssertThrowsWithReason([dictionary lastObject], @"invalidated");
 
     RLMAssertThrowsWithReason([dictionary setObject:@0 forKey:@"thread"], @"invalidated");
-    RLMAssertThrowsWithReason([dictionary addObjects:@{@"invalidated": @0}], @"invalidated");
+    RLMAssertThrowsWithReason([dictionary addEntriesFromDictionary:@{@"invalidated": @0}], @"invalidated");
     RLMAssertThrowsWithReason([dictionary removeObjectForKey:@"invalidated"], @"invalidated");
     RLMAssertThrowsWithReason([dictionary removeObjectsForKeys:(id)@[@"invalidated"]], @"invalidated");
     RLMAssertThrowsWithReason([dictionary removeAllObjects], @"invalidated");
@@ -2091,7 +1980,7 @@ static NSArray *sortedDistinctUnion(id array, NSString *type, NSString *prop) {
     XCTAssertNoThrow({for (__unused id obj in dictionary);});
     
     RLMAssertThrowsWithReason([dictionary setObject:@0 forKey:@"testKey"], @"write transaction");
-    RLMAssertThrowsWithReason([dictionary addObjects:@{@"testKey": @0}], @"write transaction");
+    RLMAssertThrowsWithReason([dictionary addEntriesFromDictionary:@{@"testKey": @0}], @"write transaction");
     RLMAssertThrowsWithReason([dictionary removeObjectForKey:@"testKey"], @"write transaction");
     RLMAssertThrowsWithReason([dictionary removeObjectsForKeys:(id)@[@"testKey"]], @"write transaction");
     RLMAssertThrowsWithReason([dictionary removeAllObjects], @"write transaction");
@@ -2218,7 +2107,7 @@ static NSArray *sortedDistinctUnion(id array, NSString *type, NSString *prop) {
 }
 
 - (void)testDeletingObjectWithNotificationsRegistered {
-    [managed.intObj addObjects:@{@"a": @10, @"b": @20}];
+    [managed.intObj addEntriesFromDictionary:@{@"a": @10, @"b": @20}];
     [realm commitWriteTransaction];
 
     __block bool first = true;
@@ -2645,7 +2534,7 @@ static NSArray *sortedDistinctUnion(id array, NSString *type, NSString *prop) {
     [AllPrimitiveDictionaries createInRealm:realm withValue:@{}];
     [AllOptionalPrimitiveDictionaries createInRealm:realm withValue:@{}];
 
-    // Only empty arrays, so count is zero
+    // Only empty dictionarys, so count is zero
     RLMAssertCount(AllPrimitiveDictionaries, 0U, @"intObj.@min == %@", @2);
     RLMAssertCount(AllOptionalPrimitiveDictionaries, 0U, @"intObj.@min == %@", @2);
     RLMAssertCount(AllPrimitiveDictionaries, 0U, @"intObj.@min == %@", @3);
@@ -2713,7 +2602,7 @@ static NSArray *sortedDistinctUnion(id array, NSString *type, NSString *prop) {
     [AllPrimitiveDictionaries createInRealm:realm withValue:@{}];
     [AllOptionalPrimitiveDictionaries createInRealm:realm withValue:@{}];
 
-    // Only empty arrays, so count is zero
+    // Only empty dictionarys, so count is zero
     RLMAssertCount(AllPrimitiveDictionaries, 0U, @"intObj.@max == %@", @2);
     RLMAssertCount(AllOptionalPrimitiveDictionaries, 0U, @"intObj.@max == %@", @2);
     RLMAssertCount(AllPrimitiveDictionaries, 0U, @"intObj.@max == %@", @3);

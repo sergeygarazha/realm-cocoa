@@ -104,11 +104,9 @@ void RLMInitializeSwiftAccessorGenerics(__unsafe_unretained RLMObjectBase *const
                 cls = [RLMManagedArray class];
             } else if (prop.set) {
                 cls = [RLMManagedSet class];
-            }
-            else if (prop.dictionary) {
+            } else if (prop.dictionary) {
                 cls = [RLMManagedDictionary class];
-            }
-            else {
+            } else {
                 REALM_UNREACHABLE();
             }
             id managedCollection = [[cls alloc] initWithParent:object property:prop];
