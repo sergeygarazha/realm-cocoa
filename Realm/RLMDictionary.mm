@@ -264,6 +264,9 @@ static void changeDictionary(__unsafe_unretained RLMDictionary *const dictionary
 }
 
 - (void)addEntriesFromDictionary:(id)otherDictionary {
+    if (!otherDictionary) {
+        return;
+    }
     if (![otherDictionary isKindOfClass:[RLMDictionary class]] &&
         ![otherDictionary isKindOfClass:[NSDictionary class]]) {
         @throw RLMException(@"Cannot add entries from the object of class '%@'", [otherDictionary className]);
