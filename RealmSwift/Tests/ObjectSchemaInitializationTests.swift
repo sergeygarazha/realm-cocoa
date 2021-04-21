@@ -137,16 +137,16 @@ class ObjectSchemaInitializationTests: TestCase {
         _ = RLMObjectSchema(forObjectClass: SwiftObjectWithStruct.self)
 
         assertThrows(RLMObjectSchema(forObjectClass: SwiftObjectWithDatePrimaryKey.self),
-            "Should throw when setting a non int/string primary key")
+                     "Should throw when setting a non int/string primary key")
         assertThrows(RLMObjectSchema(forObjectClass: SwiftObjectWithNSURL.self),
-            "Should throw when not ignoring a property of a type we can't persist")
+                     "Should throw when not ignoring a property of a type we can't persist")
         assertThrows(RLMObjectSchema(forObjectClass: SwiftObjectWithNonOptionalLinkProperty.self),
-            "Should throw when not marking a link property as optional")
+                     "Should throw when not marking a link property as optional")
     }
 
     func testPrimaryKey() {
         XCTAssertNil(SwiftObject().objectSchema.primaryKeyProperty,
-            "Object should default to having no primary key property")
+                     "Object should default to having no primary key property")
         XCTAssertEqual(SwiftPrimaryStringObject().objectSchema.primaryKeyProperty!.name, "stringCol")
     }
 

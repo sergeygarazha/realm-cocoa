@@ -141,7 +141,7 @@ class RealmTests: TestCase {
         realm.create(SwiftStringObject.self, value: ["a"])
         try! realm.commitWrite()
         XCTAssertFalse(realm.isEmpty,
-            "Realm should not be empty after committing a write transaction that added an object.")
+                       "Realm should not be empty after committing a write transaction that added an object.")
     }
 
     func testInit() {
@@ -195,7 +195,7 @@ class RealmTests: TestCase {
                                                     EmbeddedTreeObject3.self,
                                                     EmbeddedParentObject.self,
                                                     SwiftStringObject.self
-        ])
+                                                ])
         let sorted = configuration.objectTypes!.sorted { $0.className() < $1.className() }
         XCTAssertTrue(sorted[0] is EmbeddedParentObject.Type)
         XCTAssertTrue(sorted[1] is EmbeddedTreeObject1.Type)

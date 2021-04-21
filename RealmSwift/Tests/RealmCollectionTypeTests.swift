@@ -309,7 +309,7 @@ class RealmCollectionTypeTests: TestCase {
         XCTAssertEqual(2, sorted[1].intCol)
 
         sorted = collection.sorted(by: [SortDescriptor(keyPath: "doubleCol", ascending: false),
-            SortDescriptor(keyPath: "intCol", ascending: false)])
+                                        SortDescriptor(keyPath: "intCol", ascending: false)])
         XCTAssertEqual(2.22, sorted[0].doubleCol)
         XCTAssertEqual(3, sorted[0].intCol)
         XCTAssertEqual(2.22, sorted[1].doubleCol)
@@ -379,10 +379,10 @@ class RealmCollectionTypeTests: TestCase {
         XCTAssertEqual(6, collection.sum(ofProperty: "int64Col") as NSNumber)
         XCTAssertEqual(6, collection.sum(ofProperty: "int64Col") as Int64)
         XCTAssertEqual(5.5, (collection.sum(ofProperty: "floatCol") as NSNumber).floatValue,
-                                   accuracy: 0.001)
+                       accuracy: 0.001)
         XCTAssertEqual(5.5, collection.sum(ofProperty: "floatCol") as Float, accuracy: 0.001)
         XCTAssertEqual(5.55, (collection.sum(ofProperty: "doubleCol") as NSNumber).doubleValue,
-                                   accuracy: 0.001)
+                       accuracy: 0.001)
         XCTAssertEqual(5.55, collection.sum(ofProperty: "doubleCol") as Double, accuracy: 0.001)
 
         assertThrows(collection.sum(ofProperty: "noSuchCol") as NSNumber, named: "Invalid property name")
@@ -1071,7 +1071,7 @@ class ListUnmanagedRealmCollectionTypeTests: ListRealmCollectionTypeTests {
         let collection = getAggregateableCollection()
         assertThrows(collection.sorted(by: [SortDescriptor(keyPath: "intCol", ascending: true)]))
         assertThrows(collection.sorted(by: [SortDescriptor(keyPath: "doubleCol", ascending: false),
-            SortDescriptor(keyPath: "intCol", ascending: false)]))
+                                            SortDescriptor(keyPath: "intCol", ascending: false)]))
     }
 
     override func testFastEnumerationWithMutation() {
@@ -1196,7 +1196,7 @@ class ListNewlyCreatedRealmCollectionTypeTests: ListRealmCollectionTypeTests {
         var list: CTTAggregateObjectList?
         try! realmWithTestPath().write {
             list = realmWithTestPath().create(CTTAggregateObjectList.self,
-                                                    value: [makeAggregateableObjectsInWriteTransaction()])
+                                              value: [makeAggregateableObjectsInWriteTransaction()])
         }
         return AnyRealmCollection(list!.list)
     }
@@ -1213,7 +1213,7 @@ class ListRetrievedRealmCollectionTypeTests: ListRealmCollectionTypeTests {
         var list: CTTAggregateObjectList?
         try! realmWithTestPath().write {
             _ = realmWithTestPath().create(CTTAggregateObjectList.self,
-                                                 value: [makeAggregateableObjectsInWriteTransaction()])
+                                           value: [makeAggregateableObjectsInWriteTransaction()])
             list = realmWithTestPath().objects(CTTAggregateObjectList.self).first
         }
         return AnyRealmCollection(list!.list)

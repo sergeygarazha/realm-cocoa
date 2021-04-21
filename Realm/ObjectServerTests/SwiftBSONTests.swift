@@ -123,8 +123,8 @@ class SwiftBSONTests: XCTestCase {
         XCTAssertEqual(dictionary.count, swiftDocument.count)
         dictionary.forEach { (arg0) in
             guard let key = arg0.key as? String,
-                let value = arg0.value as? RLMBSON else {
-                    XCTFail("RLMBSON Document has illegal types")
+                  let value = arg0.value as? RLMBSON else {
+                XCTFail("RLMBSON Document has illegal types")
                 return
             }
             XCTAssertEqual(swiftDocument[key], ObjectiveCSupport.convert(object: value))
@@ -164,7 +164,7 @@ class SwiftBSONTests: XCTestCase {
         XCTAssertEqual(array.count, swiftArray.count)
         for idx in 0..<array.count {
             guard let value = array[idx] as? RLMBSON else {
-                    XCTFail("RLMBSON Document has illegal types")
+                XCTFail("RLMBSON Document has illegal types")
                 return
             }
             XCTAssertEqual(swiftArray[idx], ObjectiveCSupport.convert(object: value))

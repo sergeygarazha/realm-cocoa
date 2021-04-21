@@ -133,8 +133,8 @@ class CombineRealmTests: CombinePublisherTestCase {
         cancellable = realm
             .objectWillChange
             .sink {
-            called = true
-        }
+                called = true
+            }
 
         try! realm.write {
             realm.create(SwiftIntObject.self, value: [])
@@ -149,8 +149,8 @@ class CombineRealmTests: CombinePublisherTestCase {
             .objectWillChange
             .saveToken(on: self, for: \.notificationToken)
             .sink {
-            called = true
-        }
+                called = true
+            }
 
         try! realm.write {
             realm.create(SwiftIntObject.self, value: [])
@@ -165,8 +165,8 @@ class CombineRealmTests: CombinePublisherTestCase {
             .objectWillChange
             .saveToken(on: self, for: \.notificationToken)
             .sink {
-            called = true
-        }
+                called = true
+            }
 
         XCTAssertNotNil(notificationToken)
         for _ in 0..<10 {
@@ -216,8 +216,8 @@ class CombineObjectPublisherTests: CombinePublisherTestCase {
             .objectWillChange
             .saveToken(on: self, at: \.notificationToken)
             .sink {
-            exp.fulfill()
-        }
+                exp.fulfill()
+            }
         XCTAssertNotNil(notificationToken)
         try! realm.write { obj.intCol = 1 }
     }
@@ -255,7 +255,7 @@ class CombineObjectPublisherTests: CombinePublisherTestCase {
     func testDelete() {
         let exp = XCTestExpectation()
         cancellable = valuePublisher(obj).sink(receiveCompletion: { _ in exp.fulfill() },
-                                         receiveValue: { _ in })
+                                               receiveValue: { _ in })
         try! realm.write { realm.delete(obj) }
         wait(for: [exp], timeout: 1)
     }
@@ -467,7 +467,7 @@ class CombineObjectPublisherTests: CombinePublisherTestCase {
                     XCTAssertEqual(arr[i].intCol, i + 1)
                 }
                 exp.fulfill()
-        }
+            }
 
         for _ in 0..<10 {
             try! realm.write { obj.intCol += 1 }
@@ -533,7 +533,7 @@ class CombineObjectPublisherTests: CombinePublisherTestCase {
                     XCTAssertNil(properties[0].oldValue)
                 }
                 exp.fulfill()
-        }
+            }
 
         for _ in 0..<100 {
             try! realm.write { obj.intCol += 1 }
@@ -568,7 +568,7 @@ class CombineObjectPublisherTests: CombinePublisherTestCase {
                     prev = obj
                 }
                 sema.signal()
-        }
+            }
 
         for _ in 0..<100 {
             try! realm.write { obj.intCol += 1 }
@@ -618,7 +618,7 @@ class CombineObjectPublisherTests: CombinePublisherTestCase {
             .sink { (arr: [Int]) in
                 XCTAssertEqual(arr, [1, 2, 3])
                 exp.fulfill()
-        }
+            }
         wait(for: [exp], timeout: 1)
     }
 
@@ -640,7 +640,7 @@ class CombineObjectPublisherTests: CombinePublisherTestCase {
             .sink { (arr: [Int]) in
                 XCTAssertEqual(arr, [1, 2, 3])
                 exp.fulfill()
-        }
+            }
         wait(for: [exp], timeout: 1)
     }
 
@@ -688,7 +688,7 @@ class CombineObjectPublisherTests: CombinePublisherTestCase {
             .sink { (arr: [Int]) in
                 XCTAssertEqual(arr, [1, 2, 3, 4, 5])
                 exp.fulfill()
-        }
+            }
         wait(for: [exp], timeout: 1)
     }
 }
@@ -867,7 +867,7 @@ private class CombineCollectionPublisherTests<Collection: RealmCollection>: Comb
                 XCTAssertEqual(r.count, calls)
                 calls += 1
                 sema.signal()
-        }
+            }
         sema.wait()
 
         for _ in 0..<10 {
@@ -888,7 +888,7 @@ private class CombineCollectionPublisherTests<Collection: RealmCollection>: Comb
                 XCTAssertEqual(r.count, calls)
                 calls += 1
                 sema.signal()
-        }
+            }
         sema.wait()
         XCTAssertNotNil(notificationToken)
 
@@ -908,7 +908,7 @@ private class CombineCollectionPublisherTests<Collection: RealmCollection>: Comb
                 XCTAssertEqual(r.count, calls)
                 calls += 1
                 exp.fulfill()
-        }
+            }
         wait(for: [exp], timeout: 10)
 
         for _ in 0..<10 {
@@ -930,7 +930,7 @@ private class CombineCollectionPublisherTests<Collection: RealmCollection>: Comb
                 XCTAssertEqual(r.count, calls)
                 calls += 1
                 exp.fulfill()
-        }
+            }
         wait(for: [exp], timeout: 10)
         XCTAssertNotNil(notificationToken)
 
@@ -950,7 +950,7 @@ private class CombineCollectionPublisherTests<Collection: RealmCollection>: Comb
                 self.checkChangeset(change, calls: calls)
                 calls += 1
                 sema.signal()
-        }
+            }
         sema.wait()
 
         for _ in 0..<10 {
@@ -970,7 +970,7 @@ private class CombineCollectionPublisherTests<Collection: RealmCollection>: Comb
                 self.checkChangeset(change, calls: calls)
                 calls += 1
                 sema.signal()
-        }
+            }
         sema.wait()
         XCTAssertNotNil(notificationToken)
 
@@ -989,7 +989,7 @@ private class CombineCollectionPublisherTests<Collection: RealmCollection>: Comb
                 self.checkChangeset(change, calls: calls)
                 calls += 1
                 exp.fulfill()
-        }
+            }
         wait(for: [exp], timeout: 10)
 
         for _ in 0..<10 {
@@ -1010,7 +1010,7 @@ private class CombineCollectionPublisherTests<Collection: RealmCollection>: Comb
                 self.checkChangeset(change, calls: calls)
                 calls += 1
                 exp.fulfill()
-        }
+            }
         wait(for: [exp], timeout: 10)
         XCTAssertNotNil(notificationToken)
 
@@ -1054,7 +1054,7 @@ private class CombineCollectionPublisherTests<Collection: RealmCollection>: Comb
                 self.checkChangeset(change, calls: calls)
                 calls += 1
                 exp.fulfill()
-        }
+            }
         wait(for: [exp], timeout: 10)
 
         for _ in 0..<10 {
@@ -1077,7 +1077,7 @@ private class CombineCollectionPublisherTests<Collection: RealmCollection>: Comb
                 self.checkChangeset(change, calls: calls)
                 calls += 1
                 exp.fulfill()
-        }
+            }
         wait(for: [exp], timeout: 10)
         XCTAssertNotNil(notificationToken)
 
@@ -1101,7 +1101,7 @@ private class CombineCollectionPublisherTests<Collection: RealmCollection>: Comb
                     XCTAssertEqual(collection.count, i)
                 }
                 exp.fulfill()
-        }
+            }
 
         for _ in 0..<10 {
             try! realm.write { collection.appendObject() }
@@ -1145,7 +1145,7 @@ private class CombineCollectionPublisherTests<Collection: RealmCollection>: Comb
                     self.checkChangeset(change, calls: i, frozen: true)
                 }
                 exp.fulfill()
-        }
+            }
 
         for _ in 0..<10 {
             try! realm.write { collection.appendObject() }
@@ -1168,7 +1168,7 @@ private class CombineCollectionPublisherTests<Collection: RealmCollection>: Comb
                     self.checkChangeset(change, calls: i, frozen: true)
                 }
                 sema.signal()
-        }
+            }
 
         for _ in 0..<10 {
             sema.wait()
@@ -1214,7 +1214,7 @@ private class CombineCollectionPublisherTests<Collection: RealmCollection>: Comb
                     self.checkChangeset(change, calls: i, frozen: true)
                 }
                 exp.fulfill()
-        }
+            }
 
         for _ in 0..<10 {
             try! realm.write { collection.appendObject() }

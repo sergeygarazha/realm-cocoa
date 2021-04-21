@@ -113,7 +113,7 @@ public typealias App = RLMApp
 public extension App {
     /**
      Login to a user for the Realm app.
-     
+
      @param credentials The credentials identifying the user.
      @param completion A callback invoked after completion. Will return `Result.success(User)` or `Result.failure(Error)`.
      */

@@ -132,8 +132,8 @@ open class SwiftSyncTestCase: RLMSyncTestCase {
         let actual = realm.objects(type).count
         XCTAssertEqual(actual, expected,
                        "Error: expected \(expected) items, but got \(actual) (process: \(isParent ? "parent" : "child"))",
-            file: file,
-            line: line)
+                       file: file,
+                       line: line)
     }
 
     var exceptionThrown = false
@@ -162,7 +162,7 @@ open class SwiftSyncTestCase: RLMSyncTestCase {
             try block()
         } catch {
             XCTFail("Expected no error, but instead caught <\(error)>.",
-                file: (fileName), line: lineNumber)
+                    file: (fileName), line: lineNumber)
         }
     }
 }

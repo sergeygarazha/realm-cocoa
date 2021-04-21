@@ -253,8 +253,8 @@ class ThreadSafeReferenceTests: TestCase {
             company.employees.append(SwiftEmployeeObject(value: ["name": "D"]))
         }
         let results = AnyRealmCollection(realm.objects(SwiftEmployeeObject.self)
-            .filter("name != 'C'")
-            .sorted(byKeyPath: "name", ascending: false))
+                                            .filter("name != 'C'")
+                                            .sorted(byKeyPath: "name", ascending: false))
         let list = AnyRealmCollection(company.employees)
         XCTAssertEqual(3, results.count)
         XCTAssertEqual("D", results[0].name)

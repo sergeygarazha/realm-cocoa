@@ -198,7 +198,7 @@ class SwiftPerformanceTests: TestCase {
         let realm = copyRealmToTestPath(largeRealm)
         realm.beginWrite()
         let arrayPropertyObject = realm.create(SwiftArrayPropertyObject.self,
-                                                     value: ["name", realm.objects(SwiftStringObject.self).map { $0 } as NSArray, []])
+                                               value: ["name", realm.objects(SwiftStringObject.self).map { $0 } as NSArray, []])
         try! realm.commitWrite()
 
         measure {
@@ -212,7 +212,7 @@ class SwiftPerformanceTests: TestCase {
         let realm = copyRealmToTestPath(largeRealm)
         realm.beginWrite()
         let arrayPropertyObject = realm.create(SwiftArrayPropertyObject.self,
-                                                     value: ["name", realm.objects(SwiftStringObject.self).map { $0 } as NSArray, []])
+                                               value: ["name", realm.objects(SwiftStringObject.self).map { $0 } as NSArray, []])
         try! realm.commitWrite()
 
         measure {

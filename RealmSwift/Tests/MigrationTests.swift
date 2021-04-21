@@ -607,10 +607,10 @@ class MigrationTests: TestCase {
     func testRenameProperty() {
         autoreleasepool {
             let prop = RLMProperty(name: "before_stringCol", type: .string, objectClassName: nil,
-                linkOriginPropertyName: nil, indexed: false, optional: false)
+                                   linkOriginPropertyName: nil, indexed: false, optional: false)
             autoreleasepool {
                 let realm = realmWithSingleClassProperties(defaultRealmURL(), className: "SwiftStringObject",
-                    properties: [prop])
+                                                           properties: [prop])
                 try! realm.transaction {
                     realm.createObject("SwiftStringObject", withValue: ["a"])
                 }

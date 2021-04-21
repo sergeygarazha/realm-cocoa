@@ -54,7 +54,7 @@ public typealias SyncManager = RLMSyncManager
 /**
  Options for configuring timeouts and intervals in the sync client.
 
-  - see: `RLMSyncTimeoutOptions`
+ - see: `RLMSyncTimeoutOptions`
  */
 public typealias SyncTimeoutOptions = RLMSyncTimeoutOptions
 
@@ -120,8 +120,8 @@ extension SyncError {
      */
     public func clientResetInfo() -> (String, SyncError.ActionToken)? {
         if code == SyncError.clientResetError,
-            let recoveryPath = userInfo[kRLMSyncPathOfRealmBackupCopyKey] as? String,
-            let token = _nsError.__rlmSync_errorActionToken() {
+           let recoveryPath = userInfo[kRLMSyncPathOfRealmBackupCopyKey] as? String,
+           let token = _nsError.__rlmSync_errorActionToken() {
             return (recoveryPath, token)
         }
         return nil
@@ -385,11 +385,11 @@ public extension User {
     /**
      The custom data of the user.
      This is configured in your MongoDB Realm App.
-    */
+     */
     var customData: Document {
         guard let rlmCustomData = self.__customData as RLMBSON?,
-            let anyBSON = ObjectiveCSupport.convert(object: rlmCustomData),
-            case let .document(customData) = anyBSON else {
+              let anyBSON = ObjectiveCSupport.convert(object: rlmCustomData),
+              case let .document(customData) = anyBSON else {
             return [:]
         }
 
@@ -559,9 +559,9 @@ public extension SyncSession {
                                  block: @escaping (Progress) -> Void) -> ProgressNotificationToken? {
         return __addProgressNotification(for: (direction == .upload ? .upload : .download),
                                          mode: (mode == .reportIndefinitely
-                                            ? .reportIndefinitely
-                                            : .forCurrentlyOutstandingWork)) { transferred, transferrable in
-                                                block(Progress(transferred: transferred, transferrable: transferrable))
+                                                    ? .reportIndefinitely
+                                                    : .forCurrentlyOutstandingWork)) { transferred, transferrable in
+            block(Progress(transferred: transferred, transferrable: transferrable))
         }
     }
 }
@@ -577,7 +577,7 @@ extension Realm {
     /**
      Get the SyncSession used by this Realm. Will be nil if this is not a
      synchronized Realm.
-    */
+     */
     public var syncSession: SyncSession? {
         return SyncSession(for: rlmRealm)
     }

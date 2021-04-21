@@ -144,7 +144,7 @@ class ListTests: TestCase {
         }
 
         array.append(objectsIn: [str1, str2, str1, str2, str1, str2, str1, str2, str1,
-            str2, str1, str2, str1, str2, str1, str2, str1, str2, str1, str2])
+                                 str2, str1, str2, str1, str2, str1, str2, str1, str2, str1, str2])
         var str = ""
         for obj in array {
             str += obj.stringCol

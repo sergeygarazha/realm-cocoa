@@ -476,7 +476,7 @@ class SwiftIndexedOptionalPropertiesObject: Object {
 
     override class func indexedProperties() -> [String] {
         return ["optionalStringCol", "optionalIntCol", "optionalInt8Col", "optionalInt16Col",
-            "optionalInt32Col", "optionalInt64Col", "optionalBoolCol", "optionalDateCol"]
+                "optionalInt32Col", "optionalInt64Col", "optionalBoolCol", "optionalDateCol"]
     }
 }
 

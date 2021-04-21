@@ -150,4 +150,3 @@ internal class ObjectUtil {
         return getProperties(cls)
     }
 }
-

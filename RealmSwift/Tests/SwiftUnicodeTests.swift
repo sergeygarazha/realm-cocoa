@@ -49,7 +49,7 @@ class SwiftUnicodeTests: TestCase {
 
         let obj1 = realm.objects(SwiftUTF8Object.self).first!
         XCTAssertEqual(obj1.柱колоéнǢкƱаم👍, utf8TestString,
-            "Storing and retrieving a string with UTF8 content should work")
+                       "Storing and retrieving a string with UTF8 content should work")
 
         let obj2 = realm.objects(SwiftUTF8Object.self).filter("%K == %@", "柱колоéнǢкƱаم👍", utf8TestString).first!
         assertEqual(obj1, obj2)

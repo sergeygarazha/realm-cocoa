@@ -251,7 +251,7 @@ extension Array: UntypedCollection {
     func asNSFastEnumerator() -> Any {
         fatalError()
     }
-    func assign<T>(to list: List<T>) where T : RealmCollectionValue {
+    func assign<T>(to list: List<T>) where T: RealmCollectionValue {
         list.replace(with: self)
     }
 }
@@ -260,7 +260,7 @@ extension NSArray: UntypedCollection {
     func asNSFastEnumerator() -> Any {
         fatalError()
     }
-    func assign<T>(to list: List<T>) where T : RealmCollectionValue {
+    func assign<T>(to list: List<T>) where T: RealmCollectionValue {
         list.replace(with: self)
     }
 }

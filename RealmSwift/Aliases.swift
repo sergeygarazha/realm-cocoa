@@ -48,7 +48,7 @@ import Realm
 
  * `Object`
  * `Array`
-*/
+ */
 public typealias PropertyType = RLMPropertyType
 
 /**

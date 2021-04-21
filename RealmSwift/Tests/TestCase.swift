@@ -57,7 +57,7 @@ class TestCase: RLMTestCaseBase {
             // The directory shouldn't actually already exist, so not an error
         }
         try! FileManager.default.createDirectory(at: URL(fileURLWithPath: testDir, isDirectory: true),
-                                                     withIntermediateDirectories: true, attributes: nil)
+                                                 withIntermediateDirectories: true, attributes: nil)
 
         let config = Realm.Configuration(fileURL: defaultRealmURL())
         Realm.Configuration.defaultConfiguration = config
@@ -107,7 +107,7 @@ class TestCase: RLMTestCaseBase {
             return
         }
         XCTFail("Objects expected to be equal, but weren't. First: \(String(describing: o1)), "
-            + "second: \(String(describing: o2))", file: (fileName), line: lineNumber)
+                    + "second: \(String(describing: o2))", file: (fileName), line: lineNumber)
     }
 
     /// Check whether two collections containing Realm objects are equal.
@@ -122,14 +122,14 @@ class TestCase: RLMTestCaseBase {
     func assertEqual<T: Equatable>(_ expected: [T?], _ actual: [T?], file: StaticString = #file, line: UInt = #line) {
         if expected.count != actual.count {
             XCTFail("assertEqual failed: (\"\(expected)\") is not equal to (\"\(actual)\")",
-                file: (file), line: line)
+                    file: (file), line: line)
             return
         }
 
         XCTAssertEqual(expected.count, actual.count, "Collection counts were incorrect", file: (file), line: line)
         for (e, a) in zip(expected, actual) where e != a {
             XCTFail("assertEqual failed: (\"\(expected)\") is not equal to (\"\(actual)\")",
-                file: (file), line: line)
+                    file: (file), line: line)
             return
         }
     }
@@ -158,7 +158,7 @@ class TestCase: RLMTestCaseBase {
             try block()
         } catch {
             XCTFail("Expected no error, but instead caught <\(error)>.",
-                file: (fileName), line: lineNumber)
+                    file: (fileName), line: lineNumber)
         }
     }
 
@@ -168,12 +168,12 @@ class TestCase: RLMTestCaseBase {
         do {
             _ = try block()
             XCTFail("Expected to catch <\(expectedError)>, but no error was thrown.",
-                file: (fileName), line: lineNumber)
+                    file: (fileName), line: lineNumber)
         } catch let e as Realm.Error where e.code == expectedError {
             // Success!
         } catch {
             XCTFail("Expected to catch <\(expectedError)>, but instead caught <\(error)>.",
-                file: (fileName), line: lineNumber)
+                    file: (fileName), line: lineNumber)
         }
     }
 
@@ -183,12 +183,12 @@ class TestCase: RLMTestCaseBase {
         do {
             _ = try block()
             XCTFail("Expected to catch <\(expectedError)>, but no error was thrown.",
-                file: (fileName), line: lineNumber)
+                    file: (fileName), line: lineNumber)
         } catch let e where e._code == expectedError._code {
             // Success!
         } catch {
             XCTFail("Expected to catch <\(expectedError)>, but instead caught <\(error)>.",
-                file: (fileName), line: lineNumber)
+                    file: (fileName), line: lineNumber)
         }
     }
 

@@ -115,7 +115,7 @@ public extension ObjectiveCSupport {
             return .datetime(val as Date)
         case .objectId:
             guard let val = bson as? RLMObjectId,
-                let oid = try? ObjectId(string: val.stringValue) else {
+                  let oid = try? ObjectId(string: val.stringValue) else {
                 return nil
             }
             return .objectId(oid)

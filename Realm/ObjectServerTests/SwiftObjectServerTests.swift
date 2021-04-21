@@ -918,8 +918,8 @@ class SwiftObjectServerTests: SwiftSyncTestCase {
 
         let callResetFunctionEx = expectation(description: "Reset password function")
         app.emailPasswordAuth.callResetPasswordFunction(email: email,
-                                                                       password: randomString(10),
-                                                                       args: [[:]]) { (error) in
+                                                        password: randomString(10),
+                                                        args: [[:]]) { (error) in
             XCTAssertNotNil(error)
             callResetFunctionEx.fulfill()
         }
@@ -1195,7 +1195,7 @@ class SwiftObjectServerTests: SwiftSyncTestCase {
     }
 }
 
-    // MARK: - Mongo Client
+// MARK: - Mongo Client
 @objc(SwiftMongoClientTests)
 class SwiftMongoClientTests: SwiftSyncTestCase {
     override func tearDown() {
@@ -1317,15 +1317,15 @@ class SwiftMongoClientTests: SwiftSyncTestCase {
 
         let findEx1 = expectation(description: "Find documents")
         collection.find(filter: [:]) { result in
-                switch result {
-                case .success(let documents):
-                    XCTAssertEqual(documents.count, 3)
-                    XCTAssertEqual(documents[0]["name"]??.stringValue, "fido")
-                    XCTAssertEqual(documents[1]["name"]??.stringValue, "rex")
-                    XCTAssertEqual(documents[2]["name"]??.stringValue, "rex")
-                case .failure:
-                    XCTFail("Should find")
-                }
+            switch result {
+            case .success(let documents):
+                XCTAssertEqual(documents.count, 3)
+                XCTAssertEqual(documents[0]["name"]??.stringValue, "fido")
+                XCTAssertEqual(documents[1]["name"]??.stringValue, "rex")
+                XCTAssertEqual(documents[2]["name"]??.stringValue, "rex")
+            case .failure:
+                XCTFail("Should find")
+            }
             findEx1.fulfill()
         }
         wait(for: [findEx1], timeout: 4.0)
@@ -2319,7 +2319,7 @@ class CombineObjectServerTests: SwiftSyncTestCase {
                     watchEx1.fulfill()
                     sema1.signal()
                 }
-        }.store(in: &subscriptions)
+            }.store(in: &subscriptions)
 
         collection.watch(matchFilter: ["fullDocument._id": AnyBSON.objectId(objectIds[1])])
             .onOpen {
@@ -2338,7 +2338,7 @@ class CombineObjectServerTests: SwiftSyncTestCase {
                     watchEx2.fulfill()
                     sema2.signal()
                 }
-        }.store(in: &subscriptions)
+            }.store(in: &subscriptions)
 
         DispatchQueue.global().async {
             openSema1.wait()

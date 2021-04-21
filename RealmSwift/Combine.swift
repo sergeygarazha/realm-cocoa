@@ -596,7 +596,7 @@ public enum RealmPublishers {
         ///   - keyPath: The KeyPath which the `NotificationToken` is written to.
         /// - Returns: A `RealmWillChangeWithToken` Publisher.
         public func saveToken<T>(on object: T, for keyPath: WritableKeyPath<T, NotificationToken?>) -> RealmWillChangeWithToken<T> {
-              return RealmWillChangeWithToken<T>(realm, object, keyPath)
+            return RealmWillChangeWithToken<T>(realm, object, keyPath)
         }
 
         /// :nodoc:
@@ -665,7 +665,7 @@ public enum RealmPublishers {
         ///   - keyPath: The KeyPath which the `NotificationToken` is written to.
         /// - Returns: A `WillChangeWithToken` Publisher.
         public func saveToken<T>(on object: T, at keyPath: WritableKeyPath<T, NotificationToken?>) -> WillChangeWithToken<Collection, T> {
-              return WillChangeWithToken<Collection, T>(collection, object, keyPath)
+            return WillChangeWithToken<Collection, T>(collection, object, keyPath)
         }
 
         /// :nodoc:
@@ -734,7 +734,7 @@ public enum RealmPublishers {
         ///   - keyPath: The KeyPath which the `NotificationToken` is written to.
         /// - Returns: A `ValueWithToken` Publisher.
         public func saveToken<T>(on object: T, at keyPath: WritableKeyPath<T, NotificationToken?>) -> ValueWithToken<Subscribable, T> {
-              return ValueWithToken<Subscribable, T>(subscribable, queue, object, keyPath)
+            return ValueWithToken<Subscribable, T>(subscribable, queue, object, keyPath)
         }
 
         /// :nodoc:
@@ -942,17 +942,17 @@ public enum RealmPublishers {
                 .map { (obj: Output) -> Handover in
                     guard let realm = obj.realm, !realm.isFrozen else { return .object(obj) }
                     return .tsr(ThreadSafeReference(to: obj), config: realm.rlmRealm.configuration)
-            }
-            .receive(on: scheduler)
-            .compactMap { (handover: Handover) -> Output? in
-                switch handover {
-                case .object(let obj):
-                    return obj
-                case .tsr(let tsr, let config):
-                    return realm(config, scheduler)?.resolve(tsr)
                 }
-            }
-            .receive(subscriber: subscriber)
+                .receive(on: scheduler)
+                .compactMap { (handover: Handover) -> Output? in
+                    switch handover {
+                    case .object(let obj):
+                        return obj
+                    case .tsr(let tsr, let config):
+                        return realm(config, scheduler)?.resolve(tsr)
+                    }
+                }
+                .receive(subscriber: subscriber)
         }
     }
 
@@ -993,7 +993,7 @@ public enum RealmPublishers {
         ///   - keyPath: The KeyPath which the `NotificationToken` is written to.
         /// - Returns: A `ObjectChangesetWithToken` Publisher.
         public func saveToken<T>(on tokenParent: T, at keyPath: WritableKeyPath<T, NotificationToken?>) -> ObjectChangesetWithToken<O, T> {
-              return ObjectChangesetWithToken<O, T>(object, queue, tokenParent, keyPath)
+            return ObjectChangesetWithToken<O, T>(object, queue, tokenParent, keyPath)
         }
 
         /// :nodoc:
@@ -1257,7 +1257,7 @@ public enum RealmPublishers {
         ///   - keyPath: The KeyPath which the `NotificationToken` is written to.
         /// - Returns: A `CollectionChangesetWithToken` Publisher.
         public func saveToken<T>(on object: T, at keyPath: WritableKeyPath<T, NotificationToken?>) -> CollectionChangesetWithToken<Collection, T> {
-              return CollectionChangesetWithToken<Collection, T>(collection, queue, object, keyPath)
+            return CollectionChangesetWithToken<Collection, T>(collection, queue, object, keyPath)
         }
 
         /// :nodoc:

@@ -26,8 +26,8 @@ extension URLSession {
     fileprivate func resultDataTask(with request: URLRequest, _ completionHandler: @escaping (Result<Data, Error>) -> Void) {
         URLSession(configuration: .default, delegate: nil, delegateQueue: OperationQueue()).dataTask(with: request) { (data, response, error) in
             if let httpResponse = response as? HTTPURLResponse,
-                httpResponse.statusCode >= 200 && httpResponse.statusCode < 300,
-                let data = data {
+               httpResponse.statusCode >= 200 && httpResponse.statusCode < 300,
+               let data = data {
                 completionHandler(.success(data))
             } else {
                 completionHandler(.failure(error ?? URLError(.badServerResponse)))
@@ -94,7 +94,7 @@ class Admin {
 
             /**
              Append the given member to the path. E.g., if the current URL is set to
-            http://localhost:9090/api/admin/v3.0/groups/groupId/apps/appId
+             http://localhost:9090/api/admin/v3.0/groups/groupId/apps/appId
              and you currently have a:
              ```
              var app: AdminEndpoint
@@ -121,15 +121,15 @@ class Admin {
             /**
              Append the given id to the path. E.g., if the current URL is set to
              http://localhost:9090/api/admin/v3.0/groups/groupId/apps/
-              and you currently have a:
-              ```
-              var apps: AdminEndpoint
-              var appId: String
-              ```
-              you can fetch the app from its appId with
-              ```
-              apps[appId].get()
-              ```
+             and you currently have a:
+             ```
+             var apps: AdminEndpoint
+             var appId: String
+             ```
+             you can fetch the app from its appId with
+             ```
+             apps[appId].get()
+             ```
              */
             subscript(_ id: String) -> AdminEndpoint {
                 return AdminEndpoint(accessToken: accessToken,
@@ -162,7 +162,7 @@ class Admin {
                                 data.count > 0 ? try JSONSerialization.jsonObject(with: data) : nil
                             }
                         })
-                }
+                    }
             }
 
             private func request(on group: DispatchGroup, httpMethod: String, data: Any? = nil, _ completionHandler: @escaping (Result<Any?, Error>) -> Void) {
@@ -436,7 +436,7 @@ public class RealmServer: NSObject {
         ]
         // golang server needs a tmp directory
         try! FileManager.default.createDirectory(atPath: "\(tempDir.path)/tmp",
-            withIntermediateDirectories: false, attributes: nil)
+                                                 withIntermediateDirectories: false, attributes: nil)
         serverProcess.launchPath = "\(binDir)/stitch_server"
         serverProcess.currentDirectoryPath = tempDir.path
         serverProcess.arguments = [
@@ -468,8 +468,8 @@ public class RealmServer: NSObject {
                     parts.append("🔴")
                 } else if let json = try? JSONSerialization.jsonObject(with: part.data(using: .utf8)!) {
                     parts.append(String(data: try! JSONSerialization.data(withJSONObject: json,
-                                                                       options: .prettyPrinted),
-                                  encoding: .utf8)!)
+                                                                          options: .prettyPrinted),
+                                        encoding: .utf8)!)
                 } else if !part.isEmpty {
                     parts.append(String(part))
                 }
@@ -661,10 +661,10 @@ public class RealmServer: NSObject {
             "collection": "HugeSyncObject",
             "roles": [[
                 "name": "default",
-                        "apply_when": [:],
+                "apply_when": [:],
                 "insert": true,
                 "delete": true,
-                        "additional_fields": [:]
+                "additional_fields": [:]
             ]],
             "schema": [
                 "properties": [
@@ -731,13 +731,13 @@ public class RealmServer: NSObject {
                     ]
                 ],
                 "required": [
-                             "firstName",
-                             "lastName",
-                             "age"
-                             ],
+                    "firstName",
+                    "lastName",
+                    "age"
+                ],
                 "title": "SwiftPerson"
             ],
-                "relationships": [:]
+            "relationships": [:]
         ], failOnError)
 
         app.sync.config.put(on: group, data: [

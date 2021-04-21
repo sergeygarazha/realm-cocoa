@@ -44,11 +44,11 @@ public protocol ThreadConfined {
     var isInvalidated: Bool { get }
 
     /**
-    Indicates if the object is frozen.
+     Indicates if the object is frozen.
 
-    Frozen objects are not confined to their source thread. Forming a `ThreadSafeReference` to a
-    frozen object is allowed, but is unlikely to be useful.
-    */
+     Frozen objects are not confined to their source thread. Forming a `ThreadSafeReference` to a
+     frozen object is allowed, but is unlikely to be useful.
+     */
     var isFrozen: Bool { get }
 
     /**
@@ -64,7 +64,7 @@ public protocol ThreadConfined {
      - warning: Holding onto a frozen object for an extended period while performing write
      transaction on the Realm may result in the Realm file growing to large sizes. See
      `Realm.Configuration.maximumNumberOfActiveVersions` for more information.
-    */
+     */
     func freeze() -> Self
 
     /**

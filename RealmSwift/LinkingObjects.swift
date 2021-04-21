@@ -369,7 +369,7 @@ extension LinkingObjects: RealmCollection, UntypedCollection {
         return rlmResults
     }
 
-    internal func assign<T>(to list: List<T>) where T : RealmCollectionValue {
+    internal func assign<T>(to list: List<T>) where T: RealmCollectionValue {
         list.replace(with: self)
     }
 
