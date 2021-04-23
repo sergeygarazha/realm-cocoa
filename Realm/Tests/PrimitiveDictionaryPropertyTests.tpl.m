@@ -969,16 +969,16 @@ static NSArray *sortedDistinctUnion(id array, NSString *type, NSString *prop) {
         %o %man @"$prop": @[],
     }];
     [AllPrimitiveDictionaries createInRealm:realm withValue:@{
-        %r %man @"$prop": @[$v0],
+        %r %man @"$prop": @{@"0": $v0},
     }];
     [AllOptionalPrimitiveDictionaries createInRealm:realm withValue:@{
-        %o %man @"$prop": @[$v0],
+        %o %man @"$prop": @{@"0": $v0},
     }];
     [AllPrimitiveDictionaries createInRealm:realm withValue:@{
-        %r %man @"$prop": @[$v0, $v0],
+        %r %man @"$prop": @{@"0": $v0, @"1": $v0},
     }];
     [AllOptionalPrimitiveDictionaries createInRealm:realm withValue:@{
-        %o %man @"$prop": @[$v0, $v0],
+        %o %man @"$prop": @{@"0": $v0, @"1": $v0},
     }];
 
     for (unsigned int i = 0; i < 3; ++i) {

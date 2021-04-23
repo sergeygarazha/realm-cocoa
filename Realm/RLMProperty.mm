@@ -232,12 +232,9 @@ static realm::util::Optional<RLMPropertyType> typeFromProtocolString(const char 
     static const char linkingObjectsPrefix[] = "@\"RLMLinkingObjects";
     static const int linkingObjectsPrefixLen = sizeof(linkingObjectsPrefix) - 1;
 
-    auto isCollection = [&]() {
-        _array = strncmp(code, arrayPrefix, arrayPrefixLen) == 0;
-        _set = strncmp(code, setPrefix, setPrefixLen) == 0;
-        _dictionary = strncmp(code, dictionaryPrefix, dictionaryPrefixLen) == 0;
-        return _array || _set || _dictionary;
-    };
+    _array = strncmp(code, arrayPrefix, arrayPrefixLen) == 0;
+    _set = strncmp(code, setPrefix, setPrefixLen) == 0;
+    _dictionary = strncmp(code, dictionaryPrefix, dictionaryPrefixLen) == 0;
 
     if (strcmp(code, "@\"NSString\"") == 0) {
         _type = RLMPropertyTypeString;
@@ -257,7 +254,7 @@ static realm::util::Optional<RLMPropertyType> typeFromProtocolString(const char 
     else if (strcmp(code, "@\"NSUUID\"") == 0) {
         _type = RLMPropertyTypeUUID;
     }
-    else if (isCollection()) {
+    else if (_array || _set || _dictionary) {
         auto prefixLen = 0;
         NSString *collectionName;
         if (_array) {
@@ -301,27 +298,6 @@ static realm::util::Optional<RLMPropertyType> typeFromProtocolString(const char 
         @throw RLMException(@"Property '%@' is of type '%@<%@>' which is not a supported %@ object type. "
                             @"%@ can only contain instances of RLMObject subclasses. "
                             @"See https://realm.io/docs/objc/latest/#to-many for more information.", _name, collectionName, _objectClassName, collectionName, collectionName);
-    }
-    else if (strncmp(code, setPrefix, setPrefixLen) == 0) {
-        _set = true;
-        if (auto type = typeFromProtocolString(code + setPrefixLen)) {
-            _type = *type;
-            return YES;
-        }
-
-        // get object class from type string - @"RLMSet<objectClassName>"
-        _objectClassName = [[NSString alloc] initWithBytes:code + setPrefixLen
-                                                    length:strlen(code + setPrefixLen) - 2 // drop trailing >"
-                                                  encoding:NSUTF8StringEncoding];
-
-        if ([RLMSchema classForString:_objectClassName]) {
-            _optional = false;
-            _type = RLMPropertyTypeObject;
-            return YES;
-        }
-        @throw RLMException(@"Property '%@' is of type 'RLMSet<%@>' which is not a supported RLMSet object type. "
-                            @"RLMSets can only contain instances of RLMObject subclasses. "
-                            @"See https://realm.io/docs/objc/latest/#to-many for more information.", _name, _objectClassName);
     }
     else if (strncmp(code, numberPrefix, numberPrefixLen) == 0) {
         auto type = typeFromProtocolString(code + numberPrefixLen);

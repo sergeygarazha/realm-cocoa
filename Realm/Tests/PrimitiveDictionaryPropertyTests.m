@@ -2323,34 +2323,34 @@ static NSArray *sortedDistinctUnion(id array, NSString *type, NSString *prop) {
     [realm deleteAllObjects];
 
     [AllPrimitiveDictionaries createInRealm:realm withValue:@{
-        @"boolObj": @[],
-        @"intObj": @[],
-        @"stringObj": @[],
+        @"boolObj": @{},
+        @"intObj": @{},
+        @"stringObj": @{},
     }];
     [AllOptionalPrimitiveDictionaries createInRealm:realm withValue:@{
-        @"boolObj": @[],
-        @"intObj": @[],
-        @"stringObj": @[],
+        @"boolObj": @{},
+        @"intObj": @{},
+        @"stringObj": @{},
     }];
     [AllPrimitiveDictionaries createInRealm:realm withValue:@{
-        @"boolObj": @[@NO],
-        @"intObj": @[@2],
-        @"stringObj": @[@"a"],
+        @"boolObj": @{@"0": @NO},
+        @"intObj": @{@"0": @2},
+        @"stringObj": @{@"0": @"a"},
     }];
     [AllOptionalPrimitiveDictionaries createInRealm:realm withValue:@{
-        @"boolObj": @[@NO],
-        @"intObj": @[@2],
-        @"stringObj": @[@"a"],
+        @"boolObj": @{@"0": @NO},
+        @"intObj": @{@"0": @2},
+        @"stringObj": @{@"0": @"a"},
     }];
     [AllPrimitiveDictionaries createInRealm:realm withValue:@{
-        @"boolObj": @[@NO, @NO],
-        @"intObj": @[@2, @2],
-        @"stringObj": @[@"a", @"a"],
+        @"boolObj": @{@"0": @NO, @"1": @NO},
+        @"intObj": @{@"0": @2, @"1": @2},
+        @"stringObj": @{@"0": @"a", @"1": @"a"},
     }];
     [AllOptionalPrimitiveDictionaries createInRealm:realm withValue:@{
-        @"boolObj": @[@NO, @NO],
-        @"intObj": @[@2, @2],
-        @"stringObj": @[@"a", @"a"],
+        @"boolObj": @{@"0": @NO, @"1": @NO},
+        @"intObj": @{@"0": @2, @"1": @2},
+        @"stringObj": @{@"0": @"a", @"1": @"a"},
     }];
 
     for (unsigned int i = 0; i < 3; ++i) {
