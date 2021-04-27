@@ -224,6 +224,7 @@ static void changeDictionary(__unsafe_unretained RLMDictionary *const dictionary
     });
 }
 
+// Lee: obliterate this
 - (void)addObjects:(NSDictionary *)objects {
     [self addEntriesFromDictionary:objects];
 }
@@ -240,9 +241,10 @@ static void changeDictionary(__unsafe_unretained RLMDictionary *const dictionary
     if (!_backingCollection) {
         _backingCollection = [NSMutableDictionary new];
     }
-    if ([key isEqualToString:@"self"]) {
-        return [_backingCollection valueForKey:@"@self"];
-    }
+    // Lee: What is the purpose of the below?
+//    if ([key isEqualToString:@"self"]) {
+//        return [_backingCollection valueForKey:@"@self"];
+//    }
     return [_backingCollection valueForKey:key];
 }
 
@@ -291,11 +293,7 @@ static void changeDictionary(__unsafe_unretained RLMDictionary *const dictionary
 
     // We need to enumerate a copy of the backing dictionary so that it doesn't
     // reflect changes made during enumeration. This copy has to be autoreleased
-    // (since there's nowhere for us to store a strong reference), and uses
-    // RLMDictionaryHolder rather than an NSDictionary because NSDictionary doesn't guarantee
-    // that it'll use a single contiguous block of memory, and if it doesn't
-    // we'd need to forward multiple calls to this method to the same NSArray,
-    // which would require holding a reference to it somewhere.
+    // (since there's nowhere for us to store a strong reference).
     __autoreleasing RLMDictionaryHolder *copy = [[RLMDictionaryHolder alloc] init];
     copy->items = std::make_unique<id[]>(_backingCollection.count);
 
@@ -311,14 +309,6 @@ static void changeDictionary(__unsafe_unretained RLMDictionary *const dictionary
     state->state = i;
 
     return i;
-}
-
-
-- (RLMFastEnumerator *)fastEnumerator {
-    @throw RLMException(@"fastEnumerator.");
-//    return [[RLMFastEnumerator alloc] initWithBackingCollection:_backingCollection
-//                                                     collection:self
-//                                                      classInfo:*_objectInfo];
 }
 
 #pragma mark - Aggregate operations

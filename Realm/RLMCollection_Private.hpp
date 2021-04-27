@@ -26,6 +26,7 @@ namespace realm {
     class Results;
     class TableView;
     struct CollectionChangeSet;
+    struct ColKey;
     struct NotificationToken;
     namespace object_store {
         class Collection;
@@ -96,3 +97,9 @@ template<typename Collection, typename ObjcCollection>
 id RLMManagedCollectionFromCollection(RLMClassInfo* info, realm::Obj&& obj, RLMProperty *prop);
 template<typename Fn>
 void RLMGetCollectionType(RLMProperty *prop, Fn&& func);
+
+realm::ColKey columnForProperty(NSString *propertyName,
+                                realm::object_store::Collection const& backingCollection,
+                                RLMClassInfo *objectInfo,
+                                RLMPropertyType propertyType,
+                                RLMCollectionType collectionType);
