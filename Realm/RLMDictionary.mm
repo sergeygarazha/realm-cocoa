@@ -313,20 +313,6 @@ static void changeDictionary(__unsafe_unretained RLMDictionary *const dictionary
 
 #pragma mark - Aggregate operations
 
-static bool canAggregate(RLMPropertyType type, bool allowDate) {
-    switch (type) {
-        case RLMPropertyTypeInt:
-        case RLMPropertyTypeFloat:
-        case RLMPropertyTypeDouble:
-        case RLMPropertyTypeDecimal128:
-            return true;
-        case RLMPropertyTypeDate:
-            return allowDate;
-        default:
-            return false;
-    }
-}
-
 - (RLMPropertyType)typeForProperty:(NSString *)propertyName {
     if ([propertyName isEqualToString:@"self"]) {
         return _type;

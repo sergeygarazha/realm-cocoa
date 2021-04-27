@@ -103,3 +103,18 @@ realm::ColKey columnForProperty(NSString *propertyName,
                                 RLMClassInfo *objectInfo,
                                 RLMPropertyType propertyType,
                                 RLMCollectionType collectionType);
+
+static inline bool canAggregate(RLMPropertyType type, bool allowDate) {
+    switch (type) {
+        case RLMPropertyTypeInt:
+        case RLMPropertyTypeFloat:
+        case RLMPropertyTypeDouble:
+        case RLMPropertyTypeDecimal128:
+        case RLMPropertyTypeAny:
+            return true;
+        case RLMPropertyTypeDate:
+            return allowDate;
+        default:
+            return false;
+    }
+}

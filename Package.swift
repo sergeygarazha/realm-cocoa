@@ -89,7 +89,6 @@ let package = Package(
                 "Realm/RLMObjectSchema.mm",
                 "Realm/RLMObjectStore.mm",
                 "Realm/RLMObservation.mm",
-                "Realm/RLMOptionalBase.mm",
                 "Realm/RLMPredicateUtil.mm",
                 "Realm/RLMProperty.mm",
                 "Realm/RLMQueryUtil.mm",
@@ -101,10 +100,12 @@ let package = Package(
                 "Realm/RLMSet.mm",
                 "Realm/RLMSwiftCollectionBase.mm",
                 "Realm/RLMSwiftSupport.m",
+                "Realm/RLMSwiftValueStorage.mm",
                 "Realm/RLMThreadSafeReference.mm",
                 "Realm/RLMUpdateChecker.mm",
                 "Realm/RLMUtil.mm",
                 "Realm/RLMUUID.mm",
+                "Realm/RLMValue.mm",
 
                 // Sync source files
                 "Realm/NSError+RLMSync.m",
@@ -160,6 +161,7 @@ let package = Package(
                 "TestHost",
                 "PrimitiveArrayPropertyTests.tpl.m",
                 "PrimitiveSetPropertyTests.tpl.m",
+                "PrimitiveRLMValuePropertyTests.tpl.m",
                 "PrimitiveDictionaryPropertyTests.tpl.m",
             ],
             cxxSettings: testCxxSettings

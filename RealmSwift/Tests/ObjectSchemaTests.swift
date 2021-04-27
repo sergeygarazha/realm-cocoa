@@ -32,7 +32,7 @@ class ObjectSchemaTests: TestCase {
         XCTAssertEqual(propertyNames,
                        ["boolCol", "intCol", "int8Col", "int16Col", "int32Col", "int64Col", "intEnumCol", "floatCol", "doubleCol",
                         "stringCol", "binaryCol", "dateCol", "decimalCol",
-                        "objectIdCol", "objectCol", "uuidCol", "arrayCol", "setCol", "mapCol"]
+                        "objectIdCol", "objectCol", "uuidCol", "anyCol", "arrayCol", "setCol", "mapCol"]
         )
     }
 
@@ -201,6 +201,14 @@ class ObjectSchemaTests: TestCase {
                 array = NO;
                 set = NO;
                 dictionary = NO;
+                optional = NO;
+            }
+            anyCol {
+                type = mixed;
+                indexed = NO;
+                isPrimary = NO;
+                array = NO;
+                set = NO;
                 optional = NO;
             }
             arrayCol {

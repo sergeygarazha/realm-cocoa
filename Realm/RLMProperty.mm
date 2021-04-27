@@ -41,6 +41,7 @@ static_assert((int)RLMPropertyTypeObject     == (int)realm::PropertyType::Object
 static_assert((int)RLMPropertyTypeObjectId   == (int)realm::PropertyType::ObjectId);
 static_assert((int)RLMPropertyTypeDecimal128 == (int)realm::PropertyType::Decimal);
 static_assert((int)RLMPropertyTypeUUID       == (int)realm::PropertyType::UUID);
+static_assert((int)RLMPropertyTypeAny        == (int)realm::PropertyType::Mixed);
 
 BOOL RLMPropertyTypeIsComputed(RLMPropertyType propertyType) {
     return propertyType == RLMPropertyTypeLinkingObjects;
@@ -92,7 +93,7 @@ static bool rawTypeShouldBeTreatedAsComputedProperty(NSString *rawType) {
                                  objectClassName:prop.object_type.length() ? @(prop.object_type.c_str()) : nil
                           linkOriginPropertyName:prop.link_origin_property_name.length() ? @(prop.link_origin_property_name.c_str()) : nil
                                          indexed:prop.is_indexed
-                                        optional:is_nullable(prop.type)];
+                                        optional:isNullable(prop.type)];
     if (is_array(prop.type)) {
         ret->_array = true;
     }
@@ -153,6 +154,9 @@ static bool rawTypeShouldBeTreatedAsComputedProperty(NSString *rawType) {
 }
 
 static realm::util::Optional<RLMPropertyType> typeFromProtocolString(const char *type) {
+    if (strcmp(type, "RLMValue>\"") == 0) {
+        return RLMPropertyTypeAny;
+    }
     if (strncmp(type, "RLM", 3)) {
         return realm::none;
     }
@@ -254,6 +258,11 @@ static realm::util::Optional<RLMPropertyType> typeFromProtocolString(const char 
     else if (strcmp(code, "@\"NSUUID\"") == 0) {
         _type = RLMPropertyTypeUUID;
     }
+    else if (strcmp(code, "@\"<RLMValue>\"") == 0) {
+        _type = RLMPropertyTypeAny;
+        // Mixed can represent a null type but can't explicitly be an optional type.
+        _optional = false;
+    }
     else if (_array || _set || _dictionary) {
         auto prefixLen = 0;
         NSString *collectionName;
@@ -275,21 +284,21 @@ static realm::util::Optional<RLMPropertyType> typeFromProtocolString(const char 
                     break;
                 }
             }
-
+            
             prefixLen = typeLen+2; // +2 start at the type name
             collectionName = @"RLMDictionary";
         }
-
+        
         if (auto type = typeFromProtocolString(code + prefixLen)) {
             _type = *type;
             return YES;
         }
-
+        
         // get object class from type string - @"RLMSomeCollection<objectClassName>"
         _objectClassName = [[NSString alloc] initWithBytes:code + prefixLen
                                                     length:strlen(code + prefixLen) - 2 // drop trailing >"
                                                   encoding:NSUTF8StringEncoding];
-
+        
         if ([RLMSchema classForString:_objectClassName]) {
             _optional = false;
             _type = RLMPropertyTypeObject;
@@ -343,7 +352,7 @@ static realm::util::Optional<RLMPropertyType> typeFromProtocolString(const char 
         @throw RLMException(@"Property '%@' requires a protocol defining the contained type - example: RLMSet<Person>.", _name);
     }
     else if (strcmp(code, "@\"RLMDictionary\"") == 0) {
-        @throw RLMException(@"Property '%@' requires a protocol defining the contained type - example: RLMDictionary<KeyType, Person>.", _name);
+        @throw RLMException(@"Property '%@' requires a protocol defining the contained type - example: RLMDictionary<RLMString, Person>.", _name);
     }
     else {
         NSString *className;
@@ -715,7 +724,7 @@ static realm::util::Optional<RLMPropertyType> typeFromProtocolString(const char 
     if (_dictionary) {
         p.type |= realm::PropertyType::Dictionary | realm::PropertyType::Nullable;
     }
-    if (_optional) {
+    if (_optional || (p.type == realm::PropertyType::Mixed)) {
         p.type |= realm::PropertyType::Nullable;
     }
     return p;
