@@ -188,7 +188,7 @@ static void changeDictionary(__unsafe_unretained RLMDictionary *const dictionary
     }
 }
 
-- (void)setDictionary:(RLMDictionary *)dictionary {
+- (void)setDictionary:(id)dictionary {
     changeDictionary(self, ^{
         [dictionary enumerateKeysAndObjectsUsingBlock:^(id _Nonnull key, id _Nonnull value, BOOL *) {
             RLMDictionaryValidateMatchingObjectType(self, key, value);
