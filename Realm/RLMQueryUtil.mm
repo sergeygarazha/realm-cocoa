@@ -361,6 +361,9 @@ public:
         Maximum,
         Sum,
         Average,
+        // Dictionary specific.
+        AllKeys,
+        AllValues
     };
 
     CollectionOperation(Type type, ColumnReference link_column, util::Optional<ColumnReference> column)
@@ -385,6 +388,9 @@ public:
                 RLMPrecondition(m_column && propertyTypeIsNumeric(m_column->type()), @"Invalid predicate",
                                 @"%@ can only be applied to a numeric property.", name_for_type(m_type));
                 break;
+            case AllKeys:
+            case AllValues:
+                return;
             }
         }
     }
@@ -416,6 +422,9 @@ public:
                 // Sums are never null
                 valid = !isNSNull(value) && isObjectValidForProperty(value, m_column->property());
                 break;
+            case AllKeys:
+            case AllValues:
+                return;
         }
         RLMPrecondition(valid, @"Invalid operand",
                         @"%@ on a property of type %@ cannot be compared with '%@'",
@@ -436,6 +445,9 @@ public:
                                 @"%@ on a property of type %@ cannot be compared with property of type '%@'",
                                 name_for_type(m_type), RLMTypeToString(m_column->type()), RLMTypeToString(column.type()));
                 break;
+            case AllKeys:
+            case AllValues:
+                return;
         }
     }
 
@@ -456,6 +468,12 @@ private:
         if ([name isEqualToString:@"@avg"]) {
             return Average;
         }
+        if ([name isEqualToString:@"@allKeys"]) {
+            return AllKeys;
+        }
+        if ([name isEqualToString:@"@allValues"]) {
+            return AllValues;
+        }
         throwException(@"Invalid predicate", @"Unsupported collection operation '%@'", name);
     }
 
@@ -466,6 +484,8 @@ private:
             case Maximum: return @"@max";
             case Sum: return @"@sum";
             case Average: return @"@avg";
+            case AllKeys: return @"@allKeys";
+            case AllValues: return @"@allValues";
         }
     }
 
@@ -549,15 +569,22 @@ public:
     void add_link_constraint(NSPredicateOperatorType operatorType, const Columns<Link>& column, realm::null);
     void add_link_constraint(NSPredicateOperatorType, const Columns<Link>&, const ColumnReference&);
 
+    void add_link_constraint(NSPredicateOperatorType operatorType, Columns<Dictionary>& column, RLMObjectBase *obj);
+    void add_link_constraint(NSPredicateOperatorType operatorType, Columns<Dictionary>& column, realm::null);
+    void add_link_constraint(NSPredicateOperatorType, Columns<Dictionary>&, const ColumnReference&);
+
     template <CollectionOperation::Type Operation, bool IsLinkCollection, typename R>
     void add_collection_operation_constraint(NSPredicateOperatorType operatorType,
-                                             const CollectionOperation& collectionOperation, R rhs);
+                                             const CollectionOperation& collectionOperation, R rhs,
+                                             NSComparisonPredicateOptions comparisionOptions=0);
     template <CollectionOperation::Type Operation, typename R>
     void add_collection_operation_constraint(NSPredicateOperatorType operatorType,
-                                             const CollectionOperation& collectionOperation, R rhs);
+                                             const CollectionOperation& collectionOperation, R rhs,
+                                             NSComparisonPredicateOptions comparisionOptions=0);
     template <typename R>
     void add_collection_operation_constraint(NSPredicateOperatorType operatorType,
-                                             const CollectionOperation& collectionOperation, R rhs);
+                                             const CollectionOperation& collectionOperation, R rhs,
+                                             NSComparisonPredicateOptions comparisionOptions=0);
 
 
     CollectionOperation collection_operation_from_key_path(RLMObjectSchema *desc, NSString *keyPath);
@@ -682,14 +709,37 @@ void QueryBuilder::add_diacritic_sensitive_string_constraint(NSPredicateOperator
                                                              Columns<C>&& column,
                                                              T value) {
     bool caseSensitive = !(predicateOptions & NSCaseInsensitivePredicateOption);
-    // FIXME: Columns<C> can represent Columns<Lst<StringData>> for example
-    // This leaves us with an issue because dictionary is not a templated type
-    // we need to figure out how to achieve Dictionary<StringData> so we can invoke methods such as
-    // begins_with etc.
+
     if constexpr (std::is_same_v<C, Dictionary>) {
-        
-        // TODO: Ask in channel how to achieve Dictionary.begins_with etc.
-        
+        // Due to the fact that Dictionary is not a templated class we need to specialize
+        // what value types are accepted here.
+        if constexpr (std::is_same_v<T, StringData> || std::is_same_v<T, BinaryData>) {
+            switch (operatorType) {
+                case NSBeginsWithPredicateOperatorType:
+                    add_substring_constraint(value, column.begins_with(value, caseSensitive));
+                    break;
+                case NSEndsWithPredicateOperatorType:
+                    add_substring_constraint(value, column.ends_with(value, caseSensitive));
+                    break;
+                case NSContainsPredicateOperatorType:
+                    add_substring_constraint(value, column.contains(value, caseSensitive));
+                    break;
+                case NSEqualToPredicateOperatorType:
+                    m_query.and_query(column.equal(value, caseSensitive));
+                    break;
+                case NSNotEqualToPredicateOperatorType:
+                    m_query.and_query(column.not_equal(value, caseSensitive));
+                    break;
+                case NSLikePredicateOperatorType:
+                    m_query.and_query(column.like(value, caseSensitive));
+                    break;
+                default:
+                    break;
+            }
+        }
+        else {
+            RLMException(@"Unsupported string query for dictionary.");
+        }
         return;
     } else {
         switch (operatorType) {
@@ -856,6 +906,37 @@ void QueryBuilder::add_link_constraint(NSPredicateOperatorType operatorType,
 void QueryBuilder::add_link_constraint(NSPredicateOperatorType operatorType,
                                        const Columns<Link>& a, const ColumnReference& b) {
     add_bool_constraint(RLMPropertyTypeObject, operatorType, a, b.resolve<Link>());
+}
+
+void QueryBuilder::add_link_constraint(NSPredicateOperatorType operatorType,
+                                       Columns<Dictionary>& column, RLMObjectBase *obj) {
+    switch (operatorType) {
+        case NSEqualToPredicateOperatorType:
+            if (!obj->_row.is_valid())
+                m_query.and_query(std::unique_ptr<Expression>(new FalseExpression));
+            else
+                m_query.and_query(column == obj->_row);
+            break;
+        case NSNotEqualToPredicateOperatorType:
+            if (!obj->_row.is_valid())
+                m_query.and_query(std::unique_ptr<Expression>(new TrueExpression));
+            else
+                m_query.and_query(column != obj->_row);
+            break;
+        default:
+            unsupportedOperator(RLMPropertyTypeObject, operatorType);
+    }
+}
+
+void QueryBuilder::add_link_constraint(NSPredicateOperatorType operatorType,
+                                       Columns<Dictionary>& column,
+                                       realm::null) {
+    add_bool_constraint(RLMPropertyTypeObject, operatorType, column, null());
+}
+
+void QueryBuilder::add_link_constraint(NSPredicateOperatorType operatorType,
+                                       Columns<Dictionary>& a, const ColumnReference& b) {
+    add_bool_constraint(RLMPropertyTypeObject, operatorType, a, b.resolve<Dictionary>());
 }
 
 // iterate over an array of subpredicates, using @func to build a query from each
@@ -1030,14 +1111,17 @@ void QueryBuilder::do_add_constraint(RLMPropertyType type, NSPredicateOperatorTy
                                   value_of_type<String>(value));
             break;
         case RLMPropertyTypeData:
-//            add_string_constraint(operatorType, predicateOptions,
-//                                  column.resolve<Dictionary>(),
-//                                  value_of_type<Binary>(value));
+            add_string_constraint(operatorType, predicateOptions,
+                                  column.resolve<Dictionary>(),
+                                  value_of_type<Binary>(value));
             break;
         case RLMPropertyTypeObject:
         case RLMPropertyTypeLinkingObjects:
             convert_null(value, [&](auto&& value) {
-                add_link_constraint(operatorType, column.resolve<Link>(), value);
+                // pass without const because it looks like core does not support
+                // comparision queries on a 'const& Columns<Dictionary>' type.
+                auto col = column.resolve<Dictionary>();
+                add_link_constraint(operatorType, col, value);
             });
             break;
         case RLMPropertyTypeUUID:
@@ -1336,7 +1420,8 @@ auto collection_operation_expr(CollectionOperation operation) {
 
 template <CollectionOperation::Type Operation, bool IsLinkCollection, typename R>
 void QueryBuilder::add_collection_operation_constraint(NSPredicateOperatorType operatorType,
-                                                       CollectionOperation const& collectionOperation, R rhs)
+                                                       CollectionOperation const& collectionOperation, R rhs,
+                                                       NSComparisonPredicateOptions)
 {
     auto type = IsLinkCollection ? collectionOperation.column().type() : collectionOperation.link_column().type();
     switch (type) {
@@ -1383,7 +1468,8 @@ void QueryBuilder::add_collection_operation_constraint(NSPredicateOperatorType o
 
 template <CollectionOperation::Type Operation, typename R>
 void QueryBuilder::add_collection_operation_constraint(NSPredicateOperatorType operatorType,
-                                                       CollectionOperation const& collectionOperation, R rhs)
+                                                       CollectionOperation const& collectionOperation, R rhs,
+                                                       NSComparisonPredicateOptions)
 {
     convert_null(rhs, [&](auto&& rhs) {
         if (collectionOperation.link_column().is_link()) {
@@ -1404,14 +1490,14 @@ void get_collection_type(__unsafe_unretained RLMProperty *prop, Fn&& fn) {
         fn((Set<T>*)0);
     }
     else {
-        // Add Dictionary here
-        REALM_TERMINATE("Unsupported collection type.");
+        fn((Dictionary*)0);
     }
 }
 
 template <typename R>
 void QueryBuilder::add_collection_operation_constraint(NSPredicateOperatorType operatorType,
-                                                       CollectionOperation const& collectionOperation, R rhs)
+                                                       CollectionOperation const& collectionOperation, R rhs,
+                                                       NSComparisonPredicateOptions comparisionOptions)
 {
     switch (collectionOperation.type()) {
         case CollectionOperation::Count: {
@@ -1493,6 +1579,26 @@ void QueryBuilder::add_collection_operation_constraint(NSPredicateOperatorType o
         case CollectionOperation::Average:
             add_collection_operation_constraint<CollectionOperation::Average>(operatorType, collectionOperation, rhs);
             break;
+        case CollectionOperation::AllKeys: {
+            switch (operatorType) {
+                case NSEqualToPredicateOperatorType:
+                    m_query.and_query(Columns<Dictionary>(collectionOperation.link_column().column(), m_query.get_table()).keys() == value_of_type<StringData>(rhs));
+                    break;
+                case NSNotEqualToPredicateOperatorType:
+                    m_query.and_query(Columns<Dictionary>(collectionOperation.link_column().column(), m_query.get_table()).keys() != value_of_type<StringData>(rhs));
+                    break;
+                default:
+                    unsupportedOperator(collectionOperation.link_column().type(), operatorType);
+            }
+            break;
+        }
+        case CollectionOperation::AllValues:
+            do_add_constraint(collectionOperation.link_column().type(),
+                              operatorType,
+                              comparisionOptions,
+                              collectionOperation.link_column(),
+                              rhs);
+            break;
     }
 }
 
@@ -1571,7 +1677,7 @@ void QueryBuilder::apply_collection_operator_expression(RLMObjectSchema *desc,
         // Turn "a > b" into "b < a" so that we can always put the column on the lhs
         type = invert_comparison_operator(type);
     }
-    add_collection_operation_constraint(type, operation, value);
+    add_collection_operation_constraint(type, operation, value, pred.options);
 }
 
 void QueryBuilder::apply_value_expression(RLMObjectSchema *desc,

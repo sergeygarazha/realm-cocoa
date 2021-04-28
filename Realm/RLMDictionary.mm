@@ -483,7 +483,8 @@ static void changeDictionary(__unsafe_unretained RLMDictionary *const dictionary
 
 - (nonnull id)objectAtIndex:(NSUInteger)index {
     validateDictionaryBounds(self, index);
-    return _backingCollection.allValues[index];
+    NSString *key = _backingCollection.allKeys[index];
+    return _backingCollection[key];
 }
 
 - (NSUInteger)indexOfObject:(id)value {
