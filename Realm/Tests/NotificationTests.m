@@ -330,11 +330,8 @@ static void ExpectChange(id self, NSArray *deletions, NSArray *insertions,
                 IntObject *io = [IntObject createInDefaultRealmWithValue:@[@(i)]];
                 [ArrayPropertyObject createInDefaultRealmWithValue:@[@"", @[], @[io]]];
                 [DictionaryPropertyObject createInDefaultRealmWithValue:@{
-                    @"stringCol": @{},
-                    @"intDictionary": @{@"0": @{@"intCol":@0},
-                                        @"1": @{@"intCol":@1},
-                                        @"2": @{@"intCol":@2},
-                    },
+                    @"stringDictionary": @{},
+                    @"intDictionary": @{},
                     @"primitiveStringDictionary": @{},
                     @"embeddedDictionary": @{}
                 }];
