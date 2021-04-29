@@ -376,16 +376,16 @@ class SwiftMapOfSwiftObject: Object {
     let map = Map<String, SwiftObject>()
 }
 
+class SwiftMapOfSwiftOptionalObject: Object {
+    let map = Map<String, SwiftOptionalObject>()
+}
+
 class SwiftListOfSwiftOptionalObject: Object {
     let array = List<SwiftOptionalObject>()
 }
 
 class SwiftMutableSetOfSwiftOptionalObject: Object {
     let set = MutableSet<SwiftOptionalObject>()
-}
-
-class SwiftMapOfSwiftOptionalObject: Object {
-    let map = Map<String, SwiftOptionalObject>()
 }
 
 class SwiftArrayPropertySubclassObject: SwiftArrayPropertyObject {
