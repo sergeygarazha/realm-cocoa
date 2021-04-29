@@ -424,6 +424,10 @@ public:
                 break;
             case AllKeys:
             case AllValues:
+                valid = link_column().property().dictionary;
+                RLMPrecondition(valid, @"Invalid operator",
+                                @"%@ can only be valid for dictionary", name_for_type(m_type));
+
                 return;
         }
         RLMPrecondition(valid, @"Invalid operand",
