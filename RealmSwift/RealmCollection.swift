@@ -243,6 +243,7 @@ private func dictionaryType<T>(_ type: T.Type) -> RLMDictionary<AnyObject, AnyOb
     case is Decimal128.Type: return RLMDictionary(objectType: .decimal128, optional: true)
     case is ObjectId.Type:   return RLMDictionary(objectType: .objectId, optional: true)
     case is UUID.Type:       return RLMDictionary(objectType: .UUID, optional: true)
+    case is AnyRealmValue.Type: return RLMDictionary(objectType: .any, optional: false)
     default: fatalError("Unsupported type for Map: \(type)?")
     }
 }
@@ -406,6 +407,10 @@ extension AnyRealmValue: RealmCollectionValue {
     /// :nodoc:
     public static func _rlmSet() -> RLMSet<AnyObject> {
         return RLMSet(objectType: .any, optional: false)
+    }
+    /// :nodoc:
+    public static func _rlmDictionary() -> RLMDictionary<AnyObject, AnyObject> {
+        return RLMDictionary(objectType: .any, optional: false)
     }
     /// :nodoc:
     public static func _nilValue() -> AnyRealmValue {
