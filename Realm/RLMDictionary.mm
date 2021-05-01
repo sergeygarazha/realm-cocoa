@@ -246,10 +246,6 @@ static void changeDictionary(__unsafe_unretained RLMDictionary *const dictionary
     if (!_backingCollection) {
         _backingCollection = [NSMutableDictionary new];
     }
-    // Lee: What is the purpose of the below?
-//    if ([key isEqualToString:@"self"]) {
-//        return [_backingCollection valueForKey:@"@self"];
-//    }
     return [_backingCollection valueForKey:key];
 }
 

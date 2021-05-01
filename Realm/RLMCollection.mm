@@ -277,38 +277,6 @@ realm::ColKey columnForProperty(NSString *propertyName,
     return {};
 }
 
-NSDictionary *RLMDictionaryValueForKey(realm::object_store::Dictionary& collection, NSString *key, RLMClassInfo& info) {
-    size_t count = collection.size();
-    if (count == 0) {
-        return @{};
-    }
-
-    NSMutableDictionary *dictionary = [NSMutableDictionary new];
-    if ([key isEqualToString:@"self"]) {
-        RLMAccessorContext context(info);
-        for (size_t i = 0; i < count; ++i) {
-            auto element = collection.get_pair(i);
-            id objKey = RLMStringDataToNSString(element.first);
-            id object = element.second.is_null() ? NSNull.null : context.box(element.second);
-            dictionary[objKey] = object;
-        }
-        return dictionary;
-    }
-
-    if (collection.get_type() != realm::PropertyType::Object) {
-        RLMAccessorContext ctx(info);
-        for (size_t i = 0; i < count; ++i) {
-            auto element = collection.get_pair(i);
-            id objKey = RLMStringDataToNSString(element.first);
-            id object = element.second.is_null() ? NSNull.null : ctx.box(element.second);
-            dictionary[objKey] = [object valueForKey: key];
-        }
-        return dictionary;
-    }
-
-    return nil;
-}
-
 template<typename Fn>
 void RLMGetCollectionType(RLMProperty *prop, Fn&& func) {
     if (prop.array) {

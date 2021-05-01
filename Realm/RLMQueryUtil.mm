@@ -1587,10 +1587,12 @@ void QueryBuilder::add_collection_operation_constraint(NSPredicateOperatorType o
             bool caseSensitive = !(comparisionOptions & NSCaseInsensitivePredicateOption);
             switch (operatorType) {
                 case NSEqualToPredicateOperatorType:
-                    m_query.and_query(Columns<Dictionary>(collectionOperation.link_column().column(), m_query.get_table()).keys().equal(value_of_type<StringData>(rhs), caseSensitive));
+                    m_query.and_query(Columns<Dictionary>(collectionOperation.link_column().column(), m_query.get_table()).keys()
+                                      .equal(value_of_type<StringData>(rhs), caseSensitive));
                     break;
                 case NSNotEqualToPredicateOperatorType:
-                    m_query.and_query(Columns<Dictionary>(collectionOperation.link_column().column(), m_query.get_table()).keys().not_equal(value_of_type<StringData>(rhs), caseSensitive));
+                    m_query.and_query(Columns<Dictionary>(collectionOperation.link_column().column(), m_query.get_table()).keys()
+                                      .not_equal(value_of_type<StringData>(rhs), caseSensitive));
                     break;
                 default:
                     unsupportedOperator(collectionOperation.link_column().type(), operatorType);
