@@ -214,8 +214,12 @@ id RLMCreateManagedAccessor(Class cls, RLMClassInfo *info) {
             [collection removeAllObjects];
 
             if (value) {
-                [collection addObjects:validatedObjectForProperty(value, _objectSchema, property,
-                                                                  RLMSchema.partialPrivateSharedSchema)];
+                if (property.collection && !property.dictionary)
+                    [collection addObjects:validatedObjectForProperty(value, _objectSchema, property,
+                                                                      RLMSchema.partialPrivateSharedSchema)];
+                else
+                    [collection addEntriesFromDictionary:validatedObjectForProperty(value, _objectSchema, property,
+                                                                                    RLMSchema.partialPrivateSharedSchema)];
             }
         }
         else if (property.optional || (property.type == RLMPropertyTypeAny)) {

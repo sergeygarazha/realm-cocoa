@@ -107,29 +107,6 @@ void RLMDictionaryValidateMatchingObjectType(__unsafe_unretained RLMDictionary *
     }
 }
 
-void RLMDictionaryValidateMatchingValueType(__unsafe_unretained RLMDictionary *const dictionary,
-                                            __unsafe_unretained id const value) {
-   if (!value) {
-       return;
-   }
-   if (dictionary->_type != RLMPropertyTypeObject) {
-       if (!RLMValidateValue(value, dictionary->_type, dictionary->_optional, false, nil)) {
-           @throw RLMException(@"Invalid value '%@' of type '%@' for expected type '%@%s'.",
-                               value, [value class], RLMTypeToString(dictionary->_type),
-                               dictionary->_optional ? "?" : "");
-       }
-       return;
-   }
-   auto valueObject = RLMDynamicCast<RLMObjectBase>(value);
-   if (!valueObject) {
-       return;
-   }
-   if (!valueObject->_objectSchema) {
-       @throw RLMException(@"Object cannot be inserted unless the schema is initialized. "
-                           "This can happen if you try to insert objects into a RLMDictionary / Map from a default value or from an overriden unmanaged initializer (`init()`) or if the key is uninitialized.");
-   }
-}
-
 static void changeDictionary(__unsafe_unretained RLMDictionary *const dictionary,
                       dispatch_block_t f) {
     if (!dictionary->_backingCollection) {
@@ -176,16 +153,10 @@ static void changeDictionary(__unsafe_unretained RLMDictionary *const dictionary
 }
 
 - (void)setValue:(nullable id)value forKey:(nonnull NSString *)key {
-    if ([key isEqualToString:@"self"]) {
-        RLMDictionaryValidateMatchingObjectType(self, key, value);
-        [_backingCollection removeAllObjects];
-        [_backingCollection setObject:value forKey:key];
-    } else {
-        RLMDictionaryValidateMatchingObjectType(self, key, value);
-        changeDictionary(self, ^{
-            [_backingCollection setValue:value forKey:key];
-        });
-    }
+    RLMDictionaryValidateMatchingObjectType(self, key, value);
+    changeDictionary(self, ^{
+        [_backingCollection setValue:value forKey:key];
+    });
 }
 
 - (void)setDictionary:(id)dictionary {
@@ -227,11 +198,6 @@ static void changeDictionary(__unsafe_unretained RLMDictionary *const dictionary
     changeDictionary(self, ^{
         [_backingCollection removeObjectForKey:key];
     });
-}
-
-// Lee: obliterate this
-- (void)addObjects:(NSDictionary *)objects {
-    [self addEntriesFromDictionary:objects];
 }
 
 - (void)enumerateKeysAndObjectsUsingBlock:(void (^)(id <RLMDictionaryKey> key,
@@ -484,7 +450,6 @@ static void changeDictionary(__unsafe_unretained RLMDictionary *const dictionary
 }
 
 - (NSUInteger)indexOfObject:(id)value {
-    RLMDictionaryValidateMatchingValueType(self, value);
     return [_backingCollection.allValues indexOfObject:value];
 }
 
