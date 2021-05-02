@@ -61,6 +61,9 @@ extension EmbeddedObject: RealmCollectionValue {
     public static func _rlmArray() -> RLMArray<AnyObject> {
         return RLMArray(objectClassName: className())
     }
+    public static func _rlmDictionary() -> RLMDictionary<AnyObject, AnyObject> {
+        return RLMDictionary(objectClassName: className())
+    }
     /// :nodoc:
     public class override final func isEmbedded() -> Bool {
         return true
