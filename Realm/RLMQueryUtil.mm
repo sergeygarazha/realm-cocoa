@@ -721,30 +721,32 @@ void QueryBuilder::add_diacritic_sensitive_string_constraint(NSPredicateOperator
             switch (operatorType) {
                 case NSBeginsWithPredicateOperatorType:
                     add_substring_constraint(value, column.begins_with(value, caseSensitive));
-                    break;
+                    return;
                 case NSEndsWithPredicateOperatorType:
                     add_substring_constraint(value, column.ends_with(value, caseSensitive));
-                    break;
+                    return;
                 case NSContainsPredicateOperatorType:
                     add_substring_constraint(value, column.contains(value, caseSensitive));
-                    break;
+                    return;
                 case NSEqualToPredicateOperatorType:
                     m_query.and_query(column.equal(value, caseSensitive));
-                    break;
+                    return;
                 case NSNotEqualToPredicateOperatorType:
                     m_query.and_query(column.not_equal(value, caseSensitive));
-                    break;
+                    return;
                 case NSLikePredicateOperatorType:
                     m_query.and_query(column.like(value, caseSensitive));
-                    break;
+                    return;
+                case NSGreaterThanPredicateOperatorType:
+                case NSGreaterThanOrEqualToPredicateOperatorType:
+                case NSLessThanPredicateOperatorType:
+                case NSLessThanOrEqualToPredicateOperatorType:
+                    unsupportedOperator(RLMPropertyTypeString, operatorType);
+                    return;
                 default:
                     break;
             }
         }
-        else {
-            RLMException(@"Unsupported string query for dictionary.");
-        }
-        return;
     } else {
         switch (operatorType) {
             case NSBeginsWithPredicateOperatorType:

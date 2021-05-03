@@ -551,7 +551,10 @@ id unmanagedSetter(RLMProperty *prop, const char *) {
             collection = [[cls alloc] initWithObjectClassName:prop.objectClassName];
         else
             collection = [[cls alloc] initWithObjectType:prop.type optional:prop.optional];
-        [collection addObjects:values];
+        if (prop.dictionary)
+            [collection addEntriesFromDictionary:(id)values];
+        else
+            [collection addObjects:values];
         superSet(obj, propName, collection);
     };
 }

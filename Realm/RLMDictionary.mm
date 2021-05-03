@@ -335,6 +335,9 @@ static void changeDictionary(__unsafe_unretained RLMDictionary *const dictionary
     }
 
     NSArray *values = [key isEqualToString:@"self"] ? _backingCollection.allValues : [_backingCollection.allValues valueForKey:key];
+    if (sum && (values.count == 0))
+        return nil;
+
     if (_optional) {
         // Filter out NSNull values to match our behavior on managed arrays
         NSIndexSet *nonnull = [values indexesOfObjectsPassingTest:^BOOL(id obj, NSUInteger, BOOL *) {
@@ -345,7 +348,7 @@ static void changeDictionary(__unsafe_unretained RLMDictionary *const dictionary
         }
     }
     id result = [values valueForKeyPath:[op stringByAppendingString:@".self"]];
-    return sum && !result ? @0 : result;
+    return sum && !result ? nil : result;
 }
 
 - (id)minOfProperty:(NSString *)property {
@@ -411,15 +414,6 @@ static void changeDictionary(__unsafe_unretained RLMDictionary *const dictionary
 - (RLMResults *)distinctResultsUsingKeyPaths:(NSArray<NSString *> *)keyPaths {
     @throw RLMException(@"This method may only be called on RLMDictionary instances retrieved from an RLMRealm");
 }
-
-//- (NSUInteger)indexOfObjectWithPredicate:(NSPredicate *)predicate {
-//    if (!_backingCollection) {
-//        return NSNotFound;
-//    }
-//    return [_backingCollection.allValues indexOfObjectPassingTest:^BOOL(id obj, NSUInteger, BOOL *) {
-//        return [predicate evaluateWithObject:obj];
-//    }];
-//}
 
 // The compiler complains about the method's argument type not matching due to
 // it not having the generic type attached, but it doesn't seem to be possible
